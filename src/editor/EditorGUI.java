@@ -64,7 +64,13 @@ public class EditorGUI extends JFrame
 		private boolean wasSaved = true;
 		private String objectName;
 	////end : Values needed in several Method that can't invoke each other nicely
-	
+		
+	/**
+	 * Prepares and creates the graphical user interface for the usage to edit an existing switching symbol.<br>
+	 * @param p_objectName the name of the switching object to edit.
+	 * @param p_ArrayListWirkSchaltPlan the {@link ArrayList} that contains the {@link GeometricObject}&lsquo;s for the WirkSchaltPlan.
+	 * @param p_ArrayListStromFlussPlan the {@link ArrayList} that contains the {@link GeometricObject}&lsquo;s for the StromFlussPlan.
+	 */	
 	public EditorGUI(String p_objectName, ArrayList<GeometricObject> p_ArrayListWirkSchaltPlan, ArrayList<GeometricObject> p_ArrayListStromFlussPlan)
 	{
 		this();
