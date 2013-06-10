@@ -305,7 +305,6 @@ public class EditorGUI extends JFrame
 						else if(!wasSaved)
 						{
 							closeUnsaved();
-							
 						}
 		            }
 	            // subEnd : React on closing window for the saving system
