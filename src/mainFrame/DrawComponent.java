@@ -24,6 +24,7 @@ public class DrawComponent extends JSVGComponent
 
   private boolean showGrid = false;
   private int gridInterval = 30;
+  private Color gridColor = new Color(210, 210, 210);
 
 
   /**
