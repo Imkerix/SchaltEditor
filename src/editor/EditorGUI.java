@@ -379,8 +379,7 @@ public class EditorGUI extends JFrame
 		
 		switch (wannasave)
 		{
-			case 0: saveSwitchingObject();
-					dispose(); break;
+			case 0: saveSwitchingObject(); dispose(); break;
 			case 1: dispose(); break;
 		}
 	}

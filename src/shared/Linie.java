@@ -18,16 +18,15 @@ public class Linie extends GeometricObject
 	
 	public Linie(double x1, double y1, double x2, double y2)
 	{
-		this.x = x1;
-		this.y = y1;
+		x = x1;
+		y = y1;
 		punkt2X = x2;
 		punkt2Y = y2;
-		this.width = punkt2X-x;
-		this.height = punkt2Y-y;
-		dx = x;
-		dy = y;
-		dwidth = width;
-		dheight = height;
+		
+		width = punkt2X - x;
+		height = punkt2Y - y;
+		
+		setAroundBounds();
 	}
 	
 	public void draw(Graphics g)
@@ -77,29 +76,7 @@ public class Linie extends GeometricObject
 	{
 		Graphics2D g2d = (Graphics2D)g;
 		g2d.setStroke(new BasicStroke(1.0f, BasicStroke.CAP_BUTT,BasicStroke.JOIN_BEVEL,1.0f,new float[]{5.0f},0.0f));
-		
-		if(x < punkt2X)
-		{
-			dx = x;
-			dwidth = punkt2X - x;
-		}
-		if(x > punkt2X)
-		{
-			dx = punkt2X;
-			dwidth = x - punkt2X;
-		}
-		
-		if(y < punkt2Y)
-		{
-			dy = y;
-			dheight = punkt2Y - y;
-		}
-		if(y > punkt2Y)
-		{
-			dy = punkt2Y;
-			dheight = y - punkt2Y;
-		}
-		
+		setAroundBounds();
 		g2d.drawRect((int)dx, (int)dy, (int)(dwidth), (int)(dheight));	
 		g2d.setStroke(new BasicStroke());
 	}
@@ -143,6 +120,30 @@ public class Linie extends GeometricObject
 				punkt2Y = endMove.getY();
 				break;
 			}
+		}
+	}
+	public void setAroundBounds()
+	{
+		if(x < punkt2X)
+		{
+			dx = x;
+			dwidth = punkt2X - x;
+		}
+		if(x > punkt2X)
+		{
+			dx = punkt2X;
+			dwidth = x - punkt2X;
+		}
+		
+		if(y < punkt2Y)
+		{
+			dy = y;
+			dheight = punkt2Y - y;
+		}
+		if(y > punkt2Y)
+		{
+			dy = punkt2Y;
+			dheight = y - punkt2Y;
 		}
 	}
 
