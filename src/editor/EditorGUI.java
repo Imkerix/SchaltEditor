@@ -227,7 +227,7 @@ public class EditorGUI extends JFrame
 					{
 						if(wasSaved)
 						{
-							System.exit(0);
+							dispose();
 						}
 						else if(!wasSaved)
 						{
@@ -300,12 +300,12 @@ public class EditorGUI extends JFrame
 		            public void windowClosing(java.awt.event.WindowEvent e) {
 		            	if(wasSaved)
 						{
-							System.exit(0);
+							dispose();
 						}
 						else if(!wasSaved)
 						{
 							closeUnsaved();
-							System.exit(0);
+							dispose();
 						}
 		            }
 	            // subEnd : React on closing window for the saving system
@@ -380,8 +380,8 @@ public class EditorGUI extends JFrame
 		
 		switch (wannasave)
 		{
-			case 0: saveSwitchingObject(); System.exit(0); break;
-			case 1: System.exit(0); break;
+			case 0: saveSwitchingObject(); dispose(); break;
+			case 1: dispose(); break;
 		}
 	}
 	
@@ -494,7 +494,8 @@ public class EditorGUI extends JFrame
 				}
 			}
 		}
-		else{
+		else
+		{
 			for(GeometricObject go : geomListright)
 			{
 				if(go.isInside(e.getX(), e.getY()) != -1)
