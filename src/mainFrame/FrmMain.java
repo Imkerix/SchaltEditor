@@ -38,7 +38,7 @@ import javax.swing.filechooser.FileFilter;
 
 import org.apache.batik.swing.svg.JSVGComponent;
 
-import editor.EditorMain;
+import editor.EditorGUI;
 
 /**
  * This code was edited or generated using CloudGarden's Jigloo
@@ -317,15 +317,18 @@ public class FrmMain extends javax.swing.JFrame
 		file = new File(System.getProperty("user.dir") + "/Stromlaufplan");
 		File[] stromlaufFiles = file.listFiles();
 
-		//ElectricObject erzeugen und der Liste hinzuf�gen
-		for (int i = 0; i < stromlaufFiles.length; i++) 
+		if(stromlaufFiles != null)
 		{
-			File file1 = wirkstromFiles[i];
-			File file2 = stromlaufFiles[i];
-			String name = file1.getName();
+			//ElectricObject erzeugen und der Liste hinzuf�gen
+			for (int i = 0; i < stromlaufFiles.length; i++) 
+			{
+				File file1 = wirkstromFiles[i];
+				File file2 = stromlaufFiles[i];
+				String name = file1.getName();
 
-			ElectricObject eo = new ElectricObject(name, file1, file2);
-			electricObjects.add(eo);
+				ElectricObject eo = new ElectricObject(name, file1, file2);
+				electricObjects.add(eo);
+			}
 		}
 	}
 
@@ -472,8 +475,8 @@ public class FrmMain extends javax.swing.JFrame
 	 */
 	private void jMenuItem3ActionPerformed(ActionEvent evt) 
 	{
-		@SuppressWarnings("unused")
-		EditorMain editorMain = new EditorMain();
+		EditorGUI editorGui = new EditorGUI();
+		editorGui.setVisible(true);
 	}
 
 	/**
