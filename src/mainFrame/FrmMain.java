@@ -101,7 +101,7 @@ public class FrmMain extends javax.swing.JFrame
 	private JMenu jMenu3;
 	private Point startMove;
 	private int zoomCount = 0;
-	private FrmOptions frmOptions = new FrmOptions(this);
+	private FrmOptions frmOptions = new FrmOptions(this, drawComponent1, drawComponent2);
 
 
 
