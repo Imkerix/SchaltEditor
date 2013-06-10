@@ -216,6 +216,7 @@ public class FrmOptions extends javax.swing.JFrame
 					jEditorPane2 = new JEditorPane();
 					jPanel2.add(jEditorPane2);
 					jEditorPane2.setBounds(453, 37, 35, 20);
+					jEditorPane2.setEditable(false);
 					jEditorPane2.addMouseListener(new MouseAdapter() {
 						public void mouseClicked(MouseEvent evt) {
 							jEditorPane2MouseClicked(evt);
