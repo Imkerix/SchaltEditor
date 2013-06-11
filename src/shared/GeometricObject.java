@@ -177,14 +177,12 @@ public abstract class GeometricObject
 				g.drawRect((int)(x+width)-5, (int)(y+height)-5, 10, 10);
 					rectList.add(new Rectangle((int)(x+width)-5, (int)(y+height)-5, 10, 10));
 	}
-	public JToolBar setOptionsBar()
+	public  JToolBar setOptionsBar()
 	{
 		JToolBar optionsBar = new JToolBar();
 		JComboBox<String> dotted = new JComboBox<String>();
-		dotted.addItem("Test");
-		dotted.addItem("Test1");
-		dotted.addItem("Test2");
-		dotted.addItem("Test3");
+		dotted.addItem("Line");
+		dotted.addItem("Dotted");
 		optionsBar.add(dotted);
 		optionsBar.add(new JSeparator());
 		optionsBar.setFloatable(false);

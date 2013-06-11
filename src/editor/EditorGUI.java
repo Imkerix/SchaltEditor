@@ -4,11 +4,7 @@ import javax.swing.JFrame;
 import java.awt.BorderLayout;
 import java.awt.Frame;
 import java.awt.Graphics;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.awt.Point;
-import java.awt.Rectangle;
-
 import shared.Connector;
 import shared.GeometricObject;
 import shared.Kreis;
@@ -40,7 +36,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JTabbedPane;
 import javax.swing.JButton;
 import javax.swing.JSeparator;
-import javax.swing.JToolBar;
 
 /**
  * 
@@ -66,6 +61,7 @@ public class EditorGUI extends JFrame
 		private boolean wasSaved = true;
 		private String objectName;
 		private JMenuBar menuBar;
+		private boolean isActive = false;
 	////end : Values needed in several Method that can't invoke each other nicely
 		
 	/**
@@ -480,6 +476,8 @@ public class EditorGUI extends JFrame
 		actObjectleft = null;  
 		actObjectright = null;
 		
+		
+		
 		if(mytabbedpane.getSelectedIndex()==0)
 		{
 			for(GeometricObject go : geomListleft)
@@ -487,9 +485,23 @@ public class EditorGUI extends JFrame
 				if(go.isInside(e.getX(), e.getY()) != -1)
 				{
 					actObjectleft = go;
+					if(isActive == false)
+					{
 						menuBar.add(go.setOptionsBar(), 1);
+						isActive = true;
 						this.pack();
+					}
+					
 					selectedGrabber = go.isInside(e.getX(), e.getY());
+				}
+				else
+				{
+					if(isActive == true)
+					{
+						menuBar.remove(1);
+						isActive = false;
+						this.pack();
+					}
 				}
 			}
 		}
@@ -500,9 +512,24 @@ public class EditorGUI extends JFrame
 				if(go.isInside(e.getX(), e.getY()) != -1)
 				{
 					actObjectright = go;
+						
+					if(isActive == false)
+					{
 						menuBar.add(go.setOptionsBar(), 1);
+						isActive = true;
 						this.pack();
+					}
+					
 					selectedGrabber = go.isInside(e.getX(), e.getY());
+				}
+				else
+				{
+					if(isActive == true)
+					{
+						menuBar.remove(1);
+						isActive = false;
+						this.pack();
+					}
 				}
 			}
 		}
