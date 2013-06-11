@@ -13,9 +13,8 @@ public class Main
 {
   public static void main(String[] args) 
   {
-    FrmMain frmMain = new FrmMain();
-    frmMain.setVisible(true);
-    //Force Commit 2
+//    FrmMain frmMain = new FrmMain();
+//    frmMain.setVisible(true);
 	
 	  
 	  
@@ -37,8 +36,8 @@ public class Main
 //				eGui.setVisible(true);
 
 			// normal usage for the editor
-//				EditorGUI eGui = new EditorGUI();
-//				eGui.setVisible(true);
+				EditorGUI eGui = new EditorGUI();
+				eGui.setVisible(true);
 	  
   }
 } 

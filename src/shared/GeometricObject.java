@@ -8,6 +8,10 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JToolBar;
+
 public abstract class GeometricObject 
 {	
 	double x;
@@ -15,6 +19,7 @@ public abstract class GeometricObject
 	double width;
 	double height;
 	ArrayList<Rectangle> rectList = new ArrayList<Rectangle>();
+	JToolBar optionsBar;
 	
 	public abstract void draw(Graphics g);
 
@@ -171,6 +176,12 @@ public abstract class GeometricObject
 				g.setColor(Color.black);
 				g.drawRect((int)(x+width)-5, (int)(y+height)-5, 10, 10);
 					rectList.add(new Rectangle((int)(x+width)-5, (int)(y+height)-5, 10, 10));
+	}
+	public void setOptionsBar()
+	{
+		optionsBar = new JToolBar();
+		JComboBox<String> dotted = new JComboBox<String>();
+		optionsBar.add(dotted);
 	}
 
 }
