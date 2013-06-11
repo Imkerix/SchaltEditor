@@ -314,10 +314,10 @@ public class FrmMain extends javax.swing.JFrame
 	private void createElectricObjects()
 	{
 		//Die Files der beiden Ordner auflisten
-		File file = new File(System.getProperty("user.dir") + "/Wirkschaltplan");
+		File file = new File(System.getProperty("user.dir") + "/Schaltzeichen/Wirkschaltplaene");
 		File[] wirkstromFiles = file.listFiles();
 
-		file = new File(System.getProperty("user.dir") + "/Stromlaufplan");
+		file = new File(System.getProperty("user.dir") + "/Schaltzeichen/Stromlaufplaene");
 		File[] stromlaufFiles = file.listFiles();
 
 		if(stromlaufFiles != null)
