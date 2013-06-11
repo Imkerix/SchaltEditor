@@ -14,6 +14,7 @@ public class Rechteck extends GeometricObject
 		this.height = height;
 	}
 	
+	@Override
 	public void draw(Graphics g)
 	{
 		Graphics2D g2d = (Graphics2D) g;

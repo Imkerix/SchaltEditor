@@ -38,6 +38,7 @@ public class FrmOptions extends javax.swing.JFrame
 	private JTextField jTextField1;
 	private JButton jButton1;
 	private JCheckBox jCheckBox2;
+	private JCheckBox jCheckBox3;
 	private JButton jButton6;
 	private JButton jButton5;
 	private JButton jButton4;
@@ -158,6 +159,12 @@ public class FrmOptions extends javax.swing.JFrame
 							jButton5ActionPerformed(evt);
 						}
 					});
+				}
+				{
+					jCheckBox3 = new JCheckBox();
+					jPanel1.add(jCheckBox3);
+					jCheckBox3.setText("Konnektoren verstecken");
+					jCheckBox3.setBounds(22, 232, 183, 20);
 				}
 			}
 			jPanel2 = new JPanel();
@@ -298,6 +305,9 @@ public class FrmOptions extends javax.swing.JFrame
 
 		frmMain.showGrid(jCheckBox1.isSelected());
 		frmMain.setSynchronizedMoving(jCheckBox2.isSelected());
+		drawComponent1.showConnectors(!jCheckBox3.isSelected());
+		drawComponent2.showConnectors(!jCheckBox3.isSelected());
+		
 		drawComponent1.setGridColor(jEditorPane1.getBackground());
 		drawComponent2.setGridColor(jEditorPane2.getBackground());
 	}

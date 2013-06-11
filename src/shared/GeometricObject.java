@@ -8,7 +8,6 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JToolBar;
 
@@ -21,7 +20,7 @@ public abstract class GeometricObject
 	ArrayList<Rectangle> rectList = new ArrayList<Rectangle>();
 	JToolBar optionsBar;
 	
-	public abstract void draw(Graphics g);
+	public void draw(Graphics g){};
 
 	/**
 	 * Changes the x and y coordinates to paint the {@link GeometricObject} somewhere else.
