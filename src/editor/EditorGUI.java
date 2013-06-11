@@ -2,6 +2,7 @@ package editor;
 
 import javax.swing.JFrame;
 import java.awt.BorderLayout;
+import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -39,6 +40,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JTabbedPane;
 import javax.swing.JButton;
 import javax.swing.JSeparator;
+import javax.swing.JToolBar;
 
 /**
  * 
@@ -63,6 +65,7 @@ public class EditorGUI extends JFrame
 		private SVGGen svgGenerator = new SVGGen();
 		private boolean wasSaved = true;
 		private String objectName;
+		private JMenuBar menuBar;
 	////end : Values needed in several Method that can't invoke each other nicely
 		
 	/**
@@ -87,10 +90,7 @@ public class EditorGUI extends JFrame
 	public EditorGUI() 
 	{
 		//// Begin : Initialize
-			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-			GraphicsDevice[] screens = ge.getScreenDevices();
-			Rectangle display = screens[0].getDefaultConfiguration().getBounds();
-			setSize((int)display.getWidth()-500, (int)display.getHeight()-500);
+			setExtendedState(Frame.MAXIMIZED_BOTH);
 			
 			setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 			
@@ -171,7 +171,7 @@ public class EditorGUI extends JFrame
 		//// Begin : Create and implement the JMenuBar 
 			
 			// subBegin : Create JMenuBar and add it to the EditorGUI
-				JMenuBar menuBar = new JMenuBar();
+				menuBar = new JMenuBar();
 				setJMenuBar(menuBar);
 			// subBegin : Create JMenuBar and add it to the EditorGUI
 			
@@ -245,9 +245,7 @@ public class EditorGUI extends JFrame
 		//// End : Create and implement JMenuBar
 		
 		//// Begin : Create separator to get a better look in the MenuBar 	
-			JSeparator separator = new JSeparator();
-			separator.setDoubleBuffered(true);
-			menuBar.add(separator);
+			menuBar.add(new JSeparator());
 		//// End : Create separator to get a better look in the MenuBar		
 		
 		//// Begin : Create and add JButton "Schaltzeichen aufnehmen" to add a switching symbol to the "Schalt Editor"	
@@ -489,6 +487,8 @@ public class EditorGUI extends JFrame
 				if(go.isInside(e.getX(), e.getY()) != -1)
 				{
 					actObjectleft = go;
+						menuBar.add(go.setOptionsBar(), 1);
+						this.pack();
 					selectedGrabber = go.isInside(e.getX(), e.getY());
 				}
 			}
@@ -500,6 +500,8 @@ public class EditorGUI extends JFrame
 				if(go.isInside(e.getX(), e.getY()) != -1)
 				{
 					actObjectright = go;
+						menuBar.add(go.setOptionsBar(), 1);
+						this.pack();
 					selectedGrabber = go.isInside(e.getX(), e.getY());
 				}
 			}
