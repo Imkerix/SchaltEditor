@@ -63,12 +63,12 @@ public class FrmMain extends javax.swing.JFrame
 	//MainPanel
 	private JSplitPane jSplitPane1;
 
-	//Linke Seite der Splitpane
+	//Left side of the SplitPane
 	private JPanel jPanel1 = new JPanel();
 	private JScrollPane jScrollPane1 = new JScrollPane();
 	private JList<String> jList1 = new JList<String>();
 
-	//Rechte Seite
+	//Right side of the SplitPane
 	private JTabbedPane jTabbedPane2 = new JTabbedPane();
 	private JScrollPane jScrollPane2 = new JScrollPane();
 	private JScrollPane jScrollPane3 = new JScrollPane();
@@ -78,21 +78,21 @@ public class FrmMain extends javax.swing.JFrame
 	//MenuBar
 	private JMenuBar jMenuBar1;
 
-	//Men� "Tools"
+	//Menu "Tools"
 	private JMenu jMenu1;  
 	private JMenuItem jMenuItem1;
 	private JMenuItem jMenuItem2;
 
-	//Men� "Editor"
+	//Menu "Editor"
 	private JMenu jMenu2;
 	private JMenuItem jMenuItem3;
 
 
-	//Einstellungen
+	//Settings
 	private double zoomFactor = 1.1;
 	private boolean synchronizedMoving = false;
 
-	//Sonstige Attribute  
+	//Other attributes 
 	private ArrayList<ElectricObject> electricObjects= new ArrayList<ElectricObject>();  
 	private JMenuItem jMenuItem6;
 	private JMenuItem jMenuItem5;
@@ -101,7 +101,7 @@ public class FrmMain extends javax.swing.JFrame
 	private JMenu jMenu3;
 	private Point startMove;
 	private int zoomCount = 0;
-	private FrmOptions frmOptions = new FrmOptions(this);
+	private FrmOptions frmOptions = new FrmOptions(this, drawComponent1, drawComponent2);
 
 
 
@@ -205,7 +205,7 @@ public class FrmMain extends javax.swing.JFrame
 			{
 				jSplitPane1 = new JSplitPane();
 				getContentPane().add(jSplitPane1, BorderLayout.CENTER);
-				//Linke Seite der SplitPane
+				//Left side of the SplitPane
 				{  
 					BorderLayout jPanel1Layout = new BorderLayout();
 					jPanel1.setLayout(jPanel1Layout);
@@ -218,7 +218,7 @@ public class FrmMain extends javax.swing.JFrame
 					jSplitPane1.setDividerLocation(300);
 					jSplitPane1.setEnabled(false);
 				}
-				//Rechte Seite der SplitPane
+				//Right side of the SplitPane
 				{
 					jScrollPane2.setViewportView(drawComponent1);
 					jScrollPane3.setViewportView(drawComponent2);
@@ -226,9 +226,11 @@ public class FrmMain extends javax.swing.JFrame
 					jTabbedPane2.addTab("Stromlaufplan", jScrollPane3);
 					jSplitPane1.add(jTabbedPane2, JSplitPane.RIGHT);
 
+					
+					
 					//MOUSELISTENER
 
-					//Mouselistener erstellen
+					//create mouselisteners
 					MouseMotionAdapter mma = new MouseMotionAdapter() {
 						public void mouseDragged(MouseEvent evt) {
 							svgCanvasMouseDragged(evt);
@@ -244,7 +246,7 @@ public class FrmMain extends javax.swing.JFrame
 						}
 					};
 
-					//MouseListener hinzuf�gen
+					//add mouselisteners to components
 					drawComponent1.addMouseMotionListener(mma);
 					drawComponent2.addMouseMotionListener(mma);
 					drawComponent1.addMouseListener(ma);
@@ -253,7 +255,7 @@ public class FrmMain extends javax.swing.JFrame
 
 					//KEYBINDINGS
 
-					//Keybindings erstellen
+					//create keybindings
 					AbstractAction delete = new AbstractAction() {
 						public void actionPerformed(ActionEvent e) {
 							svgCanvasKeyDELETEPressed();
@@ -273,12 +275,12 @@ public class FrmMain extends javax.swing.JFrame
 					};
 
 
-					//Key Bindings hinzuf�gen
-					//Entf
+					//add keybindings
+					//Del
 					drawComponent1.getInputMap(JSVGComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "deleteAction");
 					drawComponent1.getActionMap().put("deleteAction", delete);
 
-					//
+					//+
 					drawComponent1.getInputMap(JSVGComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ADD, 0), "plusAction");
 					drawComponent1.getActionMap().put("plusAction", plus);
 
@@ -286,11 +288,11 @@ public class FrmMain extends javax.swing.JFrame
 					drawComponent1.getInputMap(JSVGComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, 0), "minusAction");
 					drawComponent1.getActionMap().put("minusAction", minus);
 
-					//Entf
+					//Del
 					drawComponent2.getInputMap(JSVGComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "deleteAction");
 					drawComponent2.getActionMap().put("deleteAction", delete);
 
-					//
+					//+
 					drawComponent2.getInputMap(JSVGComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ADD, 0), "plusAction");
 					drawComponent2.getActionMap().put("plusAction", plus);
 
@@ -305,16 +307,17 @@ public class FrmMain extends javax.swing.JFrame
 		}
 	}
 
-	//METHODEN
+	
+	//METHODS
 
-	//Erzeugt ElectricObjects aus den SVG-Dateien
+	//creates an electricObject out of the svg-files.
 	private void createElectricObjects()
 	{
 		//Die Files der beiden Ordner auflisten
-		File file = new File(System.getProperty("user.dir") + "/Wirkschaltplan");
+		File file = new File(System.getProperty("user.dir") + "/Schaltzeichen/Wirkschaltplaene");
 		File[] wirkstromFiles = file.listFiles();
 
-		file = new File(System.getProperty("user.dir") + "/Stromlaufplan");
+		file = new File(System.getProperty("user.dir") + "/Schaltzeichen/Stromlaufplaene");
 		File[] stromlaufFiles = file.listFiles();
 
 		if(stromlaufFiles != null)

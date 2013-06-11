@@ -24,6 +24,7 @@ public class DrawComponent extends JSVGComponent
 
   private boolean showGrid = false;
   private int gridInterval = 30;
+  private Color gridColor = new Color(210, 210, 210);
 
 
   /**
@@ -232,7 +233,7 @@ public class DrawComponent extends JSVGComponent
   public void drawGrid(Graphics g)
   {
     Graphics2D g2d = (Graphics2D) g;
-    g2d.setColor(new Color(210, 210, 210));
+    g2d.setColor(gridColor);
 
     for(int i = 1; i < (this.getWidth()/gridInterval); i++)
     {
@@ -261,6 +262,11 @@ public class DrawComponent extends JSVGComponent
   public void setGridInterval(int interval)
   {
     this.gridInterval = interval;
+  }
+  
+  public void setGridColor(Color c)
+  {
+	  gridColor = c;
   }
 
 
