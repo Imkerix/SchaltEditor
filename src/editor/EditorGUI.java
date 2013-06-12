@@ -57,13 +57,15 @@ public class EditorGUI extends JFrame
 		private ArrayList<GeometricObject> geomListright = new ArrayList<GeometricObject>();
 		private GeometricObject actObjectleft;
 		private GeometricObject actObjectright;
-		private JTabbedPane mytabbedpane;
+		private JTabbedPane mytabbedpane = new JTabbedPane();;
+		private JScrollPane scrollPaneleft = new JScrollPane();;
+		private JScrollPane scrollPaneright = new JScrollPane();;
 		private int selectedGrabber;
 		private String rootDir = "Schaltzeichen";
 		private SVGGen svgGenerator = new SVGGen();
 		private boolean wasSaved = true;
 		private String objectName;
-		private JMenuBar menuBar;
+		private JMenuBar menuBar = new JMenuBar();
 		private boolean isActive = false;
 	////end : Values needed in several Method that can't invoke each other nicely
 		
@@ -219,10 +221,12 @@ public class EditorGUI extends JFrame
 	    //// End : KeyListener for Canvas
 		
 		//// Begin : Create and init the JTabbedPane	 
-			mytabbedpane = new JTabbedPane();
-			mytabbedpane.setAutoscrolls(true);
-			mytabbedpane.addTab("Wirkschaltzeichen", canvasleft);
-			mytabbedpane.addTab("Stromlaufzeichen", canvasright);
+			
+			
+			scrollPaneleft.setViewportView(canvasleft);
+			scrollPaneright.setViewportView(canvasright);
+			mytabbedpane.addTab("Wirkschaltzeichen", scrollPaneleft);
+			mytabbedpane.addTab("Stromlaufzeichen", scrollPaneright);
 			splitPane.setRightComponent(mytabbedpane);
 		//// End : Create and init the JTabbedPane	
 		
@@ -240,10 +244,10 @@ public class EditorGUI extends JFrame
 			
 		//// Begin : Create and implement the JMenuBar 
 			
-			// subBegin : Create JMenuBar and add it to the EditorGUI
-				menuBar = new JMenuBar();
+			// subBegin : Init JMenuBar and add it to the EditorGUI
+				menuBar.setDoubleBuffered(true);
 				setJMenuBar(menuBar);
-			// subBegin : Create JMenuBar and add it to the EditorGUI
+			// subBegin : Init JMenuBar and add it to the EditorGUI
 			
 			// subBegin : Create JMenu and add it to the JMenuBar
 				JMenu mnDatei = new JMenu("Datei");
@@ -563,7 +567,7 @@ public class EditorGUI extends JFrame
 					{
 						menuBar.add(go.setOptionsBar(), 1);
 						isActive = true;
-						this.pack();
+						menuBar.validate();
 					}
 					
 					selectedGrabber = go.isInside(e.getX(), e.getY());
@@ -574,7 +578,7 @@ public class EditorGUI extends JFrame
 					{
 						menuBar.remove(1);
 						isActive = false;
-						this.pack();
+						menuBar.validate();
 					}
 				}
 			}
