@@ -32,7 +32,18 @@ public class Linie extends GeometricObject
 	public void draw(Graphics g)
 	{
 		Graphics2D g2d = (Graphics2D) g;
-		g2d.drawLine((int)x, (int)y, (int)(punkt2X), (int)(punkt2Y));
+		
+		if(line != null)
+		{
+			g2d.setStroke(line);
+			g2d.drawLine((int)x, (int)y, (int)(punkt2X), (int)(punkt2Y));
+			g2d.setStroke(new BasicStroke());
+		}
+		else
+		{
+			g2d.drawLine((int)x, (int)y, (int)(punkt2X), (int)(punkt2Y));
+		}
+		
 	}
 	
 	@Override

@@ -40,7 +40,7 @@ import javax.swing.JSeparator;
 /**
  * 
  * @author erik heinisch
- * @version 0.2 - 0.3
+ * @version 0.3 - 0.4
  */
 @SuppressWarnings("serial")
 public class EditorGUI extends JFrame
@@ -517,7 +517,7 @@ public class EditorGUI extends JFrame
 					{
 						menuBar.add(go.setOptionsBar(), 1);
 						isActive = true;
-						this.pack();
+						menuBar.validate();
 					}
 					
 					selectedGrabber = go.isInside(e.getX(), e.getY());
@@ -528,7 +528,7 @@ public class EditorGUI extends JFrame
 					{
 						menuBar.remove(1);
 						isActive = false;
-						this.pack();
+						menuBar.validate();
 					}
 				}
 			}

@@ -6,6 +6,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -20,6 +22,7 @@ public abstract class GeometricObject
 	double width;
 	double height;
 	ArrayList<Rectangle> rectList = new ArrayList<Rectangle>();
+	BasicStroke line = null;
 	
 	public abstract void draw(Graphics g);
 
@@ -177,12 +180,29 @@ public abstract class GeometricObject
 				g.drawRect((int)(x+width)-5, (int)(y+height)-5, 10, 10);
 					rectList.add(new Rectangle((int)(x+width)-5, (int)(y+height)-5, 10, 10));
 	}
-	public  JToolBar setOptionsBar()
+	public JToolBar setOptionsBar()
 	{
 		JToolBar optionsBar = new JToolBar();
-		JComboBox<String> dotted = new JComboBox<String>();
+		final JComboBox<String> dotted = new JComboBox<String>();
 		dotted.addItem("Line");
 		dotted.addItem("Dotted");
+		dotted.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				if("Line".equals(dotted.getSelectedItem()))
+				{
+					line = null;
+				}
+				if("Dotted".equals(dotted.getSelectedItem()))
+				{
+					line = new BasicStroke(1.0f, BasicStroke.CAP_BUTT,BasicStroke.JOIN_BEVEL,1.0f,new float[]{5.0f},0.0f);
+				}
+				
+			}
+		});
+		
 		optionsBar.add(dotted);
 		optionsBar.add(new JSeparator());
 		optionsBar.setFloatable(false);

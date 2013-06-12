@@ -1,5 +1,6 @@
 package shared;
 
+import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -17,7 +18,16 @@ public class Kreis extends GeometricObject
 	public void draw(Graphics g)
 	{
 		Graphics2D g2d = (Graphics2D) g;
-		g2d.drawOval((int) x, (int) y, (int) width, (int) height);
+		if(line != null)
+		{
+			g2d.setStroke(line);
+			g2d.drawOval((int)x, (int)y, (int)(width), (int)(height));
+			g2d.setStroke(new BasicStroke());
+		}
+		else
+		{
+			g2d.drawOval((int)x, (int)y, (int)(width), (int)(height));
+		}
 	}
 	
 	
