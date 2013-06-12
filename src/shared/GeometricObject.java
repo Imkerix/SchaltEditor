@@ -204,6 +204,7 @@ public abstract class GeometricObject
 		});
 		
 		optionsBar.add(dotted);
+	
 		optionsBar.add(new JSeparator());
 		optionsBar.setFloatable(false);
 		return optionsBar;

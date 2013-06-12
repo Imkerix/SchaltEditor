@@ -17,6 +17,8 @@ import org.apache.batik.swing.JSVGCanvas;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
 
@@ -36,6 +38,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JTabbedPane;
 import javax.swing.JButton;
 import javax.swing.JSeparator;
+import javax.swing.KeyStroke;
 
 /**
  * 
@@ -143,6 +146,77 @@ public class EditorGUI extends JFrame
 				}
 			 };
 		////End : Canvas creation
+			 
+		//// Begin : KeyListener for Canvas	 
+			 canvasleft.addKeyListener(new KeyListener() {
+				@Override
+				public void keyPressed(KeyEvent arg0) {
+					switch (arg0.getKeyCode())
+					{
+					case KeyEvent.VK_DELETE : 
+						if(actObjectleft != null)
+						{
+							geomListleft.remove(actObjectleft);
+							actObjectleft = null;
+							canvasleft.repaint();
+						}
+						break;
+					case KeyEvent.VK_PLUS : 
+						if(actObjectleft != null)
+						{
+							actObjectleft.zoom(2);
+							canvasleft.repaint();
+						}
+						break;
+					case KeyEvent.VK_MINUS :
+						if(actObjectleft != null)
+						{
+							actObjectleft.zoom(0.5);
+							canvasleft.repaint();
+						}
+						break;
+					}
+				}
+				@Override
+				public void keyReleased(KeyEvent arg0) {}
+				@Override
+				public void keyTyped(KeyEvent arg0) {}
+			});
+			 canvasright.addKeyListener(new KeyListener() {
+					@Override
+					public void keyPressed(KeyEvent arg0) {
+						switch (arg0.getKeyCode())
+						{
+						case KeyEvent.VK_DELETE : 
+							if(actObjectright != null)
+							{
+								geomListright.remove(actObjectright);
+								actObjectright = null;
+								canvasright.repaint();
+							}
+							break;
+						case KeyEvent.VK_PLUS : 
+							if(actObjectright != null)
+							{
+								actObjectright.zoom(2);
+								canvasright.repaint();
+							}
+							break;
+						case KeyEvent.VK_MINUS :
+							if(actObjectright != null)
+							{
+								actObjectright.zoom(0.5);
+								canvasright.repaint();
+							}
+							break;
+						}
+					}
+					@Override
+					public void keyReleased(KeyEvent arg0) {}
+					@Override
+					public void keyTyped(KeyEvent arg0) {}
+				});
+	    //// End : KeyListener for Canvas
 		
 		//// Begin : Create and init the JTabbedPane	 
 			mytabbedpane = new JTabbedPane();
