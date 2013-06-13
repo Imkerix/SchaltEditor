@@ -18,7 +18,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-
 import javax.swing.JScrollPane;
 
 import javax.swing.AbstractAction;
@@ -94,6 +93,9 @@ public class FrmMain extends javax.swing.JFrame
 
 	//Other attributes 
 	private ArrayList<ElectricObject> electricObjects= new ArrayList<ElectricObject>();  
+	private JMenuItem jMenuItem8;
+	private JMenuItem jMenuItem7;
+	private JMenu jMenu5;
 	private JMenuItem jMenuItem6;
 	private JMenuItem jMenuItem5;
 	private JMenu jMenu4;
@@ -102,6 +104,7 @@ public class FrmMain extends javax.swing.JFrame
 	private Point startMove;
 	private int zoomCount = 0;
 	private FrmOptions frmOptions = new FrmOptions(this, drawComponent1, drawComponent2);
+	private JFileChooser jfc = new JFileChooser();
 
 
 
@@ -115,7 +118,7 @@ public class FrmMain extends javax.swing.JFrame
 	private void initGUI() 
 	{
 		try {
-			setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+			setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 			this.setSize(1003, 532);
 			setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
 			{
@@ -128,7 +131,7 @@ public class FrmMain extends javax.swing.JFrame
 					{
 						jMenuItem6 = new JMenuItem();
 						jMenu4.add(jMenuItem6);
-						jMenuItem6.setText("ï¿½ffnen");
+						jMenuItem6.setText("Oeffnen");
 						jMenuItem6.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
 								jMenuItem6ActionPerformed(evt);
@@ -145,6 +148,39 @@ public class FrmMain extends javax.swing.JFrame
 							}
 						});
 					}
+					{
+						jMenu5 = new JMenu();
+						jMenu4.add(jMenu5);
+						jMenu5.setText("Exportieren...");
+						{
+							jMenuItem7 = new JMenuItem();
+							jMenu5.add(jMenuItem7);
+							jMenuItem7.setText("Aktuellen Schaltplan");
+							jMenuItem7.addActionListener(new ActionListener() {
+								public void actionPerformed(ActionEvent evt) {
+									try {
+										jMenuItem7ActionPerformed(evt);
+									} catch (IOException e) {
+										e.printStackTrace();
+									}
+								}
+							});
+						}
+						{
+							jMenuItem8 = new JMenuItem();
+							jMenu5.add(jMenuItem8);
+							jMenuItem8.setText("Alle Schaltplaene");
+							jMenuItem8.addActionListener(new ActionListener() {
+								public void actionPerformed(ActionEvent evt) {
+									try {
+										jMenuItem8ActionPerformed(evt);
+									} catch (IOException e) {
+										e.printStackTrace();
+									}
+								}
+							});
+						}
+					}
 				}
 				{
 					jMenu1 = new JMenu();
@@ -153,7 +189,7 @@ public class FrmMain extends javax.swing.JFrame
 					{
 						jMenuItem1 = new JMenuItem();
 						jMenu1.add(jMenuItem1);
-						jMenuItem1.setText("Zeichenflï¿½che vergrï¿½ï¿½ern");
+						jMenuItem1.setText("Zeichenflaeche vergroeßern");
 						jMenuItem1.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
 								jMenuItem1ActionPerformed(evt);
@@ -226,8 +262,8 @@ public class FrmMain extends javax.swing.JFrame
 					jTabbedPane2.addTab("Stromlaufplan", jScrollPane3);
 					jSplitPane1.add(jTabbedPane2, JSplitPane.RIGHT);
 
-					
-					
+
+
 					//MOUSELISTENER
 
 					//create mouselisteners
@@ -301,13 +337,38 @@ public class FrmMain extends javax.swing.JFrame
 					drawComponent2.getActionMap().put("minusAction", minus);
 				}
 			}
+			{
+				jfc.setAcceptAllFileFilterUsed(false);
+				jfc.addChoosableFileFilter(new FileFilter()
+				{
+					public boolean accept( File f ) 
+					{
+						return f.isDirectory() || f.getName().toLowerCase().endsWith(".svg");
+					}
+					public String getDescription() 
+					{
+						return "SVG-Dateien";
+					}          
+				});
+				jfc.addChoosableFileFilter(new FileFilter()
+				{
+					public boolean accept( File f ) 
+					{
+						return f.isDirectory() || f.getName().toLowerCase().endsWith(".jpg");
+					}
+					public String getDescription() 
+					{
+						return "JPG-Dateien";
+					}          
+				});
+			}
 			pack();      
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	
+
 	//METHODS
 
 	//creates an electricObject out of the svg-files.
@@ -520,7 +581,7 @@ public class FrmMain extends javax.swing.JFrame
 
 			if(file.exists())
 			{
-				result = JOptionPane.showOptionDialog(drawComponent1, "Datei ï¿½berschreiben?", null,
+				result = JOptionPane.showOptionDialog(drawComponent1, "Datei ueberschreiben?", null,
 						JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
 						null, null, null);
 
@@ -698,5 +759,80 @@ public class FrmMain extends javax.swing.JFrame
 		this.synchronizedMoving = b;
 	}
 
+	private void jMenuItem7ActionPerformed(ActionEvent evt) throws IOException 
+	{
+		export(true);
 
-} 
+	}
+	
+	/**
+	 * 
+	 * @param b: true bedeutet, dass nur der aktuelle Schaltplan exportiert wird. False bedeutet, dass beide Schaltpläne exportiert werden.
+	 * @throws IOException
+	 */
+	private void export(boolean b) throws IOException
+	{
+		int result = jfc.showSaveDialog(drawComponent1);
+
+		if(result == JFileChooser.APPROVE_OPTION)
+		{
+			File file = jfc.getSelectedFile();				
+			String datatype = "";
+			
+			if(jfc.getFileFilter().getDescription().equals("SVG-Dateien"))
+			{
+				datatype = ".svg";
+			}
+			else if(jfc.getFileFilter().getDescription().equals("JPG-Dateien"))
+			{
+				datatype = ".jpeg";
+			}
+
+			if(file.exists())
+			{
+				result = JOptionPane.showOptionDialog(drawComponent1, "Datei ueberschreiben?", null,
+						JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
+						null, null, null);
+
+				switch(result)
+				{
+				case 0:
+					if(b)
+					{
+					((DrawComponent) ((JScrollPane) jTabbedPane2.getSelectedComponent()).getViewport().getView()).export(file.getPath());
+					}
+					else
+					{
+						drawComponent1.export(file.getPath());
+						drawComponent2.export(file.getPath());
+					}
+				break;
+				case 1: jMenuItem7ActionPerformed(null);
+				break;
+				case 2: break;
+				}
+
+			}
+			else
+			{
+				if(b)
+				{
+					((DrawComponent) ((JScrollPane) jTabbedPane2.getSelectedComponent()).getViewport().getView()).export(file.getPath() + datatype);
+				}
+				else
+				{
+					drawComponent1.export(file.getPath() + "_Wirkschaltplan" + datatype);
+					drawComponent2.export(file.getPath() + "_Stromlaufplan" + datatype);
+				}
+			}
+
+		}
+		
+	}
+	
+	private void jMenuItem8ActionPerformed(ActionEvent evt) throws IOException 
+	{
+		export(false);
+	}
+
+}

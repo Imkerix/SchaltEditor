@@ -4,11 +4,23 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.util.ArrayList;
-
+import javax.imageio.ImageIO;
 import shared.Connector;
 
 
+import org.apache.batik.dom.GenericDOMImplementation;
+import org.apache.batik.svggen.SVGGraphics2D;
+import org.apache.batik.svggen.SVGGraphics2DIOException;
 import org.apache.batik.swing.svg.JSVGComponent;
 import org.apache.batik.swing.svg.SVGUserAgent;
 
@@ -47,25 +59,32 @@ public class DrawComponent extends JSVGComponent
 	 */
 	public void paintComponent(Graphics g)
 	{  
+		Graphics2D g2d = (Graphics2D) g;
+		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+				RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		g2d.setRenderingHint(RenderingHints.KEY_RENDERING,
+				RenderingHints.VALUE_RENDER_QUALITY);
+
+
 		if(showGrid)
 		{
-			drawGrid(g);
+			drawGrid(g2d);
 		}
-		
+
 		if(! drawObjects.isEmpty())
 		{
 			for(DrawObject dO : drawObjects)
 			{
-				dO.draw(g, showConnectors, actObject);
+				dO.draw(g2d, showConnectors, actObject);
 			}
 		}
-		
+
 		if(actObject != null)
 		{
-			actObject.drawOutline(g);
+			actObject.drawOutline(g2d);
 		}
-		
-		
+
+
 
 
 	}
@@ -280,5 +299,49 @@ public class DrawComponent extends JSVGComponent
 		this.showConnectors = b;
 	}
 
+	/**
+	 * 
+	 * @param file
+	 * @param datatype: 0 == SVG, 1 == JPEG
+	 * @throws IOException 
+	 */
+	public void export(String path) throws IOException
+	{
+		actObject = null;
+		if(path.endsWith(".svg"))
+		{
+			SVGGraphics2D g2d = new SVGGraphics2D(GenericDOMImplementation.getDOMImplementation().createDocument("http://www.w3.org/2000/svg", "svg", null)); 
+			paintComponent(g2d);
+			g2d.setSVGCanvasSize(this.getSize());
 
-} 
+			try 
+			{
+				Writer out = new OutputStreamWriter(new FileOutputStream(new File(path)), "UTF-8");
+				g2d.stream(out, true); //true means that svgGenerator  uses CSS
+				out.close();
+			}
+			catch (UnsupportedEncodingException | FileNotFoundException | SVGGraphics2DIOException e) 
+			{
+				e.printStackTrace();
+			}
+		}
+		else if(path.endsWith(".jpeg"))
+		{
+			BufferedImage bufferedImage = new BufferedImage(this.getWidth(),
+					this.getHeight(), BufferedImage.TYPE_INT_RGB);
+			Graphics2D g2d = bufferedImage.createGraphics();
+			g2d.setBackground(Color.white);
+			g2d.setColor(Color.white);
+			g2d.fillRect(0, 0, getWidth(), getHeight());
+			g2d.setColor(Color.black);
+			paintComponent(g2d);
+
+			try {
+				ImageIO.write(bufferedImage, "jpeg", new File(path));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+}
+
