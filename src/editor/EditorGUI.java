@@ -47,11 +47,11 @@ import javax.swing.JSeparator;
 @SuppressWarnings("serial")
 public class EditorGUI extends JFrame 
 {
-	//// Begin : Values needed in several Method that can't invoke each other nicely
+	//// Begin : Stuff needed in several Method that can't invoke each other nicely
 	private JList<String> list;
 	private Point startMove;
-	private JSVGCanvas canvasleft;
-	private JSVGCanvas canvasright;
+	private EditorCanvas canvasleft;
+	private EditorCanvas canvasright;
 	private ArrayList<GeometricObject> geomListleft = new ArrayList<GeometricObject>();
 	private ArrayList<GeometricObject> geomListright = new ArrayList<GeometricObject>();
 	private GeometricObject actObjectleft;
@@ -68,7 +68,7 @@ public class EditorGUI extends JFrame
 	private String objectName;
 	private JMenuBar menuBar;
 	private boolean isActive = false;
-	////end : Values needed in several Method that can't invoke each other nicely
+	//// End : Stuff needed in several Method that can't invoke each other nicely
 
 		
 	/**
@@ -371,7 +371,8 @@ public class EditorGUI extends JFrame
 		//// Begin : Create window adapter
 				this.addWindowListener(new WindowAdapter() {
 					// subBegin : React on closing window for the saving system
-			            public void windowClosing(WindowEvent e) {
+			            public void windowClosing(WindowEvent e) 
+			            {
 			            	if(wasSaved)
 							{
 								dispose();
