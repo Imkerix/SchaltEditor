@@ -14,12 +14,10 @@ import shared.Rechteck;
 import org.apache.batik.dom.GenericDOMImplementation;
 import org.apache.batik.svggen.SVGGraphics2D;
 import org.apache.batik.swing.JSVGCanvas;
-
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -47,7 +45,7 @@ import javax.swing.JSeparator;
  * @version 0.3 - 0.4
  */
 @SuppressWarnings("serial")
-public class EditorGUI extends JFrame
+public class EditorGUI extends JFrame 
 {
 	//// Begin : Values needed in several Method that can't invoke each other nicely
 	private JList<String> list;
@@ -71,6 +69,7 @@ public class EditorGUI extends JFrame
 	private JMenuBar menuBar;
 	private boolean isActive = false;
 	////end : Values needed in several Method that can't invoke each other nicely
+
 		
 	/**
 	 * Prepares and creates the graphical user interface for the usage to edit an existing switching symbol.<br>
@@ -135,7 +134,7 @@ public class EditorGUI extends JFrame
 							
 				// subBegin : Canvas creation
 						// subBegin : Left side
-							 canvasleft = new JSVGCanvas()
+							 canvasleft = new EditorCanvas()
 							 {
 								
 								public void paint(Graphics g) 
@@ -150,6 +149,7 @@ public class EditorGUI extends JFrame
 											actObjectleft.drawOutline(g);
 											actObjectleft.drawGrabbers(g);
 										}
+										drawGrid(g);
 									// subEnd : Update canvas to actual state
 								}
 							 };
@@ -161,7 +161,7 @@ public class EditorGUI extends JFrame
 								
 						// subBegin : Right side		
 								
-							 canvasright = new JSVGCanvas()
+							 canvasright = new EditorCanvas()
 							 {
 								@Override
 								public void paint(Graphics g) 
@@ -176,6 +176,7 @@ public class EditorGUI extends JFrame
 											actObjectright.drawOutline(g);
 											actObjectright.drawGrabbers(g);
 										}
+										drawGrid(g);
 									// subEnd : Update canvas to actual state
 								}
 							 };
@@ -203,7 +204,6 @@ public class EditorGUI extends JFrame
 										}
 										break;
 									case KeyEvent.VK_PLUS : 
-										    
 											actObjectleft.zoom(2); 
 											canvasleft.repaint();
 										break;
@@ -658,7 +658,5 @@ public class EditorGUI extends JFrame
 			repaint();		
 		}
 	}
-
-	
 	
 }
