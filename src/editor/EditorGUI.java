@@ -22,6 +22,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JList;
 import javax.swing.JSplitPane;
@@ -103,99 +104,8 @@ public class EditorGUI extends JFrame
 		//// End : Initialize
 		
 		//// Begin : Canvas	
-				//
-				// subBegin : Canvas creation
-						 canvasleft = new JSVGCanvas()
-						 {
-							
-							public void paint(Graphics g) 
-							{
-								// subBegin : Update canvas to actual state
-									for (GeometricObject go : geomListleft) 
-									{
-										go.draw(g);
-									}
-									if(actObjectleft!=null)
-									{
-										actObjectleft.drawOutline(g);
-										actObjectleft.drawGrabbers(g);
-									}
-								// subEnd : Update canvas to actual state
-							}
-						 };
-						 canvasright = new JSVGCanvas()
-					 {
-						@Override
-						public void paint(Graphics g) 
-						{
-							// subBegin : Update canvas to actual state
-								for (GeometricObject go : geomListright) 
-								{
-									go.draw(g);
-								}
-								if(actObjectright!=null)
-								{
-									actObjectright.drawOutline(g);
-									actObjectright.drawGrabbers(g);
-								}
-							// subEnd : Update canvas to actual state
-						}
-					 };
-				// subEnd : Canvas creation
-				//	 
-				// subBegin : KeyListener for Canvas	 
-						 canvasleft.addKeyListener(new KeyAdapter() {
-							@Override
-							public void keyPressed(KeyEvent arg0) {
-								switch (arg0.getKeyCode())
-								{
-								case KeyEvent.VK_DELETE : 
-									if(actObjectleft != null)
-									{
-										geomListleft.remove(actObjectleft);
-										actObjectleft = null;
-										canvasleft.repaint();
-									}
-									break;
-								case KeyEvent.VK_PLUS : 
-										actObjectleft.zoom(2); // Zomm in canvas
-										canvasleft.repaint();
-									break;
-								case KeyEvent.VK_MINUS :
-										actObjectleft.zoom(0.5);
-										canvasleft.repaint();
-									break;
-								}
-							}
-						});
-						 canvasright.addKeyListener(new KeyAdapter() {
-							@Override
-							public void keyPressed(KeyEvent arg0) {
-								switch (arg0.getKeyCode())
-								{
-								case KeyEvent.VK_DELETE : 
-									if(actObjectright != null)
-									{
-										geomListright.remove(actObjectright);
-										actObjectright = null;
-										canvasright.repaint();
-									}
-									break;
-								case KeyEvent.VK_PLUS : 
-										actObjectright.zoom(2);
-										canvasright.repaint();
-									break;
-								case KeyEvent.VK_MINUS :
-										actObjectright.zoom(0.5);
-										canvasright.repaint();
-									break;
-								}
-							}
-						});
-			    // subEnd : KeyListener for Canvas
-				//		 
+						 
 				// subBegin : MouseMotionAdapter for Canvas
-						
 						MouseMotionAdapter mma = new MouseMotionAdapter() 
 						{
 							@Override
@@ -204,17 +114,10 @@ public class EditorGUI extends JFrame
 								canvasMouseDragged(e);
 							}
 						};
-						
-						// subBegin : Add mouse adapters
-							canvasleft.addMouseMotionListener(mma);
-							canvasright.addMouseMotionListener(mma);
-						// subEnd : Add mouse adapters
-							
 				// subEnd : MouseMotionAdapter for Canvas	
-				//		
-				//
+						
+				
 				// subBegin : MouseAdapter for Canvas	
-							
 							MouseAdapter ma = new MouseAdapter() 
 						{
 							@Override
@@ -228,14 +131,115 @@ public class EditorGUI extends JFrame
 								canvasMouseReleased(e);
 							}
 						};
-						//
-						// subBegin : Add mouse adapters
-							canvasleft.addMouseListener(ma);
-							canvasright.addMouseListener(ma);
-						// subEnd : Add mouse adapters
-						//	
-				// subEnd : MouseAdapter for Canvas		
-				//			
+				// subEnd : MouseAdapter for Canvas	
+							
+				// subBegin : Canvas creation
+						// subBegin : Left side
+							 canvasleft = new JSVGCanvas()
+							 {
+								
+								public void paint(Graphics g) 
+								{
+									// subBegin : Update canvas to actual state
+										for (GeometricObject go : geomListleft) 
+										{
+											go.draw(g);
+										}
+										if(actObjectleft!=null)
+										{
+											actObjectleft.drawOutline(g);
+											actObjectleft.drawGrabbers(g);
+										}
+									// subEnd : Update canvas to actual state
+								}
+							 };
+							 // subBegin : Add mouse adapters
+							 	canvasleft.addMouseListener(ma);
+								canvasleft.addMouseMotionListener(mma);
+							 // subEnd : Add mouse adapters
+						// subEnd : Left side	
+								
+						// subBegin : Right side		
+								
+							 canvasright = new JSVGCanvas()
+							 {
+								@Override
+								public void paint(Graphics g) 
+								{
+									// subBegin : Update canvas to actual state
+										for (GeometricObject go : geomListright) 
+										{
+											go.draw(g);
+										}
+										if(actObjectright!=null)
+										{
+											actObjectright.drawOutline(g);
+											actObjectright.drawGrabbers(g);
+										}
+									// subEnd : Update canvas to actual state
+								}
+							 };
+							// subBegin : Add mouse adapters
+							 	canvasright.addMouseListener(ma);
+								canvasright.addMouseMotionListener(mma);
+							 // subEnd : Add mouse adapters
+						
+						// subBegin : Right side	
+								
+				// subEnd : Canvas creation
+						 
+				// subBegin : KeyListener for Canvas	 
+							 canvasleft.addKeyListener(new KeyAdapter() {
+								@Override
+								public void keyPressed(KeyEvent arg0) {
+									switch (arg0.getKeyCode())
+									{
+									case KeyEvent.VK_DELETE : 
+										if(actObjectleft != null)
+										{
+											geomListleft.remove(actObjectleft);
+											actObjectleft = null;
+											canvasleft.repaint();
+										}
+										break;
+									case KeyEvent.VK_PLUS : 
+										    
+											actObjectleft.zoom(2); 
+											canvasleft.repaint();
+										break;
+									case KeyEvent.VK_MINUS :
+											actObjectleft.zoom(0.5);
+											canvasleft.repaint();
+										break;
+									}
+								}
+							});
+							 canvasright.addKeyListener(new KeyAdapter() {
+								@Override
+								public void keyPressed(KeyEvent arg0) {
+									switch (arg0.getKeyCode())
+									{
+									case KeyEvent.VK_DELETE : 
+										if(actObjectright != null)
+										{
+											geomListright.remove(actObjectright);
+											actObjectright = null;
+											canvasright.repaint();
+										}
+										break;
+									case KeyEvent.VK_PLUS : 
+											actObjectright.zoom(2);
+											canvasright.repaint();
+										break;
+									case KeyEvent.VK_MINUS :
+											actObjectright.zoom(0.5);
+											canvasright.repaint();
+										break;
+									}
+								}
+							});
+			    // subEnd : KeyListener for Canvas
+							
 		//// End : Canvas	
 			
 		//// Begin : List with GeometricObjects	
@@ -284,80 +288,80 @@ public class EditorGUI extends JFrame
 				// subBegin : Create the JMenuItem "Neu"
 						JMenuItem mntmNeu = new JMenuItem("Neu");
 						mntmNeu.addActionListener(new ActionListener() 
-					{
-						// subsubBegin : React properly on MouseEvent in order to save before clearing the canvas 
-						public void actionPerformed(ActionEvent arg0) 
 						{
-							if(!wasSaved)
-							{
-								saveSwitchingObject();
-							}
-							actObjectleft = null;
-							actObjectright = null;
-							geomListleft.clear();
-							geomListright.clear();
-							canvasleft.repaint();
-							canvasright.repaint();
-						}
-						// subsubEnd : React properly on MouseEvent in order to save before clearing the canvas
-					});
+							// subsubBegin : React properly on MouseEvent in order to save before clearing the canvas 
+								public void actionPerformed(ActionEvent arg0) 
+								{
+									if(!wasSaved)
+									{
+										saveSwitchingObject();
+									}
+									actObjectleft = null;
+									actObjectright = null;
+									geomListleft.clear();
+									geomListright.clear();
+									canvasleft.repaint();
+									canvasright.repaint();
+								}
+							// subsubEnd : React properly on MouseEvent in order to save before clearing the canvas
+						});
+						mnDatei.add(mntmNeu);
 				// subEnd : Create the JMenuItem "Neu"
 				
 				// subBegin : Create the JMenuItem "Schließen"
 						JMenuItem mntmSpeichern = new JMenuItem("Speichern");
 						mntmSpeichern.addActionListener(new ActionListener() 
-					{
-						// subsubBegin : Call saving Handler method "saveSwitchingObject()" if unsaved
-						public void actionPerformed(ActionEvent arg0) 
 						{
-							if(!wasSaved)
-							{
-								saveSwitchingObject();
-							}
-						}
-						// subsubEnd : Call saving Handler method "saveSwitchingObject()" if unsaved
-					});
+							// subsubBegin : Call saving Handler method "saveSwitchingObject()" if unsaved
+								public void actionPerformed(ActionEvent arg0) 
+								{
+									if(!wasSaved)
+									{
+										saveSwitchingObject();
+									}
+								}
+							// subsubEnd : Call saving Handler method "saveSwitchingObject()" if unsaved
+						});
+						mnDatei.add(mntmSpeichern);
 				// subEnd : Create the JMenuItem "Speichern"
 					
 				// subBegin : Create the JMenuItem "Schließen"
 						JMenuItem mntmSchliessen = new JMenuItem("Schließen");
 						mntmSchliessen.addActionListener(new ActionListener() 
-					{
-						// subsubBegin : React properly on MouseEvent in order to close only a saved switching symbol 
-						public void actionPerformed(ActionEvent arg0) 
 						{
-							if(wasSaved)
-							{
-								dispose();
-							}
-							else if(!wasSaved)
-							{
-								closeUnsaved();
-							}
-						}
-						// subsubEnd : React properly on MouseEvent in order to close only a saved switching symbol
-					});
+							// subsubBegin : React properly on MouseEvent in order to close only a saved switching symbol 
+								public void actionPerformed(ActionEvent arg0) 
+								{
+									if(wasSaved)
+									{
+										dispose();
+									}
+									else if(!wasSaved)
+									{
+										closeUnsaved();
+									}
+								}
+							// subsubEnd : React properly on MouseEvent in order to close only a saved switching symbol
+						});
+						mnDatei.add(mntmSchliessen);
 				// subEnd : Create the JMenuItem "Schließen"
+						
+						menuBar.add(new JSeparator()); // For the look of the menubar
 					
 				// subBegin : Create and add JButton "Schaltzeichen aufnehmen" to add a switching symbol to the "Schalt Editor"	
 						JButton btnSchaltzeichenAufnehmen = new JButton("Schaltzeichen aufnehmen");
 						btnSchaltzeichenAufnehmen.addActionListener(new ActionListener() 
 						{
 							// subBegin : Call saving Handler method "saveSwitchingObject()" 
-							public void actionPerformed(ActionEvent arg0) 
-							{
-								saveSwitchingObject();
-							}
+								public void actionPerformed(ActionEvent arg0) 
+								{
+									saveSwitchingObject();
+								}
 							// subEnd : Call saving Handler method "saveSwitchingObject()"
 						});
+						menuBar.add(btnSchaltzeichenAufnehmen);
 				// subEnd : Create and add JButton "Schaltzeichen aufnehmen" to add a switching symbol to the "Schalt Editor"	
 					
-						mnDatei.add(mntmNeu);
-						mnDatei.add(mntmSpeichern);
-						mnDatei.add(mntmSchliessen);
-						menuBar.add(new JSeparator()); // For the look of the menubar
-						menuBar.add(btnSchaltzeichenAufnehmen);
-				
 		//// End : Create and implement JMenuBar
 		
 		
@@ -367,7 +371,7 @@ public class EditorGUI extends JFrame
 		//// Begin : Create window adapter
 				this.addWindowListener(new WindowAdapter() {
 					// subBegin : React on closing window for the saving system
-			            public void windowClosing(java.awt.event.WindowEvent e) {
+			            public void windowClosing(WindowEvent e) {
 			            	if(wasSaved)
 							{
 								dispose();
@@ -413,9 +417,10 @@ public class EditorGUI extends JFrame
 								
 						// subEnd : Right side tabbed pane		
 						
+						splitPane.setRightComponent(mytabbedpane);
+						
 				// subEnd : Right side
 				
-				splitPane.setRightComponent(mytabbedpane);
 				splitPane.setDividerSize(5);
 				this.getContentPane().add(splitPane, BorderLayout.CENTER);
 
@@ -487,8 +492,6 @@ public class EditorGUI extends JFrame
 			{
 				actObjectleft = null;  
 				actObjectright = null;
-				
-				
 				
 				if(mytabbedpane.getSelectedIndex()==0)
 				{
