@@ -7,6 +7,13 @@ import java.io.Serializable;
 
 public class Kreis extends GeometricObject implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3014423749338160039L;
+
+
+
 	public Kreis(double x, double y, double width, double height)
 	{
 		this.x = x;

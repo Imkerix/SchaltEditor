@@ -6,13 +6,18 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import javax.swing.JComboBox;
 import javax.swing.JToolBar;
 
-public abstract class GeometricObject 
+public abstract class GeometricObject implements Serializable
 {	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6657697299399445413L;
 	double x;
 	double y;
 	double width;

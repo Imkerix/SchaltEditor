@@ -10,6 +10,10 @@ import mainFrame.DrawObject;
 
 public class Connector extends GeometricObject implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8079836887320992062L;
 	private Connector connectedTo = null;
 	private boolean isKlicked = false;
 	private static double width = 8;

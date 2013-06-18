@@ -10,6 +10,10 @@ import java.io.Serializable;
 
 public class Linie extends GeometricObject implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4535005784268489996L;
 	double punkt2X;
 	double punkt2Y;
 	double dx;

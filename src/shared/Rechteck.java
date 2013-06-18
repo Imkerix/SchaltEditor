@@ -7,6 +7,11 @@ import java.io.Serializable;
 
 public class Rechteck extends GeometricObject implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2629425128400755354L;
+
 	public Rechteck(double x, double y, double width, double height)
 	{
 		this.x = x;
