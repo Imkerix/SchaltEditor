@@ -13,7 +13,6 @@ import shared.Rechteck;
 
 import org.apache.batik.dom.GenericDOMImplementation;
 import org.apache.batik.svggen.SVGGraphics2D;
-import org.apache.batik.swing.JSVGCanvas;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
@@ -29,6 +28,7 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -69,9 +69,6 @@ public class EditorGUI extends JFrame
 	private JMenuBar menuBar;
 	private boolean isActive = false;
 	//// End : Stuff needed in several Method that can't invoke each other nicely
-
-		
-	
 		
 	/**
 	 * Contains the implementation of the graphical user interface.
@@ -190,8 +187,11 @@ public class EditorGUI extends JFrame
 										}
 										break;
 									case KeyEvent.VK_PLUS : 
-											actObjectleft.zoom(2); 
-											canvasleft.repaint();
+										for(GeometricObject tempLeft : geomListleft)
+										{
+											tempLeft.zoom(2); 
+										}
+										canvasleft.repaint();
 										break;
 									case KeyEvent.VK_MINUS :
 											actObjectleft.zoom(0.5);
