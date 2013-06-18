@@ -71,21 +71,7 @@ public class EditorGUI extends JFrame
 	//// End : Stuff needed in several Method that can't invoke each other nicely
 
 		
-	/**
-	 * Prepares and creates the graphical user interface for the usage to edit an existing switching symbol.<br>
-	 * @param p_objectName the name of the switching object to edit.
-	 * @param p_ArrayListWirkSchaltPlan the {@link ArrayList} that contains the {@link GeometricObject}&lsquo;s for the WirkSchaltPlan.
-	 * @param p_ArrayListStromFlussPlan the {@link ArrayList} that contains the {@link GeometricObject}&lsquo;s for the StromFlussPlan.
-	 */	
-	public EditorGUI(String p_objectName, ArrayList<GeometricObject> p_ArrayListWirkSchaltPlan, ArrayList<GeometricObject> p_ArrayListStromFlussPlan)
-	{
-		this();
-		objectName = p_objectName;
-		geomListleft = p_ArrayListWirkSchaltPlan;
-		geomListright = p_ArrayListStromFlussPlan;
-		canvasleft.repaint();
-		canvasright.repaint();
-	}
+	
 		
 	/**
 	 * Contains the implementation of the graphical user interface.
@@ -658,6 +644,21 @@ public class EditorGUI extends JFrame
 			wasSaved = false;
 			repaint();		
 		}
+	}
+	
+	/**
+	 * Prepares the graphical user interface for the usage to edit an existing switching symbol.<br>
+	 * @param p_objectName the name of the switching object to edit.
+	 * @param p_ArrayListWirkSchaltPlan the {@link ArrayList} that contains the {@link GeometricObject}&lsquo;s for the WirkSchaltPlan.
+	 * @param p_ArrayListStromFlussPlan the {@link ArrayList} that contains the {@link GeometricObject}&lsquo;s for the StromFlussPlan.
+	 */	
+	public void setEditMode(String p_objectName, ArrayList<GeometricObject> p_ArrayListWirkSchaltPlan, ArrayList<GeometricObject> p_ArrayListStromFlussPlan)
+	{
+		objectName = p_objectName;
+		geomListleft = p_ArrayListWirkSchaltPlan;
+		geomListright = p_ArrayListStromFlussPlan;
+		canvasleft.repaint();
+		canvasright.repaint();
 	}
 	
 }
