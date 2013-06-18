@@ -11,15 +11,14 @@ public class Connector extends GeometricObject
 {
 	private Connector connectedTo = null;
 	private boolean isKlicked = false;
-	private static double diameter = 8;
+	private static double width = 8;
+	private static double height = 8;
 
 
 	public Connector(double x, double y)
 	{
 		this.x = x;
 		this.y = y;
-		this.width = diameter;
-		this.height = diameter;
 	}	
 
 	public void draw(Graphics g, boolean b, DrawObject d) 
@@ -27,12 +26,12 @@ public class Connector extends GeometricObject
 		Graphics2D g2d = (Graphics2D) g;
 		if(b || (!b && (d != null)))
 		{
-			g2d.drawOval((int) x, (int) y, (int) diameter, (int) diameter);
+			g2d.drawOval((int) x, (int) y, (int) width, (int) height);
 			if(isKlicked || connectedTo != null)
 			{
-				g2d.fillOval((int) x, (int) y, (int) diameter, (int) diameter);
+				g2d.fillOval((int) x, (int) y, (int) width, (int) height);
 			}
-			
+
 		}
 
 		if(connectedTo != null)
@@ -96,28 +95,29 @@ public class Connector extends GeometricObject
 	public void expand(int grabber, Point endMove, int canvasWidth, int canvasHeight) {
 
 	}
-	
-	public static void setDiameter(double pdiameter)
+
+	public static void setDiameter(double diameter)
 	{
-		diameter = pdiameter;
+		height = diameter;
+		width = diameter;
 	}
-	
+
 	public static double getDiameter()
 	{
-		return diameter;
+		return height;
 	}
-	
+
 	@Override
 	public int isInside(int p_x, int p_y)
 	{
 		for (Rectangle r : rectList) 
 		{
-			if((r.getX()<p_x && p_x<(r.getX()+diameter)) && (r.getY()<p_y && p_y<(r.getY()+diameter))) 
+			if((r.getX()<p_x && p_x<(r.getX()+width)) && (r.getY()<p_y && p_y<(r.getY()+height))) 
 			{
 				return rectList.indexOf(r);		
 			}
 		}
-		if((getX()<p_x && p_x<(getX()+diameter)) && (getY()<p_y && p_y<(getY()+diameter)))
+		if((getX()<p_x && p_x<(getX()+width)) && (getY()<p_y && p_y<(getY()+height)))
 		{
 			return 10; //is in canvas
 		}
@@ -125,9 +125,17 @@ public class Connector extends GeometricObject
 		{
 			return -1; //not inside of anything
 		}
-		
+
 	}
 	
+	public static void staticZoom(double zoomFactor)
+	{
+		width = (width*zoomFactor);
+		height = (height*zoomFactor);
+	}
+
+
+
 
 }
 

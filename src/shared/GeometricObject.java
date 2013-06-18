@@ -136,7 +136,7 @@ public abstract class GeometricObject
 		    x = (x*zoom);
 		    y = (y*zoom);
 		    width = (width*zoom);
-		    height = (height*zoom);   
+		    height = (height*zoom);
 	}
 	
 	

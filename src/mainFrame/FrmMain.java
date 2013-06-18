@@ -679,6 +679,7 @@ public class FrmMain extends javax.swing.JFrame
 		zoomCount++;
 		drawComponent1.zoom(zoomFactor);
 		drawComponent2.zoom(zoomFactor);
+		Connector.staticZoom(zoomFactor);
 		zoomDrawComponent(zoomFactor);
 		repaint();
 	}
@@ -692,6 +693,7 @@ public class FrmMain extends javax.swing.JFrame
 		zoomCount--;
 		drawComponent1.zoom(1/zoomFactor);
 		drawComponent2.zoom(1/zoomFactor);
+		Connector.staticZoom(1/zoomFactor);
 		zoomDrawComponent(1/zoomFactor);
 		repaint();
 	}
