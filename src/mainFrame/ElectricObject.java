@@ -132,7 +132,7 @@ public class ElectricObject
         }
         if(width == 8 && height == 8)
         {
-          drawObject.addConnector(new Connector(x, y, width, height));
+          drawObject.addConnector(new Connector(x, y));
         }
         else
         {

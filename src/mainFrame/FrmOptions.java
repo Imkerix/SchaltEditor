@@ -19,6 +19,8 @@ import javax.swing.SwingConstants;
 
 import javax.swing.WindowConstants;
 
+import shared.Connector;
+
 
 /**
  * This code was edited or generated using CloudGarden's Jigloo
@@ -38,6 +40,9 @@ public class FrmOptions extends javax.swing.JFrame
 	private JTextField jTextField1;
 	private JButton jButton1;
 	private JCheckBox jCheckBox2;
+	private JLabel jLabel8;
+	private JTextField jTextField3;
+	private JLabel jLabel7;
 	private JCheckBox jCheckBox3;
 	private JButton jButton6;
 	private JButton jButton5;
@@ -165,6 +170,24 @@ public class FrmOptions extends javax.swing.JFrame
 					jPanel1.add(jCheckBox3);
 					jCheckBox3.setText("Konnektoren verstecken");
 					jCheckBox3.setBounds(22, 232, 183, 20);
+				}
+				{
+					jLabel7 = new JLabel();
+					jPanel1.add(jLabel7);
+					jLabel7.setText("Konnektoren-Durchmesser:");
+					jLabel7.setBounds(22, 267, 169, 16);
+				}
+				{
+					jTextField3 = new JTextField();
+					jTextField3.setText(Double.toString(Connector.getDiameter()));
+					jPanel1.add(jTextField3);
+					jTextField3.setBounds(183, 264, 30, 23);
+				}
+				{
+					jLabel8 = new JLabel();
+					jPanel1.add(jLabel8);
+					jLabel8.setText("Pixel");
+					jLabel8.setBounds(213, 267, 52, 16);
 				}
 			}
 			jPanel2 = new JPanel();
@@ -297,6 +320,7 @@ public class FrmOptions extends javax.swing.JFrame
 		{
 			frmMain.setZoomFactor(Double.parseDouble(jTextField1.getText()));    
 			frmMain.setGridInterval(Integer.parseInt(jTextField2.getText()));
+			Connector.setDiameter(Integer.parseInt(jTextField3.getText()));
 		}
 		catch(NumberFormatException nfe)
 		{

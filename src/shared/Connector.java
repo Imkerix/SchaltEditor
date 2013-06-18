@@ -3,6 +3,7 @@ package shared;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 
 import mainFrame.DrawObject;
 
@@ -10,14 +11,15 @@ public class Connector extends GeometricObject
 {
 	private Connector connectedTo = null;
 	private boolean isKlicked = false;
+	private static double diameter = 8;
 
 
-	public Connector(double x, double y, double width, double height)
+	public Connector(double x, double y)
 	{
 		this.x = x;
 		this.y = y;
-		this.width = width;
-		this.height = height;
+		this.width = diameter;
+		this.height = diameter;
 	}	
 
 	public void draw(Graphics g, boolean b, DrawObject d) 
@@ -25,10 +27,10 @@ public class Connector extends GeometricObject
 		Graphics2D g2d = (Graphics2D) g;
 		if(b || (!b && (d != null)))
 		{
-			g2d.drawOval((int) x, (int) y, (int) width, (int) height);
+			g2d.drawOval((int) x, (int) y, (int) diameter, (int) diameter);
 			if(isKlicked || connectedTo != null)
 			{
-				g2d.fillOval((int) x, (int) y, (int) width, (int) height);
+				g2d.fillOval((int) x, (int) y, (int) diameter, (int) diameter);
 			}
 			
 		}
@@ -92,9 +94,40 @@ public class Connector extends GeometricObject
 
 	@Override
 	public void expand(int grabber, Point endMove, int canvasWidth, int canvasHeight) {
-		// TODO Automatisch generierter Methodenstub
 
 	}
+	
+	public static void setDiameter(double pdiameter)
+	{
+		diameter = pdiameter;
+	}
+	
+	public static double getDiameter()
+	{
+		return diameter;
+	}
+	
+	@Override
+	public int isInside(int p_x, int p_y)
+	{
+		for (Rectangle r : rectList) 
+		{
+			if((r.getX()<p_x && p_x<(r.getX()+diameter)) && (r.getY()<p_y && p_y<(r.getY()+diameter))) 
+			{
+				return rectList.indexOf(r);		
+			}
+		}
+		if((getX()<p_x && p_x<(getX()+diameter)) && (getY()<p_y && p_y<(getY()+diameter)))
+		{
+			return 10; //is in canvas
+		}
+		else
+		{
+			return -1; //not inside of anything
+		}
+		
+	}
+	
 
 }
 

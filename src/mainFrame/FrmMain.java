@@ -37,6 +37,8 @@ import javax.swing.filechooser.FileFilter;
 
 import org.apache.batik.swing.svg.JSVGComponent;
 
+import shared.Connector;
+
 import editor.EditorGUI;
 
 /**
@@ -111,6 +113,7 @@ public class FrmMain extends javax.swing.JFrame
 	public FrmMain() {
 		super();
 		initGUI();
+		Connector.setDiameter(8);
 		createElectricObjects();
 		updateListItems();
 	}
@@ -834,5 +837,6 @@ public class FrmMain extends javax.swing.JFrame
 	{
 		export(false);
 	}
+	
 
 }

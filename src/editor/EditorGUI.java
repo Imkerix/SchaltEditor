@@ -410,7 +410,7 @@ public class EditorGUI extends JFrame
 					break;
 				case "Linie" : temp.add(new Linie(0, 0, 50, 50));
 					break;
-				case "Connector" : temp.add(new Connector(0, 0, 8, 8));
+				case "Connector" : temp.add(new Connector(0, 0));
 					break;
 			}
 			wasSaved = false;
