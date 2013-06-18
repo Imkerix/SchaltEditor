@@ -95,6 +95,7 @@ public class FrmMain extends javax.swing.JFrame
 
 	//Other attributes 
 	private ArrayList<ElectricObject> electricObjects= new ArrayList<ElectricObject>();  
+	private JMenuItem jMenuItem9;
 	private JMenuItem jMenuItem8;
 	private JMenuItem jMenuItem7;
 	private JMenu jMenu5;
@@ -107,6 +108,7 @@ public class FrmMain extends javax.swing.JFrame
 	private int zoomCount = 0;
 	private FrmOptions frmOptions = new FrmOptions(this, drawComponent1, drawComponent2);
 	private JFileChooser jfc = new JFileChooser();
+	private String path = null;
 
 
 
@@ -138,6 +140,16 @@ public class FrmMain extends javax.swing.JFrame
 						jMenuItem6.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
 								jMenuItem6ActionPerformed(evt);
+							}
+						});
+					}
+					{
+						jMenuItem9 = new JMenuItem();
+						jMenu4.add(jMenuItem9);
+						jMenuItem9.setText("Speichern");
+						jMenuItem9.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent evt) {
+								jMenuItem9ActionPerformed(evt);
 							}
 						});
 					}
@@ -580,7 +592,7 @@ public class FrmMain extends javax.swing.JFrame
 		if(result == JFileChooser.APPROVE_OPTION)
 		{
 			File file = fc.getSelectedFile();
-			String path = file.getPath();
+			path = file.getPath();
 
 			if(file.exists())
 			{
@@ -601,6 +613,7 @@ public class FrmMain extends javax.swing.JFrame
 			else
 			{
 				saveAs((path + ".ser"));
+				path = path + ".ser";
 			}
 		}
 	}
@@ -631,6 +644,7 @@ public class FrmMain extends javax.swing.JFrame
 		if(result == JFileChooser.APPROVE_OPTION)
 		{
 			File file = fc.getSelectedFile();
+			path = file.getPath();
 			InputStream fis = null;
 			ObjectInputStream oip = null;
 
@@ -839,5 +853,16 @@ public class FrmMain extends javax.swing.JFrame
 		export(false);
 	}
 	
+	private void jMenuItem9ActionPerformed(ActionEvent evt) 
+	{
+		if(path == null)
+		{
+			jMenuItem5ActionPerformed(evt);
+		}
+		else
+		{
+			saveAs(path);
+		}
+	}
 
 }
