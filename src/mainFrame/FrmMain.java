@@ -580,7 +580,7 @@ public class FrmMain extends javax.swing.JFrame
 		if(result == JFileChooser.APPROVE_OPTION)
 		{
 			File file = fc.getSelectedFile();
-			String parentpath = file.getParentFile().getAbsolutePath() + "/";
+			String path = file.getPath();
 
 			if(file.exists())
 			{
@@ -590,9 +590,9 @@ public class FrmMain extends javax.swing.JFrame
 
 				switch(result)
 				{
-				case 0: saveAs((parentpath + file.getName() + ".ser"));
+				case 0: saveAs((path));
 				break;
-				case 1: saveAs((parentpath + file.getName() + "2.ser"));
+				case 1: jMenuItem5ActionPerformed(evt);
 				break;
 				case 2: break;
 				}
@@ -600,8 +600,7 @@ public class FrmMain extends javax.swing.JFrame
 			}
 			else
 			{
-				System.out.println(parentpath + file.getName() +  ".ser");
-				saveAs((parentpath + file.getName()  + ".ser"));
+				saveAs((path + ".ser"));
 			}
 		}
 	}
