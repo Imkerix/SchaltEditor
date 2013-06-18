@@ -352,6 +352,8 @@ public class FrmMain extends javax.swing.JFrame
 					drawComponent2.getActionMap().put("minusAction", minus);
 				}
 			}
+			
+			//FileChooser Filters
 			{
 				jfc.setAcceptAllFileFilterUsed(false);
 				jfc.addChoosableFileFilter(new FileFilter()
@@ -411,7 +413,7 @@ public class FrmMain extends javax.swing.JFrame
 		}
 	}
 
-	//Fï¿½llt die Liste mit den Objekten aus der ArrayList<ElectricObject>
+	//Fuellt die Liste mit den Objekten aus der ArrayList<ElectricObject>
 	public void updateListItems()
 	{
 		String[] filenames = new String[electricObjects.size()];
@@ -436,9 +438,107 @@ public class FrmMain extends javax.swing.JFrame
 		drawComponent1.repaint();
 		drawComponent2.repaint();
 	}
+	
+	/**
+	 * Vergroessert oder verkleinert die Zeichenflaeche um einen Zoom-Faktor.
+	 * @param zoom
+	 */
+	private void zoomDrawComponent(double zoom)
+	{
+		Dimension canvasSize = drawComponent1.getSize();
+		int width = canvasSize.width;
+		int height = canvasSize.height;
+
+		drawComponent1.setPreferredSize(new Dimension((int) (width*zoom), (int) (height*zoom)));
+		drawComponent1.setSize((int) (width*zoom), (int) (height*zoom));
+		drawComponent2.setPreferredSize(new Dimension((int) (width*zoom), (int) (height*zoom)));
+		drawComponent2.setSize((int) (width*zoom), (int) (height*zoom));
+	}
+
+	public void saveAs(String filename)
+	{
+		OutputStream fos;
+		ObjectOutputStream oos = null;
+		try
+		{
+			fos = new FileOutputStream(filename);
+			oos = new ObjectOutputStream(fos);
+			oos.writeObject(drawComponent1.getObjectList());
+			oos.writeObject(drawComponent2.getObjectList());
+		}
+		catch (IOException e) 
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 
+	 * @param b: true bedeutet, dass nur der aktuelle Schaltplan exportiert wird. False bedeutet, dass beide Schaltpläne exportiert werden.
+	 * @throws IOException
+	 */
+	private void export(boolean b) throws IOException
+	{
+		int result = jfc.showSaveDialog(drawComponent1);
+
+		if(result == JFileChooser.APPROVE_OPTION)
+		{
+			File file = jfc.getSelectedFile();				
+			String datatype = "";
+			
+			if(jfc.getFileFilter().getDescription().equals("SVG-Dateien"))
+			{
+				datatype = ".svg";
+			}
+			else if(jfc.getFileFilter().getDescription().equals("JPG-Dateien"))
+			{
+				datatype = ".jpeg";
+			}
+
+			if(file.exists())
+			{
+				result = JOptionPane.showOptionDialog(drawComponent1, "Datei ueberschreiben?", null,
+						JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
+						null, null, null);
+
+				switch(result)
+				{
+				case 0:
+					if(b)
+					{
+					((DrawComponent) ((JScrollPane) jTabbedPane2.getSelectedComponent()).getViewport().getView()).export(file.getPath());
+					}
+					else
+					{
+						drawComponent1.export(file.getPath());
+						drawComponent2.export(file.getPath());
+					}
+				break;
+				case 1: jMenuItem7ActionPerformed(null);
+				break;
+				case 2: break;
+				}
+
+			}
+			else
+			{
+				if(b)
+				{
+					((DrawComponent) ((JScrollPane) jTabbedPane2.getSelectedComponent()).getViewport().getView()).export(file.getPath() + datatype);
+				}
+				else
+				{
+					drawComponent1.export(file.getPath() + "_Wirkschaltplan" + datatype);
+					drawComponent2.export(file.getPath() + "_Stromlaufplan" + datatype);
+				}
+			}
+
+		}
+		
+	}
 
 
-	//EVENTS  
+	//MOUSE-EVENTS  
 
 	/**
 	 * MouseClickedListener der Liste
@@ -495,6 +595,7 @@ public class FrmMain extends javax.swing.JFrame
 			drawComponent2.setActObject(objectIndex);
 		}
 	}
+	
 
 	/**
 	 * MousePressedListener: Beim Drï¿½cken der Maus wird der gedrï¿½ckte Punkt gespeichert. Dient zum Verschieben des Objektes.
@@ -515,10 +616,51 @@ public class FrmMain extends javax.swing.JFrame
 		drawComponent2.move(startMove, evt.getPoint());
 		startMove = evt.getPoint();
 	}
+	
+	//KEY-EVENTS
+	
+	/**
+	 * Wenn die Taste "Entfernen" gedrï¿½ckt wird, wird die delete-Methode der beiden DrawComponents aufgerufen.
+	 */
+	private void svgCanvasKeyDELETEPressed()
+	{
+		drawComponent1.delete();
+		drawComponent2.delete();
+	}
 
 	/**
-	 * Menï¿½ Tools, Menï¿½punkt "Zeichenflï¿½che vergrï¿½ï¿½ern": Dazu wird zunï¿½chst die aktuelle grï¿½ï¿½e des eines DrawComponents ausgelesen, da diese, je nach Bildschirmgrï¿½ï¿½e
-	 * variieren kann. Dann wird die selbe Grï¿½ï¿½e  100 Pixel als neue grï¿½ï¿½e gesetzt. Die Grï¿½ï¿½e wird fï¿½r beide DrawComponents gleichzeitig erhï¿½ht.
+	 * Wenn die Taste "+" gedrï¿½ckt wird zunï¿½chst der Zoom-Count erhï¿½ht, anschlieï¿½end die zoom-Methode der beiden DrawComponents aufgerufen und
+	 * zu letzt, die Zeichenflï¿½che um den ZoomFaktor vergrï¿½ï¿½ert.
+	 */
+	private void svgCanvasKeyPLUSPressed()
+	{
+		zoomCount++;
+		drawComponent1.zoom(zoomFactor);
+		drawComponent2.zoom(zoomFactor);
+		Connector.staticZoom(zoomFactor);
+		zoomDrawComponent(zoomFactor);
+		repaint();
+	}
+
+	/**
+	 * Wenn die Taste "-" gedrï¿½ckt wird zunï¿½chst der Zoom-Count verringert, anschlieï¿½end die zoom-Methode der beiden DrawComponents aufgerufen und
+	 * zu letzt, die Zeichenflï¿½che um den ZoomFaktor verkleinert.
+	 */
+	private void svgCanvasKeyMINUSPressed()
+	{
+		zoomCount--;
+		drawComponent1.zoom(1/zoomFactor);
+		drawComponent2.zoom(1/zoomFactor);
+		Connector.staticZoom(1/zoomFactor);
+		zoomDrawComponent(1/zoomFactor);
+		repaint();
+	}
+	
+	//Menu-Listener
+
+	/**
+	 * Menue Tools, Menuepunkt "Zeichenflaeche vergroessern": Dazu wird zunï¿½chst die aktuelle grï¿½ï¿½e des eines DrawComponents ausgelesen, da diese, je nach Bildschirmgrï¿½ï¿½e
+	 * variieren kann. Dann wird die selbe Groesse  100 Pixel als neue Groesse gesetzt. Die Groessee wird fuer beide DrawComponents gleichzeitig erhoeht.
 	 * @param evt
 	 */
 	private void jMenuItem1ActionPerformed(ActionEvent evt) 
@@ -673,77 +815,44 @@ public class FrmMain extends javax.swing.JFrame
 
 	}
 
-
 	/**
-	 * Wenn die Taste "Entfernen" gedrï¿½ckt wird, wird die delete-Methode der beiden DrawComponents aufgerufen.
+	 * Datei --> Exportieren --> Aktuellen Schaltplan
+	 * Ruft die Export-Methode mit Parameter "True" auf, da nur der aktuelle Schaltplan exportiert werden soll.
+	 * @param evt
+	 * @throws IOException
 	 */
-	private void svgCanvasKeyDELETEPressed()
+	private void jMenuItem7ActionPerformed(ActionEvent evt) throws IOException 
 	{
-		drawComponent1.delete();
-		drawComponent2.delete();
-	}
+		export(true);
 
+	}
+	
 	/**
-	 * Wenn die Taste "+" gedrï¿½ckt wird zunï¿½chst der Zoom-Count erhï¿½ht, anschlieï¿½end die zoom-Methode der beiden DrawComponents aufgerufen und
-	 * zu letzt, die Zeichenflï¿½che um den ZoomFaktor vergrï¿½ï¿½ert.
+	 * Datei --> Exportieren --> Alle Schaltplaene
+	 * Ruft die Export-Methode mit Parameter "False" auf, da beide Schaltplaene exportiert werden sollen.
+	 * @param evt
+	 * @throws IOException
 	 */
-	private void svgCanvasKeyPLUSPressed()
+	private void jMenuItem8ActionPerformed(ActionEvent evt) throws IOException 
 	{
-		zoomCount++;
-		drawComponent1.zoom(zoomFactor);
-		drawComponent2.zoom(zoomFactor);
-		Connector.staticZoom(zoomFactor);
-		zoomDrawComponent(zoomFactor);
-		repaint();
+		export(false);
 	}
-
-	/**
-	 * Wenn die Taste "-" gedrï¿½ckt wird zunï¿½chst der Zoom-Count verringert, anschlieï¿½end die zoom-Methode der beiden DrawComponents aufgerufen und
-	 * zu letzt, die Zeichenflï¿½che um den ZoomFaktor verkleinert.
-	 */
-	private void svgCanvasKeyMINUSPressed()
+	
+	private void jMenuItem9ActionPerformed(ActionEvent evt) 
 	{
-		zoomCount--;
-		drawComponent1.zoom(1/zoomFactor);
-		drawComponent2.zoom(1/zoomFactor);
-		Connector.staticZoom(1/zoomFactor);
-		zoomDrawComponent(1/zoomFactor);
-		repaint();
-	}
-
-	/**
-	 * Vergrï¿½ï¿½ert oder Verkleinert die Zeichenflï¿½che um einen Zoom-Faktor.
-	 * @param zoom
-	 */
-	private void zoomDrawComponent(double zoom)
-	{
-		Dimension canvasSize = drawComponent1.getSize();
-		int width = canvasSize.width;
-		int height = canvasSize.height;
-
-		drawComponent1.setPreferredSize(new Dimension((int) (width*zoom), (int) (height*zoom)));
-		drawComponent1.setSize((int) (width*zoom), (int) (height*zoom));
-		drawComponent2.setPreferredSize(new Dimension((int) (width*zoom), (int) (height*zoom)));
-		drawComponent2.setSize((int) (width*zoom), (int) (height*zoom));
-	}
-
-	public void saveAs(String filename)
-	{
-		OutputStream fos;
-		ObjectOutputStream oos = null;
-		try
+		if(path == null)
 		{
-			fos = new FileOutputStream(filename);
-			oos = new ObjectOutputStream(fos);
-			oos.writeObject(drawComponent1.getObjectList());
-			oos.writeObject(drawComponent2.getObjectList());
+			jMenuItem5ActionPerformed(evt);
 		}
-		catch (IOException e) 
+		else
 		{
-			e.printStackTrace();
+			saveAs(path);
 		}
 	}
-
+	
+	
+	//GETTER UND SETTER
+	
 	public double getZoomFactor()
 	{
 		return zoomFactor;
@@ -777,92 +886,10 @@ public class FrmMain extends javax.swing.JFrame
 		this.synchronizedMoving = b;
 	}
 
-	private void jMenuItem7ActionPerformed(ActionEvent evt) throws IOException 
-	{
-		export(true);
 
-	}
 	
-	/**
-	 * 
-	 * @param b: true bedeutet, dass nur der aktuelle Schaltplan exportiert wird. False bedeutet, dass beide Schaltpläne exportiert werden.
-	 * @throws IOException
-	 */
-	private void export(boolean b) throws IOException
-	{
-		int result = jfc.showSaveDialog(drawComponent1);
-
-		if(result == JFileChooser.APPROVE_OPTION)
-		{
-			File file = jfc.getSelectedFile();				
-			String datatype = "";
-			
-			if(jfc.getFileFilter().getDescription().equals("SVG-Dateien"))
-			{
-				datatype = ".svg";
-			}
-			else if(jfc.getFileFilter().getDescription().equals("JPG-Dateien"))
-			{
-				datatype = ".jpeg";
-			}
-
-			if(file.exists())
-			{
-				result = JOptionPane.showOptionDialog(drawComponent1, "Datei ueberschreiben?", null,
-						JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
-						null, null, null);
-
-				switch(result)
-				{
-				case 0:
-					if(b)
-					{
-					((DrawComponent) ((JScrollPane) jTabbedPane2.getSelectedComponent()).getViewport().getView()).export(file.getPath());
-					}
-					else
-					{
-						drawComponent1.export(file.getPath());
-						drawComponent2.export(file.getPath());
-					}
-				break;
-				case 1: jMenuItem7ActionPerformed(null);
-				break;
-				case 2: break;
-				}
-
-			}
-			else
-			{
-				if(b)
-				{
-					((DrawComponent) ((JScrollPane) jTabbedPane2.getSelectedComponent()).getViewport().getView()).export(file.getPath() + datatype);
-				}
-				else
-				{
-					drawComponent1.export(file.getPath() + "_Wirkschaltplan" + datatype);
-					drawComponent2.export(file.getPath() + "_Stromlaufplan" + datatype);
-				}
-			}
-
-		}
-		
-	}
 	
-	private void jMenuItem8ActionPerformed(ActionEvent evt) throws IOException 
-	{
-		export(false);
-	}
 	
-	private void jMenuItem9ActionPerformed(ActionEvent evt) 
-	{
-		if(path == null)
-		{
-			jMenuItem5ActionPerformed(evt);
-		}
-		else
-		{
-			saveAs(path);
-		}
-	}
+	
 
 }
