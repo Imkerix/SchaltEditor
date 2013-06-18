@@ -183,8 +183,19 @@ public abstract class GeometricObject
 	{
 		JToolBar optionsBar = new JToolBar();
 		final JComboBox<String> dotted = new JComboBox<String>();
-		dotted.addItem("Line");
-		dotted.addItem("Dotted");
+		
+		if(line == null)
+		{
+			dotted.addItem("Line");
+			dotted.addItem("Dotted");
+		}
+		else
+		{
+			dotted.addItem("Dotted");
+			dotted.addItem("Line");
+		}
+		
+		
 		dotted.addActionListener(new ActionListener() {
 			
 			@Override

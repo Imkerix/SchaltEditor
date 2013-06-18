@@ -11,6 +11,8 @@ import shared.Kreis;
 import shared.Linie;
 import shared.Rechteck;
 
+import mainFrame.DrawComponent;
+
 import org.apache.batik.dom.GenericDOMImplementation;
 import org.apache.batik.svggen.SVGGraphics2D;
 import java.awt.event.ActionListener;
@@ -119,7 +121,7 @@ public class EditorGUI extends JFrame
 						// subBegin : Left side
 							 canvasleft = new EditorCanvas()
 							 {
-								
+								@Override
 								public void paint(Graphics g) 
 								{
 									// subBegin : Update canvas to actual state
