@@ -142,7 +142,6 @@ public abstract class GeometricObject
 		    height = (height*zoom);   
 	}
 	
-	
 	/**
 	 *  Draw&lsquo;s the grabbers for an {@link GeometricObject}
 	 * @param g the Graphics Object used to draw the grabbers

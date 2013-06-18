@@ -86,10 +86,11 @@ public class Connector extends GeometricObject
 	}
 
 	@Override
-	public void expand(int grabber, Point endMove, int canvasWidth, int canvasHeight) {
+	public void expand(int grabber, Point endMove, int canvasWidth, int canvasHeight) 
+	{
 		// TODO Automatisch generierter Methodenstub
-		
 	}
+	
 	@Override
 	public JToolBar setOptionsBar()
 	{

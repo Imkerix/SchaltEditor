@@ -196,7 +196,10 @@ public class EditorGUI extends JFrame
 										canvasleft.repaint();
 										break;
 									case KeyEvent.VK_MINUS :
-											actObjectleft.zoom(0.5);
+										for(GeometricObject tempLeft : geomListleft)
+										{
+											tempLeft.zoom(0.5); 
+										}
 											canvasleft.repaint();
 										break;
 									}
@@ -216,12 +219,18 @@ public class EditorGUI extends JFrame
 										}
 										break;
 									case KeyEvent.VK_PLUS : 
-											actObjectright.zoom(2);
-											canvasright.repaint();
+										for(GeometricObject tempRight : geomListright)
+										{
+											tempRight.zoom(2); 
+										}
+										canvasright.repaint();
 										break;
 									case KeyEvent.VK_MINUS :
-											actObjectright.zoom(0.5);
-											canvasright.repaint();
+										for(GeometricObject tempRight : geomListright)
+										{
+											tempRight.zoom(0.5); 
+										}
+										canvasright.repaint();
 										break;
 									}
 								}
@@ -634,13 +643,13 @@ public class EditorGUI extends JFrame
 			}
 			switch (list.getSelectedValue())
 			{
-				case "Kreis" : temp.add(new Kreis(0, 0, 50, 50));
+				case "Kreis" : temp.add(new Kreis(1, 1, 51, 51));
 					break;
-				case "Rechteck" : temp.add(new Rechteck(0, 0, 50, 50));
+				case "Rechteck" : temp.add(new Rechteck(1, 1, 51, 51));
 					break;
-				case "Linie" : temp.add(new Linie(0, 0, 50, 50));
+				case "Linie" : temp.add(new Linie(1, 1, 51, 51));
 					break;
-				case "Connector" : temp.add(new Connector(0, 0, 8, 8));
+				case "Connector" : temp.add(new Connector(1, 1, 9, 9));
 					break;
 			}
 			wasSaved = false;

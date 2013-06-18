@@ -9,12 +9,17 @@ import java.awt.Rectangle;
 
 public class Linie extends GeometricObject
 {
+	// Second points
 	double punkt2X;
 	double punkt2Y;
+	// Second points
+	
+	// Surrounding points
 	double dx;
 	double dy;
 	double dwidth;
 	double dheight;
+	// Surrounding points
 	
 	public Linie(double x1, double y1, double x2, double y2)
 	{
@@ -27,6 +32,15 @@ public class Linie extends GeometricObject
 		height = punkt2Y - y;
 		
 		setAroundBounds();
+	}
+	
+	@Override
+	public void zoom(double zoom)
+	{
+	    x = (x*zoom);
+	    y = (y*zoom);
+	    punkt2X = (punkt2X*zoom);
+	    punkt2Y = (punkt2Y*zoom);   
 	}
 	
 	public void draw(Graphics g)
