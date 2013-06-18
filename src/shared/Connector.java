@@ -4,10 +4,11 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.io.Serializable;
 
 import mainFrame.DrawObject;
 
-public class Connector extends GeometricObject
+public class Connector extends GeometricObject implements Serializable
 {
 	private Connector connectedTo = null;
 	private boolean isKlicked = false;

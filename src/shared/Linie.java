@@ -6,8 +6,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.io.Serializable;
 
-public class Linie extends GeometricObject
+public class Linie extends GeometricObject implements Serializable
 {
 	double punkt2X;
 	double punkt2Y;
@@ -146,6 +147,15 @@ public class Linie extends GeometricObject
 			dy = punkt2Y;
 			dheight = y - punkt2Y;
 		}
+	}
+	
+	@Override
+	public void zoom(double zoom)
+	{
+		x = (x*zoom);
+		y = (y*zoom);
+		punkt2X = (punkt2X*zoom);
+		punkt2Y = (punkt2Y*zoom);
 	}
 
 }

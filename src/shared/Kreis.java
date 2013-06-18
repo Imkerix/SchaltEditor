@@ -3,8 +3,9 @@ package shared;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.io.Serializable;
 
-public class Kreis extends GeometricObject
+public class Kreis extends GeometricObject implements Serializable
 {
 	public Kreis(double x, double y, double width, double height)
 	{
