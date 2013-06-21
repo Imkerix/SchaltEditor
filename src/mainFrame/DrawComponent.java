@@ -37,13 +37,14 @@ public class DrawComponent extends JSVGComponent
 	private boolean showGrid = false;
 	private int gridInterval = 30;
 	private Color gridColor = new Color(210, 210, 210);
+	private Color symbolColor = Color.black;
 
 	private boolean showConnectors = true;
 
 
 	/**
 	 * JSVGComponent muss dieses Superkonstruktor implementieren. Es wurde JSVGComponent statt JComponent verwendet
-	 * um sp�ter eine Funktion zum anzeigen vollst�ndiger SVG-Dateien implementieren zu k�nnen.
+	 * um spaeter eine Funktion zum anzeigen vollstaendiger SVG-Dateien implementieren zu koennen.
 	 * @param ua
 	 * @param eventsEnabled
 	 * @param selectableText
@@ -71,6 +72,7 @@ public class DrawComponent extends JSVGComponent
 			drawGrid(g2d);
 		}
 
+		g2d.setColor(symbolColor);
 		if(! drawObjects.isEmpty())
 		{
 			for(DrawObject dO : drawObjects)
@@ -271,7 +273,6 @@ public class DrawComponent extends JSVGComponent
 				y += gridInterval;
 			}
 		}
-		g2d.setColor(Color.black);
 	}
 
 	public void showGrid(boolean b)
@@ -342,6 +343,11 @@ public class DrawComponent extends JSVGComponent
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public void setSymbolColor(Color c)
+	{
+		this.symbolColor = c;
 	}
 }
 

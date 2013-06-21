@@ -40,6 +40,14 @@ public class FrmOptions extends javax.swing.JFrame
 	private JTextField jTextField1;
 	private JButton jButton1;
 	private JCheckBox jCheckBox2;
+	private JEditorPane jEditorPane6;
+	private JLabel jLabel12;
+	private JEditorPane jEditorPane5;
+	private JLabel jLabel11;
+	private JEditorPane jEditorPane4;
+	private JEditorPane jEditorPane3;
+	private JLabel jLabel10;
+	private JLabel jLabel9;
 	private JLabel jLabel8;
 	private JTextField jTextField3;
 	private JLabel jLabel7;
@@ -95,7 +103,7 @@ public class FrmOptions extends javax.swing.JFrame
 					jButton5ActionPerformed(evt);
 				}
 			};		
-			
+
 
 
 			{
@@ -245,7 +253,7 @@ public class FrmOptions extends javax.swing.JFrame
 				{
 					jEditorPane2 = new JEditorPane();
 					jPanel2.add(jEditorPane2);
-					jEditorPane2.setBounds(453, 37, 35, 20);
+					jEditorPane2.setBounds(453, 37, 28, 20);
 					jEditorPane2.setEditable(false);
 					jEditorPane2.addMouseListener(new MouseAdapter() {
 						public void mouseClicked(MouseEvent evt) {
@@ -273,6 +281,74 @@ public class FrmOptions extends javax.swing.JFrame
 					jButton6.setText("Uebernehmen");
 					jButton6.setBounds(298, 315, 123, 23);
 					jButton6.addActionListener(alAPPLY);
+				}
+				{
+					jLabel9 = new JLabel();
+					jPanel2.add(jLabel9);
+					jLabel9.setText("Symbolfarbe: ");
+					jLabel9.setBounds(12, 71, 127, 16);
+				}
+				{
+					jLabel10 = new JLabel();
+					jPanel2.add(jLabel10);
+					jLabel10.setText("Symbolfarbe: ");
+					jLabel10.setBounds(328, 71, 109, 16);
+				}
+				{
+					jEditorPane3 = new JEditorPane();
+					jPanel2.add(jEditorPane3);
+					jEditorPane3.setBounds(146, 67, 27, 20);
+					jEditorPane3.setEditable(false);
+					jEditorPane3.addMouseListener(new MouseAdapter() {
+						public void mouseClicked(MouseEvent evt) {
+							jEditorPane3MouseClicked(evt);
+						}
+					});
+				}
+				{
+					jEditorPane4 = new JEditorPane();
+					jPanel2.add(jEditorPane4);
+					jEditorPane4.setBounds(455, 68, 26, 20);
+					jEditorPane4.setEditable(false);
+					jEditorPane4.addMouseListener(new MouseAdapter() {
+						public void mouseClicked(MouseEvent evt) {
+							jEditorPane4MouseClicked(evt);
+						}
+					});
+				}
+				{
+					jLabel11 = new JLabel();
+					jPanel2.add(jLabel11);
+					jLabel11.setText("Hintergrundfarbe: ");
+					jLabel11.setBounds(12, 105, 111, 16);
+				}
+				{
+					jEditorPane5 = new JEditorPane();
+					jPanel2.add(jEditorPane5);
+					jEditorPane5.setBounds(146, 99, 27, 20);
+					jEditorPane5.setEditable(false);
+					jEditorPane5.addMouseListener(new MouseAdapter() {
+						public void mouseClicked(MouseEvent evt) {
+							jEditorPane5MouseClicked(evt);
+						}
+					});
+				}
+				{
+					jLabel12 = new JLabel();
+					jPanel2.add(jLabel12);
+					jLabel12.setText("Hintergrundfarbe: ");
+					jLabel12.setBounds(328, 105, 117, 16);
+				}
+				{
+					jEditorPane6 = new JEditorPane();
+					jPanel2.add(jEditorPane6);
+					jEditorPane6.setBounds(455, 100, 26, 20);
+					jEditorPane6.setEditable(false);
+					jEditorPane6.addMouseListener(new MouseAdapter() {
+						public void mouseClicked(MouseEvent evt) {
+							jEditorPane6MouseClicked(evt);
+						}
+					});
 				}
 				jPanel1.setLayout(null);
 				getContentPane().add(jTabbedPane1, BorderLayout.CENTER);
@@ -331,9 +407,38 @@ public class FrmOptions extends javax.swing.JFrame
 		frmMain.setSynchronizedMoving(jCheckBox2.isSelected());
 		drawComponent1.showConnectors(!jCheckBox3.isSelected());
 		drawComponent2.showConnectors(!jCheckBox3.isSelected());
-		
+
 		drawComponent1.setGridColor(jEditorPane1.getBackground());
 		drawComponent2.setGridColor(jEditorPane2.getBackground());
+		drawComponent1.setSymbolColor(jEditorPane3.getBackground());
+		drawComponent2.setSymbolColor(jEditorPane4.getBackground());
+		frmMain.setBackgroundColor(jEditorPane5.getBackground(), jEditorPane6.getBackground());
 	}
+
+	private void jEditorPane3MouseClicked(MouseEvent evt) 
+	{
+		Color c = JColorChooser.showDialog(this, "Symbolfarbe Zeichenflaeche Wirkschaltplan:", Color.black);
+		jEditorPane3.setBackground(c);
+	}
+
+	private void jEditorPane4MouseClicked(MouseEvent evt) 
+	{
+		Color c = JColorChooser.showDialog(this, "Symbolfarbe Zeichenflaeche Stromlaufplan:", Color.black);
+		jEditorPane4.setBackground(c);
+	}
+	
+	private void jEditorPane5MouseClicked(MouseEvent evt) 
+	{
+		Color c = JColorChooser.showDialog(this, "Hintergrundfarbe Zeichenflaeche Wirkschaltplan:", Color.white);
+		jEditorPane5.setBackground(c);
+	}
+	
+	private void jEditorPane6MouseClicked(MouseEvent evt) 
+	{
+		Color c = JColorChooser.showDialog(this, "Hintergrundfarbe Zeichenflaeche Stromlaufplan:", Color.white);
+		jEditorPane6.setBackground(c);
+	}
+	
+
 
 } 

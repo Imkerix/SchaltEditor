@@ -1,6 +1,7 @@
 package mainFrame;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -109,8 +110,6 @@ public class FrmMain extends javax.swing.JFrame
 	private FrmOptions frmOptions = new FrmOptions(this, drawComponent1, drawComponent2);
 	private JFileChooser jfc = new JFileChooser();
 	private String path = null;
-
-
 
 	public FrmMain() {
 		super();
@@ -261,9 +260,7 @@ public class FrmMain extends javax.swing.JFrame
 					BorderLayout jPanel1Layout = new BorderLayout();
 					jPanel1.setLayout(jPanel1Layout);
 					jPanel1.add(jScrollPane1);
-
 					jScrollPane1.setViewportView(jList1);
-
 					jSplitPane1.add(jPanel1, JSplitPane.LEFT);
 					jPanel1.setMinimumSize(new Dimension(300, 50));
 					jSplitPane1.setDividerLocation(300);
@@ -272,7 +269,9 @@ public class FrmMain extends javax.swing.JFrame
 				//Right side of the SplitPane
 				{
 					jScrollPane2.setViewportView(drawComponent1);
+					jScrollPane2.getViewport().setBackground(Color.white);
 					jScrollPane3.setViewportView(drawComponent2);
+					jScrollPane3.getViewport().setBackground(Color.white);
 					jTabbedPane2.addTab("Wirkschaltplan", jScrollPane2);
 					jTabbedPane2.addTab("Stromlaufplan", jScrollPane3);
 					jSplitPane1.add(jTabbedPane2, JSplitPane.RIGHT);
@@ -352,7 +351,7 @@ public class FrmMain extends javax.swing.JFrame
 					drawComponent2.getActionMap().put("minusAction", minus);
 				}
 			}
-			
+
 			//FileChooser Filters
 			{
 				jfc.setAcceptAllFileFilterUsed(false);
@@ -438,7 +437,7 @@ public class FrmMain extends javax.swing.JFrame
 		drawComponent1.repaint();
 		drawComponent2.repaint();
 	}
-	
+
 	/**
 	 * Vergroessert oder verkleinert die Zeichenflaeche um einen Zoom-Faktor.
 	 * @param zoom
@@ -471,7 +470,7 @@ public class FrmMain extends javax.swing.JFrame
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @param b: true bedeutet, dass nur der aktuelle Schaltplan exportiert wird. False bedeutet, dass beide Schaltpläne exportiert werden.
@@ -485,7 +484,7 @@ public class FrmMain extends javax.swing.JFrame
 		{
 			File file = jfc.getSelectedFile();				
 			String datatype = "";
-			
+
 			if(jfc.getFileFilter().getDescription().equals("SVG-Dateien"))
 			{
 				datatype = ".svg";
@@ -506,14 +505,14 @@ public class FrmMain extends javax.swing.JFrame
 				case 0:
 					if(b)
 					{
-					((DrawComponent) ((JScrollPane) jTabbedPane2.getSelectedComponent()).getViewport().getView()).export(file.getPath());
+						((DrawComponent) ((JScrollPane) jTabbedPane2.getSelectedComponent()).getViewport().getView()).export(file.getPath());
 					}
 					else
 					{
 						drawComponent1.export(file.getPath());
 						drawComponent2.export(file.getPath());
 					}
-				break;
+					break;
 				case 1: jMenuItem7ActionPerformed(null);
 				break;
 				case 2: break;
@@ -534,7 +533,7 @@ public class FrmMain extends javax.swing.JFrame
 			}
 
 		}
-		
+
 	}
 
 
@@ -595,7 +594,7 @@ public class FrmMain extends javax.swing.JFrame
 			drawComponent2.setActObject(objectIndex);
 		}
 	}
-	
+
 
 	/**
 	 * MousePressedListener: Beim Drï¿½cken der Maus wird der gedrï¿½ckte Punkt gespeichert. Dient zum Verschieben des Objektes.
@@ -616,9 +615,9 @@ public class FrmMain extends javax.swing.JFrame
 		drawComponent2.move(startMove, evt.getPoint());
 		startMove = evt.getPoint();
 	}
-	
+
 	//KEY-EVENTS
-	
+
 	/**
 	 * Wenn die Taste "Entfernen" gedrï¿½ckt wird, wird die delete-Methode der beiden DrawComponents aufgerufen.
 	 */
@@ -655,7 +654,7 @@ public class FrmMain extends javax.swing.JFrame
 		zoomDrawComponent(1/zoomFactor);
 		repaint();
 	}
-	
+
 	//Menu-Listener
 
 	/**
@@ -826,7 +825,7 @@ public class FrmMain extends javax.swing.JFrame
 		export(true);
 
 	}
-	
+
 	/**
 	 * Datei --> Exportieren --> Alle Schaltplaene
 	 * Ruft die Export-Methode mit Parameter "False" auf, da beide Schaltplaene exportiert werden sollen.
@@ -837,7 +836,7 @@ public class FrmMain extends javax.swing.JFrame
 	{
 		export(false);
 	}
-	
+
 	private void jMenuItem9ActionPerformed(ActionEvent evt) 
 	{
 		if(path == null)
@@ -849,10 +848,10 @@ public class FrmMain extends javax.swing.JFrame
 			saveAs(path);
 		}
 	}
-	
-	
+
+
 	//GETTER UND SETTER
-	
+
 	public double getZoomFactor()
 	{
 		return zoomFactor;
@@ -886,10 +885,16 @@ public class FrmMain extends javax.swing.JFrame
 		this.synchronizedMoving = b;
 	}
 
+	public void setBackgroundColor(Color c1, Color c2)
+	{
+		jScrollPane2.getViewport().setBackground(c1);
+		jScrollPane3.getViewport().setBackground(c2);
+	}
 
-	
-	
-	
-	
+
+
+
+
+
 
 }
