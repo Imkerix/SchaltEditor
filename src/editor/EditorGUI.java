@@ -2,14 +2,17 @@ package editor;
 
 import javax.swing.JFrame;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Frame;
-import java.awt.Graphics;
 import java.awt.Point;
 import shared.Connector;
 import shared.GeometricObject;
 import shared.Kreis;
 import shared.Linie;
 import shared.Rechteck;
+
+import mainFrame.DrawComponent;
+import mainFrame.DrawObject;
 
 import org.apache.batik.dom.GenericDOMImplementation;
 import org.apache.batik.svggen.SVGGraphics2D;
@@ -48,8 +51,8 @@ public class EditorGUI extends JFrame
 	//// Begin : Stuff needed in several Method that can't invoke each other nicely
 		private JList<String> list;
 		private Point startMove;
-		private EditorCanvas canvasleft;
-		private EditorCanvas canvasright;
+		private DrawComponent canvasleft;
+		private DrawComponent canvasright;
 		private ArrayList<GeometricObject> geomListleft = new ArrayList<GeometricObject>();
 		private ArrayList<GeometricObject> geomListright = new ArrayList<GeometricObject>();
 		private GeometricObject actObjectleft;
@@ -66,10 +69,7 @@ public class EditorGUI extends JFrame
 		private String objectName;
 		private JMenuBar menuBar;
 		private boolean isActive = false;
-		private boolean drawGrid = false;
-	//// End : Stuff needed in several Method that can't invoke each other nicely
-		
-	/**
+		/**
 	 * Contains the implementation of the graphical user interface.
 	 */
 	public EditorGUI() 
@@ -117,28 +117,8 @@ public class EditorGUI extends JFrame
 				// subBegin : Canvas creation
 						// subBegin : Left side
 						
-							 canvasleft = new EditorCanvas()
-							 {
-								@Override
-								public void paint(Graphics g) 
-								{
-									// subBegin : Update canvas to actual state
-										for (GeometricObject go : geomListleft) 
-										{
-											go.draw(g);
-										}
-										if(actObjectleft!=null)
-										{
-											actObjectleft.drawOutline(g);
-											actObjectleft.drawGrabbers(g);
-										}
-										if(drawGrid)
-										{
-											drawGrid(g);
-										}
-									// subEnd : Update canvas to actual state
-								}
-							 };
+							 canvasleft = new DrawComponent(null, rootPaneCheckingEnabled, rootPaneCheckingEnabled);
+							 			
 							 // subBegin : Add mouse adapters
 							 	canvasleft.addMouseListener(ma);
 								canvasleft.addMouseMotionListener(mma);
@@ -148,28 +128,8 @@ public class EditorGUI extends JFrame
 								
 						// subBegin : Right side		
 								
-							 canvasright = new EditorCanvas()
-							 {
-								@Override
-								public void paint(Graphics g) 
-								{
-									// subBegin : Update canvas to actual state
-										for (GeometricObject go : geomListright) 
-										{
-											go.draw(g);
-										}
-										if(actObjectright!=null)
-										{
-											actObjectright.drawOutline(g);
-											actObjectright.drawGrabbers(g);
-										}
-										if(drawGrid)
-										{
-											drawGrid(g);
-										}
-									// subEnd : Update canvas to actual state
-								}
-							 };
+							 canvasright = new DrawComponent(null, rootPaneCheckingEnabled, rootPaneCheckingEnabled);
+							 
 							 // subBegin : Add mouse adapters
 							 	canvasright.addMouseListener(ma);
 								canvasright.addMouseMotionListener(mma);
@@ -657,6 +617,23 @@ public class EditorGUI extends JFrame
 				case "Connector" : temp.add(new Connector(1, 1, 9, 9));
 					break;
 			}
+			
+			for (GeometricObject geomObjectLeft : geomListleft) 
+ 			{
+ 				DrawObject drawObjTemp = new DrawObject(0);
+ 				drawObjTemp.addGeometricObject(geomObjectLeft);
+				canvasleft.addToList(drawObjTemp);
+ 			}	
+ 			canvasleft.repaint();
+ 			
+			for (GeometricObject geomObjectRight : geomListright) 
+ 			{
+ 				DrawObject drawObjTemp = new DrawObject(0);
+ 				drawObjTemp.addGeometricObject(geomObjectRight);
+				canvasright.addToList(drawObjTemp);
+ 			}	
+ 			canvasright.repaint();
+ 			
 			wasSaved = false;
 			repaint();		
 		}
@@ -677,12 +654,18 @@ public class EditorGUI extends JFrame
 		canvasright.repaint();
 	}
 
-	/**
-	 * @param drawGrid the drawGrid to set
-	 */
-	public void setDrawGrid(boolean drawGrid)
+	public void setBackgroundColor(Color p_left, Color p_right)
 	{
-		this.drawGrid = drawGrid;
+		scrollPaneleft.getViewport().setBackground(p_left);
+		scrollPaneright.getViewport().setBackground(p_right);
 	}
 	
+	public DrawComponent getLeftDrawComponent()
+	{
+		return canvasleft;
+	}
+	public DrawComponent getRightDrawComponent()
+	{
+		return canvasright;
+	}
 }
