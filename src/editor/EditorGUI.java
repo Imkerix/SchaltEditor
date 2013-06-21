@@ -4,6 +4,7 @@ import javax.swing.JFrame;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Frame;
+import java.awt.Graphics;
 import java.awt.Point;
 import shared.Connector;
 import shared.GeometricObject;
@@ -69,6 +70,7 @@ public class EditorGUI extends JFrame
 		private String objectName;
 		private JMenuBar menuBar;
 		private boolean isActive = false;
+		private boolean drawGrid = false;
 		/**
 	 * Contains the implementation of the graphical user interface.
 	 */
@@ -117,7 +119,27 @@ public class EditorGUI extends JFrame
 				// subBegin : Canvas creation
 						// subBegin : Left side
 						
-							 canvasleft = new DrawComponent(null, rootPaneCheckingEnabled, rootPaneCheckingEnabled);
+							 canvasleft = new DrawComponent(null, rootPaneCheckingEnabled, rootPaneCheckingEnabled){
+								 @Override
+								 public void paintComponent(Graphics g)
+								 {
+									// subBegin : Update canvas to actual state
+										for (GeometricObject go : geomListleft) 
+										{
+											go.draw(g);
+										}
+										if(actObjectleft!=null)
+										{
+											actObjectleft.drawOutline(g);
+											actObjectleft.drawGrabbers(g);
+										}
+										if(drawGrid)
+										{
+											drawGrid(g);
+										}
+									// subEnd : Update canvas to actual state 
+								 }
+							 };
 							 			
 							 // subBegin : Add mouse adapters
 							 	canvasleft.addMouseListener(ma);
@@ -128,7 +150,27 @@ public class EditorGUI extends JFrame
 								
 						// subBegin : Right side		
 								
-							 canvasright = new DrawComponent(null, rootPaneCheckingEnabled, rootPaneCheckingEnabled);
+							 canvasright = new DrawComponent(null, rootPaneCheckingEnabled, rootPaneCheckingEnabled){
+								 @Override
+								 public void paintComponent(Graphics g)
+								 {
+									// subBegin : Update canvas to actual state
+										for (GeometricObject go : geomListleft) 
+										{
+											go.draw(g);
+										}
+										if(actObjectleft!=null)
+										{
+											actObjectleft.drawOutline(g);
+											actObjectleft.drawGrabbers(g);
+										}
+										if(drawGrid)
+										{
+											drawGrid(g);
+										}
+									// subEnd : Update canvas to actual state 
+								 }
+							 };
 							 
 							 // subBegin : Add mouse adapters
 							 	canvasright.addMouseListener(ma);
@@ -618,26 +660,35 @@ public class EditorGUI extends JFrame
 					break;
 			}
 			
-			for (GeometricObject geomObjectLeft : geomListleft) 
- 			{
- 				DrawObject drawObjTemp = new DrawObject(0);
- 				drawObjTemp.addGeometricObject(geomObjectLeft);
-				canvasleft.addToList(drawObjTemp);
- 			}	
- 			canvasleft.repaint();
- 			
-			for (GeometricObject geomObjectRight : geomListright) 
- 			{
- 				DrawObject drawObjTemp = new DrawObject(0);
- 				drawObjTemp.addGeometricObject(geomObjectRight);
-				canvasright.addToList(drawObjTemp);
- 			}	
- 			canvasright.repaint();
+//			updateCanvasleft();
+//			updateCanvasright();
  			
 			wasSaved = false;
 			repaint();		
 		}
 	}
+
+//	private void updateCanvasleft() 
+//	{
+//		for (GeometricObject geomObjectLeft : geomListleft) 
+//		{
+//			DrawObject drawObjTemp = new DrawObject(0);
+//			drawObjTemp.addGeometricObject(geomObjectLeft);
+//			canvasleft.addToList(drawObjTemp);
+//		}	
+//		canvasleft.repaint();
+//	}
+//
+//	private void updateCanvasright() 
+//	{
+//		for (GeometricObject geomObjectRight : geomListright) 
+//		{
+//			DrawObject drawObjTemp = new DrawObject(0);
+//			drawObjTemp.addGeometricObject(geomObjectRight);
+//			canvasright.addToList(drawObjTemp);
+//		}	
+//		canvasright.repaint();
+//	}
 	
 	/**
 	 * Prepares the graphical user interface for the usage to edit an existing switching symbol.<br>
