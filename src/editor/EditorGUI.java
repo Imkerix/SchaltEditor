@@ -13,10 +13,10 @@ import shared.Linie;
 import shared.Rechteck;
 
 import mainFrame.DrawComponent;
-import mainFrame.DrawObject;
-
 import org.apache.batik.dom.GenericDOMImplementation;
 import org.apache.batik.svggen.SVGGraphics2D;
+import org.apache.batik.swing.svg.JSVGComponent;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
@@ -32,6 +32,8 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JMenuBar;
@@ -40,6 +42,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JTabbedPane;
 import javax.swing.JButton;
 import javax.swing.JSeparator;
+import javax.swing.KeyStroke;
 
 /**
  * 
@@ -70,7 +73,6 @@ public class EditorGUI extends JFrame
 		private String objectName;
 		private JMenuBar menuBar;
 		private boolean isActive = false;
-		private boolean drawGrid = false;
 		/**
 	 * Contains the implementation of the graphical user interface.
 	 */
@@ -115,135 +117,169 @@ public class EditorGUI extends JFrame
 							}
 						};
 				// subEnd : MouseAdapter for Canvas	
-							
-				// subBegin : Canvas creation
-						// subBegin : Left side
+				
+				// subBegin : KeyListener 
 						
-							 canvasleft = new DrawComponent(null, rootPaneCheckingEnabled, rootPaneCheckingEnabled){
-								 @Override
-								 public void paintComponent(Graphics g)
-								 {
-									// subBegin : Update canvas to actual state
-										for (GeometricObject go : geomListleft) 
-										{
-											go.draw(g);
-										}
-										if(actObjectleft!=null)
-										{
-											actObjectleft.drawOutline(g);
-											actObjectleft.drawGrabbers(g);
-										}
-										if(drawGrid)
-										{
-											drawGrid(g);
-										}
-									// subEnd : Update canvas to actual state 
-								 }
-							 };
-							 			
-							 // subBegin : Add mouse adapters
-							 	canvasleft.addMouseListener(ma);
-								canvasleft.addMouseMotionListener(mma);
-							 // subEnd : Add mouse adapters
-								
-						// subEnd : Left side	
-								
-						// subBegin : Right side		
-								
-							 canvasright = new DrawComponent(null, rootPaneCheckingEnabled, rootPaneCheckingEnabled){
-								 @Override
-								 public void paintComponent(Graphics g)
-								 {
-									// subBegin : Update canvas to actual state
-										for (GeometricObject go : geomListleft) 
-										{
-											go.draw(g);
-										}
-										if(actObjectleft!=null)
-										{
-											actObjectleft.drawOutline(g);
-											actObjectleft.drawGrabbers(g);
-										}
-										if(drawGrid)
-										{
-											drawGrid(g);
-										}
-									// subEnd : Update canvas to actual state 
-								 }
-							 };
-							 
-							 // subBegin : Add mouse adapters
-							 	canvasright.addMouseListener(ma);
-								canvasright.addMouseMotionListener(mma);
-							 // subEnd : Add mouse adapters
-						
-						// subBegin : Right side	
-								
-				// subEnd : Canvas creation
-						 
-				// subBegin : KeyListener for Canvas	 
-							 canvasleft.addKeyListener(new KeyAdapter() {
-								@Override
-								public void keyPressed(KeyEvent arg0) {
-									switch (arg0.getKeyCode())
+						// subBegin : KeyListener for Canvasleft
+								AbstractAction deleteLeft = new AbstractAction() 
+								{
+									public void actionPerformed(ActionEvent e)
 									{
-									case KeyEvent.VK_DELETE : 
 										if(actObjectleft != null)
 										{
 											geomListleft.remove(actObjectleft);
 											actObjectleft = null;
 											canvasleft.repaint();
 										}
-										break;
-									case KeyEvent.VK_PLUS : 
+									}
+								};
+								AbstractAction plusLeft = new AbstractAction() 
+								{
+									public void actionPerformed(ActionEvent e) 
+									{
 										for(GeometricObject tempLeft : geomListleft)
 										{
 											tempLeft.zoom(2); 
 										}
 										canvasleft.repaint();
-										break;
-									case KeyEvent.VK_MINUS :
+									}
+								};
+								AbstractAction minusLeft = new AbstractAction() 
+								{
+									public void actionPerformed(ActionEvent e) 
+									{
 										for(GeometricObject tempLeft : geomListleft)
 										{
 											tempLeft.zoom(0.5); 
 										}
-											canvasleft.repaint();
-										break;
+										canvasleft.repaint();
 									}
-								}
-							});
-							 canvasright.addKeyListener(new KeyAdapter() {
-								@Override
-								public void keyPressed(KeyEvent arg0) {
-									switch (arg0.getKeyCode())
+								};
+						// subEnd : KeyListener for Canvasleft
+						// subBegin : KeyListener for Canvasright
+								AbstractAction deleteRight = new AbstractAction() 
+								{
+									public void actionPerformed(ActionEvent e)
 									{
-									case KeyEvent.VK_DELETE : 
 										if(actObjectright != null)
 										{
 											geomListright.remove(actObjectright);
 											actObjectright = null;
 											canvasright.repaint();
 										}
-										break;
-									case KeyEvent.VK_PLUS : 
+									}
+								};
+								AbstractAction plusRight = new AbstractAction() 
+								{
+									public void actionPerformed(ActionEvent e) 
+									{
 										for(GeometricObject tempRight : geomListright)
 										{
 											tempRight.zoom(2); 
 										}
 										canvasright.repaint();
-										break;
-									case KeyEvent.VK_MINUS :
+									}
+								};
+								AbstractAction minusRight = new AbstractAction() 
+								{
+									public void actionPerformed(ActionEvent e) 
+									{
 										for(GeometricObject tempRight : geomListright)
 										{
 											tempRight.zoom(0.5); 
 										}
 										canvasright.repaint();
-										break;
 									}
-								}
-							});
-			    // subEnd : KeyListener for Canvas
-							
+								};
+						// subEnd : KeyListener for Canvasright	
+								
+				// subEnd : KeyListener 			
+					
+				// subBegin : Canvas creation
+						// subBegin : Left side
+						
+							 canvasleft = new DrawComponent(null, true, rootPaneCheckingEnabled)
+							 {
+								 @Override
+								 public void paintComponent(Graphics g)
+								 {
+									// subBegin : Update canvas to actual state
+										for (GeometricObject go : geomListleft) 
+										{
+											go.draw(g);
+										}
+										if(actObjectleft!=null)
+										{
+											actObjectleft.drawOutline(g);
+											actObjectleft.drawGrabbers(g);
+										}
+										if(showGrid)
+									    {
+									      drawGrid(g);
+									    }
+									// subEnd : Update canvas to actual state 
+								 }
+							 };
+							 			
+							 // subBegin : Add Listeners
+							 	canvasleft.addMouseListener(ma);
+								canvasleft.addMouseMotionListener(mma);
+								
+								canvasleft.getInputMap(JSVGComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "deleteAction");
+								canvasleft.getActionMap().put("deleteAction", deleteLeft);
+								
+								canvasleft.getInputMap(JSVGComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, 0), "PlusAction");
+								canvasleft.getActionMap().put("PlusAction", plusLeft);
+								
+								canvasleft.getInputMap(JSVGComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, 0), "MinusAction");
+								canvasleft.getActionMap().put("MinusAction", minusLeft);
+								
+							 // subEnd : Add Listeners
+								
+						// subEnd : Left side	
+								
+						// subBegin : Right side		
+							 canvasright = new DrawComponent(null, true, rootPaneCheckingEnabled)
+							 {
+								 @Override
+								 public void paintComponent(Graphics g)
+								 {
+									// subBegin : Update canvas to actual state
+										for (GeometricObject go : geomListright) 
+										{
+											go.draw(g);
+										}
+										if(actObjectright!=null)
+										{
+											actObjectright.drawOutline(g);
+											actObjectright.drawGrabbers(g);
+										}
+										if(showGrid)
+									    {
+									      drawGrid(g);
+									    }
+									// subEnd : Update canvas to actual state 
+								 }
+							 };
+							 
+							 // subBegin : Add Listeners
+							 	canvasright.addMouseListener(ma);
+								canvasright.addMouseMotionListener(mma);
+								
+								canvasright.getInputMap(JSVGComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "deleteAction");
+								canvasright.getActionMap().put("deleteAction", deleteRight);
+								
+								canvasright.getInputMap(JSVGComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, 0), "PlusAction");
+								canvasright.getActionMap().put("PlusAction", plusRight);
+								
+								canvasright.getInputMap(JSVGComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, 0), "MinusAction");
+								canvasright.getActionMap().put("MinusAction", minusRight);
+							 // subEnd : Add Listeners
+						
+						// subBegin : Right side	
+								
+				// subEnd : Canvas creation
+						 
 		//// End : Canvas	
 			
 		//// Begin : List with GeometricObjects	
@@ -659,37 +695,12 @@ public class EditorGUI extends JFrame
 				case "Connector" : temp.add(new Connector(1, 1, 9, 9));
 					break;
 			}
-			
-//			updateCanvasleft();
-//			updateCanvasright();
  			
 			wasSaved = false;
 			repaint();		
 		}
 	}
 
-//	private void updateCanvasleft() 
-//	{
-//		for (GeometricObject geomObjectLeft : geomListleft) 
-//		{
-//			DrawObject drawObjTemp = new DrawObject(0);
-//			drawObjTemp.addGeometricObject(geomObjectLeft);
-//			canvasleft.addToList(drawObjTemp);
-//		}	
-//		canvasleft.repaint();
-//	}
-//
-//	private void updateCanvasright() 
-//	{
-//		for (GeometricObject geomObjectRight : geomListright) 
-//		{
-//			DrawObject drawObjTemp = new DrawObject(0);
-//			drawObjTemp.addGeometricObject(geomObjectRight);
-//			canvasright.addToList(drawObjTemp);
-//		}	
-//		canvasright.repaint();
-//	}
-	
 	/**
 	 * Prepares the graphical user interface for the usage to edit an existing switching symbol.<br>
 	 * @param p_objectName the name of the switching object to edit.

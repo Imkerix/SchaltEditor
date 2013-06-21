@@ -22,7 +22,7 @@ public class DrawComponent extends JSVGComponent
   private Connector actConnector1;
   private Connector actConnector2;
 
-  private boolean showGrid = false;
+  protected boolean showGrid = false;
   private int gridInterval = 30;
   private Color gridColor = new Color(210, 210, 210);
 
