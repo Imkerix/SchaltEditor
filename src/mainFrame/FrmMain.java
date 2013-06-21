@@ -74,8 +74,8 @@ public class FrmMain extends javax.swing.JFrame
 	private JTabbedPane jTabbedPane2 = new JTabbedPane();
 	private JScrollPane jScrollPane2 = new JScrollPane();
 	private JScrollPane jScrollPane3 = new JScrollPane();
-	private DrawComponent drawComponent1 = new DrawComponent(null, rootPaneCheckingEnabled, rootPaneCheckingEnabled);
-	private DrawComponent drawComponent2 = new DrawComponent(null, rootPaneCheckingEnabled, rootPaneCheckingEnabled);
+	private DrawComponent drawComponent1 = new DrawComponent(null, rootPaneCheckingEnabled, rootPaneCheckingEnabled, true);
+	private DrawComponent drawComponent2 = new DrawComponent(null, rootPaneCheckingEnabled, rootPaneCheckingEnabled, false);
 
 	//MenuBar
 	private JMenuBar jMenuBar1;
@@ -92,7 +92,7 @@ public class FrmMain extends javax.swing.JFrame
 
 	//Settings
 	private double zoomFactor = 1.1;
-	private boolean synchronizedMoving = false;
+	private boolean synchronize = false;
 
 	//Other attributes 
 	private ArrayList<ElectricObject> electricObjects= new ArrayList<ElectricObject>();  
@@ -560,9 +560,19 @@ public class FrmMain extends javax.swing.JFrame
 					break;
 				}
 			}  
-
-			drawComponent1.addToList(eo.getDrawObject(0, drawComponent1.getNextIndex(), zoomCount, zoomFactor));
-			drawComponent2.addToList(eo.getDrawObject(1, drawComponent2.getNextIndex(), zoomCount, zoomFactor));
+			
+			if(synchronize)
+			{
+				drawComponent1.addToList(eo.getDrawObject(true, drawComponent1.getNextIndex(), zoomCount, zoomFactor));
+				drawComponent2.addToList(eo.getDrawObject(false, drawComponent2.getNextIndex(), zoomCount, zoomFactor));
+			}
+			else
+			{
+				DrawComponent actDrawComponent = (DrawComponent) ((JScrollPane) jTabbedPane2.getSelectedComponent()).getViewport().getView();
+				actDrawComponent.addToList(eo.getDrawObject(actDrawComponent.getSchaltplan(), 
+						actDrawComponent.getNextIndex() , 
+						zoomCount, zoomFactor));
+			}
 			repaintAll();
 		}
 	}
@@ -588,7 +598,7 @@ public class FrmMain extends javax.swing.JFrame
 			drawComponent2.setActObject(objectIndex);
 		}
 
-		if(synchronizedMoving)
+		if(synchronize)
 		{
 			drawComponent1.setActObject(objectIndex);
 			drawComponent2.setActObject(objectIndex);
@@ -690,7 +700,7 @@ public class FrmMain extends javax.swing.JFrame
 	}
 
 	/**
-	 * Men� Editor, Men�punkt "Neues Schaltzeichen": �ffnet ein neues JFrame mit dem leeren Editor.
+	 * Menue Editor, Menuepunkt "Neues Schaltzeichen": Oeffnet ein neues JFrame mit dem leeren Editor.
 	 * @param evt
 	 */
 	private void jMenuItem3ActionPerformed(ActionEvent evt) 
@@ -700,7 +710,7 @@ public class FrmMain extends javax.swing.JFrame
 	}
 
 	/**
-	 * Men� Extras, Men�punkt "Benutzervorgaben": �ffnet das Einstellungsfenster
+	 * Menue Extras, Menuepunkt "Benutzervorgaben": Oeffnet das Einstellungsfenster
 	 * @param evt
 	 */
 	private void jMenuItem4ActionPerformed(ActionEvent evt) 
@@ -880,9 +890,9 @@ public class FrmMain extends javax.swing.JFrame
 		drawComponent2.setGridInterval(interval);
 	}
 
-	public void setSynchronizedMoving(boolean b)
+	public void setSynchronized(boolean b)
 	{
-		this.synchronizedMoving = b;
+		this.synchronize = b;
 	}
 
 	public void setBackgroundColor(Color c1, Color c2)

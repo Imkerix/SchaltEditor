@@ -139,7 +139,7 @@ public class FrmOptions extends javax.swing.JFrame
 			}
 			{
 				jCheckBox2 = new JCheckBox();
-				jCheckBox2.setText("Synchronisiertes Verschieben");
+				jCheckBox2.setText("Zeichenflaechen synchronisieren");
 				jCheckBox2.setBounds(22, 195, 255, 20);
 			}
 			{
@@ -404,7 +404,7 @@ public class FrmOptions extends javax.swing.JFrame
 		}
 
 		frmMain.showGrid(jCheckBox1.isSelected());
-		frmMain.setSynchronizedMoving(jCheckBox2.isSelected());
+		frmMain.setSynchronized(jCheckBox2.isSelected());
 		drawComponent1.showConnectors(!jCheckBox3.isSelected());
 		drawComponent2.showConnectors(!jCheckBox3.isSelected());
 

@@ -33,6 +33,7 @@ public class DrawComponent extends JSVGComponent
 	private DrawObject actObject;
 	private Connector actConnector1;
 	private Connector actConnector2;
+	private boolean schaltplan; //true = Wirkschaltplan
 
 	private boolean showGrid = false;
 	private int gridInterval = 30;
@@ -49,9 +50,10 @@ public class DrawComponent extends JSVGComponent
 	 * @param eventsEnabled
 	 * @param selectableText
 	 */
-	public DrawComponent(SVGUserAgent ua, boolean eventsEnabled, boolean selectableText) 
+	public DrawComponent(SVGUserAgent ua, boolean eventsEnabled, boolean selectableText, boolean schaltplan) 
 	{
 		super(ua, eventsEnabled, selectableText);  
+		this.schaltplan = schaltplan;
 	}
 
 	@Override
@@ -348,6 +350,11 @@ public class DrawComponent extends JSVGComponent
 	public void setSymbolColor(Color c)
 	{
 		this.symbolColor = c;
+	}
+	
+	public boolean getSchaltplan()
+	{
+		return schaltplan;
 	}
 }
 

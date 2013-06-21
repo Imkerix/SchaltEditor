@@ -31,14 +31,14 @@ public class ElectricObject
 		this.stromlaufplan = stromlaufplan;  
 	}
 
-	public DrawObject getDrawObject(int state, int index, int zoomCount, double zoomFactor)
+	public DrawObject getDrawObject(boolean state, int index, int zoomCount, double zoomFactor)
 	{
 		DrawObject drawObject = new DrawObject(index);
 		ArrayList<Double> xList= new ArrayList<Double>();
 		ArrayList<Double> yList= new ArrayList<Double>();
 		File svgFile;
 
-		if(state == 0)
+		if(state)
 		{
 			svgFile = wirkschaltplan;
 		}
