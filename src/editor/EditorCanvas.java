@@ -7,11 +7,12 @@ import org.apache.batik.swing.JSVGCanvas;
 
 public class EditorCanvas extends JSVGCanvas{
 
-	
 	private Color gridColor = new Color(210, 210, 210);
 	private int gridInterval = 30;
 
 
+	
+	
 	////Begin : Grid
 		public void drawGrid(Graphics g)
 		{

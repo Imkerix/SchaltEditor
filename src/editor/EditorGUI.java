@@ -11,8 +11,6 @@ import shared.Kreis;
 import shared.Linie;
 import shared.Rechteck;
 
-import mainFrame.DrawComponent;
-
 import org.apache.batik.dom.GenericDOMImplementation;
 import org.apache.batik.svggen.SVGGraphics2D;
 import java.awt.event.ActionListener;
@@ -30,8 +28,6 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JMenuBar;
@@ -50,26 +46,27 @@ import javax.swing.JSeparator;
 public class EditorGUI extends JFrame 
 {
 	//// Begin : Stuff needed in several Method that can't invoke each other nicely
-	private JList<String> list;
-	private Point startMove;
-	private EditorCanvas canvasleft;
-	private EditorCanvas canvasright;
-	private ArrayList<GeometricObject> geomListleft = new ArrayList<GeometricObject>();
-	private ArrayList<GeometricObject> geomListright = new ArrayList<GeometricObject>();
-	private GeometricObject actObjectleft;
-	private GeometricObject actObjectright;
-	private JTabbedPane mytabbedpane = new JTabbedPane();
-	private JSplitPane splitPane = new JSplitPane();
-	private JScrollPane scrollPane = new JScrollPane();
-	private JScrollPane scrollPaneleft = new JScrollPane();
-	private JScrollPane scrollPaneright = new JScrollPane();
-	private int selectedGrabber;
-	private String rootDir = "Schaltzeichen";
-	private SVGGen svgGenerator = new SVGGen();
-	private boolean wasSaved = true;
-	private String objectName;
-	private JMenuBar menuBar;
-	private boolean isActive = false;
+		private JList<String> list;
+		private Point startMove;
+		private EditorCanvas canvasleft;
+		private EditorCanvas canvasright;
+		private ArrayList<GeometricObject> geomListleft = new ArrayList<GeometricObject>();
+		private ArrayList<GeometricObject> geomListright = new ArrayList<GeometricObject>();
+		private GeometricObject actObjectleft;
+		private GeometricObject actObjectright;
+		private JTabbedPane mytabbedpane = new JTabbedPane();
+		private JSplitPane splitPane = new JSplitPane();
+		private JScrollPane scrollPane = new JScrollPane();
+		private JScrollPane scrollPaneleft = new JScrollPane();
+		private JScrollPane scrollPaneright = new JScrollPane();
+		private int selectedGrabber;
+		private String rootDir = "Schaltzeichen";
+		private SVGGen svgGenerator = new SVGGen();
+		private boolean wasSaved = true;
+		private String objectName;
+		private JMenuBar menuBar;
+		private boolean isActive = false;
+		private boolean drawGrid = false;
 	//// End : Stuff needed in several Method that can't invoke each other nicely
 		
 	/**
@@ -119,6 +116,7 @@ public class EditorGUI extends JFrame
 							
 				// subBegin : Canvas creation
 						// subBegin : Left side
+						
 							 canvasleft = new EditorCanvas()
 							 {
 								@Override
@@ -134,7 +132,10 @@ public class EditorGUI extends JFrame
 											actObjectleft.drawOutline(g);
 											actObjectleft.drawGrabbers(g);
 										}
-										drawGrid(g);
+										if(drawGrid)
+										{
+											drawGrid(g);
+										}
 									// subEnd : Update canvas to actual state
 								}
 							 };
@@ -142,6 +143,7 @@ public class EditorGUI extends JFrame
 							 	canvasleft.addMouseListener(ma);
 								canvasleft.addMouseMotionListener(mma);
 							 // subEnd : Add mouse adapters
+								
 						// subEnd : Left side	
 								
 						// subBegin : Right side		
@@ -161,11 +163,14 @@ public class EditorGUI extends JFrame
 											actObjectright.drawOutline(g);
 											actObjectright.drawGrabbers(g);
 										}
-										drawGrid(g);
+										if(drawGrid)
+										{
+											drawGrid(g);
+										}
 									// subEnd : Update canvas to actual state
 								}
 							 };
-							// subBegin : Add mouse adapters
+							 // subBegin : Add mouse adapters
 							 	canvasright.addMouseListener(ma);
 								canvasright.addMouseMotionListener(mma);
 							 // subEnd : Add mouse adapters
@@ -670,6 +675,14 @@ public class EditorGUI extends JFrame
 		geomListright = p_ArrayListStromFlussPlan;
 		canvasleft.repaint();
 		canvasright.repaint();
+	}
+
+	/**
+	 * @param drawGrid the drawGrid to set
+	 */
+	public void setDrawGrid(boolean drawGrid)
+	{
+		this.drawGrid = drawGrid;
 	}
 	
 }
