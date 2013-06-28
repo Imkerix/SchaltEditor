@@ -59,18 +59,18 @@ import editor.EditorGUI;
 public class FrmMain extends javax.swing.JFrame 
 {
 	private static final long serialVersionUID = 1L;
+	
+	//GUI
 
-	//GUI Components
-
-	//MainPanel
+	//Hauptpanel
 	private JSplitPane jSplitPane1;
 
-	//Left side of the SplitPane
+	//Linke Seite der SplitPane
 	private JPanel jPanel1 = new JPanel();
 	private JScrollPane jScrollPane1 = new JScrollPane();
 	private JList<String> jList1 = new JList<String>();
 
-	//Right side of the SplitPane
+	//Rechte Seite der SplitPane
 	private JTabbedPane jTabbedPane2 = new JTabbedPane();
 	private JScrollPane jScrollPane2 = new JScrollPane();
 	private JScrollPane jScrollPane3 = new JScrollPane();
@@ -80,31 +80,37 @@ public class FrmMain extends javax.swing.JFrame
 	//MenuBar
 	private JMenuBar jMenuBar1;
 
+	//Menu "Datei"
+	private JMenu menuFile;
+	private JMenuItem menuItemOpen;	
+	private JMenuItem menuItemSave;	
+	private JMenuItem menuItemSaveAs;
+	//Untermenu "Exportieren"
+	private JMenu menuExport;
+	private JMenuItem menuItemExportCurrent;
+	private JMenuItem menuItemExportBoth;
+	
+	
 	//Menu "Tools"
-	private JMenu jMenu1;  
-	private JMenuItem jMenuItem1;
-	private JMenuItem jMenuItem2;
+	private JMenu menuTools;  
+	private JMenuItem menuItemExtendWorkBench;
+	private JMenuItem menuItemReduceWorkBench;
 
 	//Menu "Editor"
-	private JMenu jMenu2;
-	private JMenuItem jMenuItem3;
+	private JMenu menuEditor;
+	private JMenuItem menuItemNewSymbol;
+	
+	//Menu "Extras"
+	private JMenu menuExtras;
+	private JMenuItem menuItemPreferences;
 
 
 	//Settings
 	private double zoomFactor = 1.1;
-	private boolean synchronize = false;
+	private boolean synchronizeWorkBench = false;
 
 	//Other attributes 
 	private ArrayList<ElectricObject> electricObjects= new ArrayList<ElectricObject>();  
-	private JMenuItem jMenuItem9;
-	private JMenuItem jMenuItem8;
-	private JMenuItem jMenuItem7;
-	private JMenu jMenu5;
-	private JMenuItem jMenuItem6;
-	private JMenuItem jMenuItem5;
-	private JMenu jMenu4;
-	private JMenuItem jMenuItem4;
-	private JMenu jMenu3;
 	private Point startMove;
 	private int zoomCount = 0;
 	private FrmOptions frmOptions = new FrmOptions(this, drawComponent1, drawComponent2);
@@ -129,51 +135,51 @@ public class FrmMain extends javax.swing.JFrame
 				jMenuBar1 = new JMenuBar();
 				setJMenuBar(jMenuBar1);
 				{
-					jMenu4 = new JMenu();
-					jMenuBar1.add(jMenu4);
-					jMenu4.setText("Datei");
+					menuFile = new JMenu();
+					jMenuBar1.add(menuFile);
+					menuFile.setText("Datei");
 					{
-						jMenuItem6 = new JMenuItem();
-						jMenu4.add(jMenuItem6);
-						jMenuItem6.setText("Oeffnen");
-						jMenuItem6.addActionListener(new ActionListener() {
+						menuItemOpen = new JMenuItem();
+						menuFile.add(menuItemOpen);
+						menuItemOpen.setText("Oeffnen");
+						menuItemOpen.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
-								jMenuItem6ActionPerformed(evt);
+								menuItemOpenActionPerformed(evt);
 							}
 						});
 					}
 					{
-						jMenuItem9 = new JMenuItem();
-						jMenu4.add(jMenuItem9);
-						jMenuItem9.setText("Speichern");
-						jMenuItem9.addActionListener(new ActionListener() {
+						menuItemSave = new JMenuItem();
+						menuFile.add(menuItemSave);
+						menuItemSave.setText("Speichern");
+						menuItemSave.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
-								jMenuItem9ActionPerformed(evt);
+								menuItemSaveActionPerformed(evt);
 							}
 						});
 					}
 					{
-						jMenuItem5 = new JMenuItem();
-						jMenu4.add(jMenuItem5);
-						jMenuItem5.setText("Speichern unter...");
-						jMenuItem5.addActionListener(new ActionListener() {
+						menuItemSaveAs = new JMenuItem();
+						menuFile.add(menuItemSaveAs);
+						menuItemSaveAs.setText("Speichern unter...");
+						menuItemSaveAs.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
-								jMenuItem5ActionPerformed(evt);
+								menuItemSaveAsActionPerformed(evt);
 							}
 						});
 					}
 					{
-						jMenu5 = new JMenu();
-						jMenu4.add(jMenu5);
-						jMenu5.setText("Exportieren...");
+						menuExport = new JMenu();
+						menuFile.add(menuExport);
+						menuExport.setText("Exportieren...");
 						{
-							jMenuItem7 = new JMenuItem();
-							jMenu5.add(jMenuItem7);
-							jMenuItem7.setText("Aktuellen Schaltplan");
-							jMenuItem7.addActionListener(new ActionListener() {
+							menuItemExportCurrent = new JMenuItem();
+							menuExport.add(menuItemExportCurrent);
+							menuItemExportCurrent.setText("Aktuellen Schaltplan");
+							menuItemExportCurrent.addActionListener(new ActionListener() {
 								public void actionPerformed(ActionEvent evt) {
 									try {
-										jMenuItem7ActionPerformed(evt);
+										menuItemExportCurrentActionPerformed(evt);
 									} catch (IOException e) {
 										e.printStackTrace();
 									}
@@ -181,13 +187,13 @@ public class FrmMain extends javax.swing.JFrame
 							});
 						}
 						{
-							jMenuItem8 = new JMenuItem();
-							jMenu5.add(jMenuItem8);
-							jMenuItem8.setText("Alle Schaltplaene");
-							jMenuItem8.addActionListener(new ActionListener() {
+							menuItemExportBoth = new JMenuItem();
+							menuExport.add(menuItemExportBoth);
+							menuItemExportBoth.setText("Alle Schaltplaene");
+							menuItemExportBoth.addActionListener(new ActionListener() {
 								public void actionPerformed(ActionEvent evt) {
 									try {
-										jMenuItem8ActionPerformed(evt);
+										menuItemExportBothActionPerformed(evt);
 									} catch (IOException e) {
 										e.printStackTrace();
 									}
@@ -197,56 +203,56 @@ public class FrmMain extends javax.swing.JFrame
 					}
 				}
 				{
-					jMenu1 = new JMenu();
-					jMenuBar1.add(jMenu1);
-					jMenu1.setText("Tools");
+					menuTools = new JMenu();
+					jMenuBar1.add(menuTools);
+					menuTools.setText("Tools");
 					{
-						jMenuItem1 = new JMenuItem();
-						jMenu1.add(jMenuItem1);
-						jMenuItem1.setText("Zeichenflaeche vergroeßern");
-						jMenuItem1.addActionListener(new ActionListener() {
+						menuItemExtendWorkBench = new JMenuItem();
+						menuTools.add(menuItemExtendWorkBench);
+						menuItemExtendWorkBench.setText("Arbeitsflaeche vergroeßern");
+						menuItemExtendWorkBench.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
-								jMenuItem1ActionPerformed(evt);
+								menuItemExtendWorkBenchActionPerformed(evt);
 							}
 						});
 					}
 					{
-						jMenuItem2 = new JMenuItem();
-						jMenu1.add(jMenuItem2);
-						jMenuItem2.setText("Zeichenflï¿½che verkleiner");
-						jMenuItem2.addActionListener(new ActionListener() {
+						menuItemReduceWorkBench = new JMenuItem();
+						menuTools.add(menuItemReduceWorkBench);
+						menuItemReduceWorkBench.setText("Arbeitsflaeche verkleiner");
+						menuItemReduceWorkBench.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
-								jMenuItem2ActionPerformed(evt);
-							}
-						});
-					}
-				}
-				{
-					jMenu2 = new JMenu();
-					jMenuBar1.add(jMenu2);
-					jMenu2.setText("Editor");
-					{
-						jMenuItem3 = new JMenuItem();
-						jMenu2.add(jMenuItem3);
-						jMenuItem3.setText("Neues Schaltzeichen");
-						jMenuItem3.addActionListener(new ActionListener() {
-							public void actionPerformed(ActionEvent evt) {
-								jMenuItem3ActionPerformed(evt);
+								menuItemReduceWorkBenchActionPerformed(evt);
 							}
 						});
 					}
 				}
 				{
-					jMenu3 = new JMenu();
-					jMenuBar1.add(jMenu3);
-					jMenu3.setText("Extras");
+					menuEditor = new JMenu();
+					jMenuBar1.add(menuEditor);
+					menuEditor.setText("Editor");
 					{
-						jMenuItem4 = new JMenuItem();
-						jMenu3.add(jMenuItem4);
-						jMenuItem4.setText("Benutzervorgaben");
-						jMenuItem4.addActionListener(new ActionListener() {
+						menuItemNewSymbol = new JMenuItem();
+						menuEditor.add(menuItemNewSymbol);
+						menuItemNewSymbol.setText("Neues Schaltzeichen");
+						menuItemNewSymbol.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
-								jMenuItem4ActionPerformed(evt);
+								menuItemNewSymbolActionPerformed(evt);
+							}
+						});
+					}
+				}
+				{
+					menuExtras = new JMenu();
+					jMenuBar1.add(menuExtras);
+					menuExtras.setText("Extras");
+					{
+						menuItemPreferences = new JMenuItem();
+						menuExtras.add(menuItemPreferences);
+						menuItemPreferences.setText("Benutzervorgaben");
+						menuItemPreferences.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent evt) {
+								menuItemPreferencesActionPerformed(evt);
 							}
 						});
 					}
@@ -513,7 +519,7 @@ public class FrmMain extends javax.swing.JFrame
 						drawComponent2.export(file.getPath());
 					}
 					break;
-				case 1: jMenuItem7ActionPerformed(null);
+				case 1: menuItemExportCurrentActionPerformed(null);
 				break;
 				case 2: break;
 				}
@@ -561,7 +567,7 @@ public class FrmMain extends javax.swing.JFrame
 				}
 			}  
 			
-			if(synchronize)
+			if(synchronizeWorkBench)
 			{
 				drawComponent1.addToList(eo.getDrawObject(true, drawComponent1.getNextIndex(), zoomCount, zoomFactor));
 				drawComponent2.addToList(eo.getDrawObject(false, drawComponent2.getNextIndex(), zoomCount, zoomFactor));
@@ -598,7 +604,7 @@ public class FrmMain extends javax.swing.JFrame
 			drawComponent2.setActObject(objectIndex);
 		}
 
-		if(synchronize)
+		if(synchronizeWorkBench)
 		{
 			drawComponent1.setActObject(objectIndex);
 			drawComponent2.setActObject(objectIndex);
@@ -672,7 +678,7 @@ public class FrmMain extends javax.swing.JFrame
 	 * variieren kann. Dann wird die selbe Groesse  100 Pixel als neue Groesse gesetzt. Die Groessee wird fuer beide DrawComponents gleichzeitig erhoeht.
 	 * @param evt
 	 */
-	private void jMenuItem1ActionPerformed(ActionEvent evt) 
+	private void menuItemExtendWorkBenchActionPerformed(ActionEvent evt) 
 	{
 		int width = drawComponent1.getSize().width;
 		int height = drawComponent1.getSize().height;
@@ -688,7 +694,7 @@ public class FrmMain extends javax.swing.JFrame
 	 * variieren kann. Dann wird die selbe Grï¿½ï¿½e - 100 Pixel als neue Grï¿½ï¿½e gesetzt. Die Grï¿½ï¿½e wird fï¿½r beide DrawComponents gleichzeitig verkleinert.
 	 * @param evt
 	 */
-	private void jMenuItem2ActionPerformed(ActionEvent evt) 
+	private void menuItemReduceWorkBenchActionPerformed(ActionEvent evt) 
 	{
 		int width = drawComponent1.getSize().width;
 		int height = drawComponent1.getSize().height;
@@ -703,7 +709,7 @@ public class FrmMain extends javax.swing.JFrame
 	 * Menue Editor, Menuepunkt "Neues Schaltzeichen": Oeffnet ein neues JFrame mit dem leeren Editor.
 	 * @param evt
 	 */
-	private void jMenuItem3ActionPerformed(ActionEvent evt) 
+	private void menuItemNewSymbolActionPerformed(ActionEvent evt) 
 	{
 		EditorGUI editorGui = new EditorGUI();
 		editorGui.setVisible(true);
@@ -713,7 +719,7 @@ public class FrmMain extends javax.swing.JFrame
 	 * Menue Extras, Menuepunkt "Benutzervorgaben": Oeffnet das Einstellungsfenster
 	 * @param evt
 	 */
-	private void jMenuItem4ActionPerformed(ActionEvent evt) 
+	private void menuItemPreferencesActionPerformed(ActionEvent evt) 
 	{
 		frmOptions.setVisible(true);
 	}
@@ -722,7 +728,7 @@ public class FrmMain extends javax.swing.JFrame
 	 * Menï¿½ Datei, Menï¿½punkt "Speichern unter...": ï¿½ffnet einen Filechooser und speichert den aktuellen Schaltplan.
 	 * @param evt
 	 */
-	private void jMenuItem5ActionPerformed(ActionEvent evt) 
+	private void menuItemSaveAsActionPerformed(ActionEvent evt) 
 	{
 		JFileChooser fc = new JFileChooser();
 		fc.setAcceptAllFileFilterUsed(false);
@@ -755,7 +761,7 @@ public class FrmMain extends javax.swing.JFrame
 				{
 				case 0: saveAs((path));
 				break;
-				case 1: jMenuItem5ActionPerformed(evt);
+				case 1: menuItemSaveAsActionPerformed(evt);
 				break;
 				case 2: break;
 				}
@@ -775,7 +781,7 @@ public class FrmMain extends javax.swing.JFrame
 	 * @param evt
 	 */
 	@SuppressWarnings("unchecked")
-	private void jMenuItem6ActionPerformed(ActionEvent evt) 
+	private void menuItemOpenActionPerformed(ActionEvent evt) 
 	{
 		JFileChooser fc = new JFileChooser();
 		fc.setAcceptAllFileFilterUsed(false);
@@ -830,7 +836,7 @@ public class FrmMain extends javax.swing.JFrame
 	 * @param evt
 	 * @throws IOException
 	 */
-	private void jMenuItem7ActionPerformed(ActionEvent evt) throws IOException 
+	private void menuItemExportCurrentActionPerformed(ActionEvent evt) throws IOException 
 	{
 		export(true);
 
@@ -842,16 +848,16 @@ public class FrmMain extends javax.swing.JFrame
 	 * @param evt
 	 * @throws IOException
 	 */
-	private void jMenuItem8ActionPerformed(ActionEvent evt) throws IOException 
+	private void menuItemExportBothActionPerformed(ActionEvent evt) throws IOException 
 	{
 		export(false);
 	}
 
-	private void jMenuItem9ActionPerformed(ActionEvent evt) 
+	private void menuItemSaveActionPerformed(ActionEvent evt) 
 	{
 		if(path == null)
 		{
-			jMenuItem5ActionPerformed(evt);
+			menuItemSaveAsActionPerformed(evt);
 		}
 		else
 		{
@@ -890,9 +896,9 @@ public class FrmMain extends javax.swing.JFrame
 		drawComponent2.setGridInterval(interval);
 	}
 
-	public void setSynchronized(boolean b)
+	public void setsynchronizeWorkBenchd(boolean b)
 	{
-		this.synchronize = b;
+		this.synchronizeWorkBench = b;
 	}
 
 	public void setBackgroundColor(Color c1, Color c2)

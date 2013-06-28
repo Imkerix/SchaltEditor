@@ -213,7 +213,6 @@ public class DrawComponent extends JSVGComponent
 			{								
 				gridMoveReferenceX += endMove.getX()-startMove.getX();
 				gridMoveReferenceY += endMove.getY()-startMove.getY();
-				System.out.println(gridMoveReferenceX);
 				
 				startMove.setLocation(0, 0);
 				endMove.setLocation(0, 0);

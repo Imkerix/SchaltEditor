@@ -1,14 +1,14 @@
 package mainFrame;
 
 /**
- * The main-class only includes the main-method.
+ * Die Main Klasse enthaelt nur die Main-Methode und dient zum Starten des Programms.
  * @author Clemens Krug
  *
  */
 public class Main 
 {
 	/**
-	 * This method is called at the very start of the program.
+	 * Diese Methode wird beim Starten des Programms aufgerufen.
 	 * @param args
 	 */
   public static void main(String[] args) 
