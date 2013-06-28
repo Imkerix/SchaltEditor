@@ -40,6 +40,7 @@ public class FrmOptions extends javax.swing.JFrame
 	private JTextField jTextField1;
 	private JButton jButton1;
 	private JCheckBox jCheckBox2;
+	private JCheckBox jCheckBox4;
 	private JEditorPane jEditorPane6;
 	private JLabel jLabel12;
 	private JEditorPane jEditorPane5;
@@ -197,6 +198,12 @@ public class FrmOptions extends javax.swing.JFrame
 					jLabel8.setText("Pixel");
 					jLabel8.setBounds(213, 267, 52, 16);
 				}
+				{
+					jCheckBox4 = new JCheckBox();
+					jPanel1.add(jCheckBox4);
+					jCheckBox4.setText("Bewegung am Gitter ausrichten");
+					jCheckBox4.setBounds(22, 159, 229, 20);
+				}
 			}
 			jPanel2 = new JPanel();
 
@@ -216,6 +223,7 @@ public class FrmOptions extends javax.swing.JFrame
 					jPanel2.add(jEditorPane1);
 					jEditorPane1.setBounds(146, 34, 27, 20);
 					jEditorPane1.setEditable(false);
+					jEditorPane1.setBackground(new Color(210, 210, 210));
 					jEditorPane1.addMouseListener(new MouseAdapter() {
 						public void mouseClicked(MouseEvent evt) {
 							jEditorPane1MouseClicked(evt);
@@ -255,6 +263,7 @@ public class FrmOptions extends javax.swing.JFrame
 					jPanel2.add(jEditorPane2);
 					jEditorPane2.setBounds(453, 37, 28, 20);
 					jEditorPane2.setEditable(false);
+					jEditorPane2.setBackground(new Color(210, 210, 210));
 					jEditorPane2.addMouseListener(new MouseAdapter() {
 						public void mouseClicked(MouseEvent evt) {
 							jEditorPane2MouseClicked(evt);
@@ -299,6 +308,7 @@ public class FrmOptions extends javax.swing.JFrame
 					jPanel2.add(jEditorPane3);
 					jEditorPane3.setBounds(146, 67, 27, 20);
 					jEditorPane3.setEditable(false);
+					jEditorPane3.setBackground(Color.black);
 					jEditorPane3.addMouseListener(new MouseAdapter() {
 						public void mouseClicked(MouseEvent evt) {
 							jEditorPane3MouseClicked(evt);
@@ -310,6 +320,7 @@ public class FrmOptions extends javax.swing.JFrame
 					jPanel2.add(jEditorPane4);
 					jEditorPane4.setBounds(455, 68, 26, 20);
 					jEditorPane4.setEditable(false);
+					jEditorPane4.setBackground(Color.black);
 					jEditorPane4.addMouseListener(new MouseAdapter() {
 						public void mouseClicked(MouseEvent evt) {
 							jEditorPane4MouseClicked(evt);
@@ -407,6 +418,8 @@ public class FrmOptions extends javax.swing.JFrame
 		frmMain.setSynchronized(jCheckBox2.isSelected());
 		drawComponent1.showConnectors(!jCheckBox3.isSelected());
 		drawComponent2.showConnectors(!jCheckBox3.isSelected());
+		drawComponent1.setGridMoving(jCheckBox4.isSelected());
+		drawComponent2.setGridMoving(jCheckBox4.isSelected());
 
 		drawComponent1.setGridColor(jEditorPane1.getBackground());
 		drawComponent2.setGridColor(jEditorPane2.getBackground());

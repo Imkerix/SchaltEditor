@@ -34,8 +34,8 @@ public abstract class GeometricObject implements Serializable
 	 */
 	public void move(Point startMove, Point endMove, int canvasWidth, int canvasHeight)
 	{
-		if(((x + endMove.getX()-startMove.getX()) > 0) 
-			&& ((y + endMove.getY()-startMove.getY()) > 0)
+		if(((x + endMove.getX()-startMove.getX()) >= 0) 
+			&& ((y + endMove.getY()-startMove.getY()) >= 0)
 			&& ((x + width + endMove.getX()-startMove.getX()) < canvasWidth) 
 			&& ((y + height + endMove.getY()-startMove.getY()) < canvasHeight)	
 			)

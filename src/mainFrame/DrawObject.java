@@ -93,12 +93,12 @@ public class DrawObject implements Serializable
 
 	public void move(Point startMove, Point endMove, int canvasWidth, int canvasHeight)
 	{
-		if(((x1 + endMove.getX()-startMove.getX()) > 0) 
-				&& ((y1 + endMove.getY()-startMove.getY()) > 0)
+		if(((x1 + endMove.getX()-startMove.getX()) >= 0) 
+				&& ((y1 + endMove.getY()-startMove.getY()) >= 0)
 				&& ((x2 + endMove.getX()-startMove.getX()) < canvasWidth) 
 				&& ((y2 + endMove.getY()-startMove.getY()) < canvasHeight))
 		{    
-
+			
 			updateOuterPoints(startMove, endMove);  
 
 			for(GeometricObject go : geometricObjects)

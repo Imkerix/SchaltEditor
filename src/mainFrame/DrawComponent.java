@@ -33,13 +33,27 @@ public class DrawComponent extends JSVGComponent
 	private DrawObject actObject;
 	private Connector actConnector1;
 	private Connector actConnector2;
-	private boolean schaltplan; //true = Wirkschaltplan
+	private double gridMoveReferenceX = 0;
+	private double gridMoveReferenceY = 0;
+	private boolean gridMoving = false;
 
+	/**
+	 * Dieses Attribut gibt an, ob der DrawComponent Wirkschaltplanzeichen darstellen soll oder Stromlaufplanzeichen.
+	 * True bedeutet Wirkschaltplan.
+	 * False bedeutet Stromlaufplan. */
+	private boolean schaltplantyp; //true = Wirkschaltplan
+
+	//Einstellungen
+
+	//Gitter anzeigen? True = ja, False = nein.
 	private boolean showGrid = false;
+	//Abstand der Gitterpunkte
 	private int gridInterval = 30;
+	//Farbe des Gitters
 	private Color gridColor = new Color(210, 210, 210);
+	//Farbe der Symbole
 	private Color symbolColor = Color.black;
-
+	//Connectors anzeigen? True = ja, False = nein.
 	private boolean showConnectors = true;
 
 
@@ -50,10 +64,10 @@ public class DrawComponent extends JSVGComponent
 	 * @param eventsEnabled
 	 * @param selectableText
 	 */
-	public DrawComponent(SVGUserAgent ua, boolean eventsEnabled, boolean selectableText, boolean schaltplan) 
+	public DrawComponent(SVGUserAgent ua, boolean eventsEnabled, boolean selectableText, boolean schaltplantyp) 
 	{
 		super(ua, eventsEnabled, selectableText);  
-		this.schaltplan = schaltplan;
+		this.schaltplantyp = schaltplantyp;
 	}
 
 	@Override
@@ -88,13 +102,10 @@ public class DrawComponent extends JSVGComponent
 			actObject.drawOutline(g2d);
 		}
 
-
-
-
 	}
 
 	/**
-	 * F�gt der Liste ein neues DrawObject hinzu.
+	 * Fuegt der Liste ein neues DrawObject hinzu.
 	 * @param drawObject
 	 */
 	public void addToList(DrawObject drawObject)
@@ -179,11 +190,11 @@ public class DrawComponent extends JSVGComponent
 		//Wenn actConnector1 nicht null ist, aber in kein Objekt geklickt wurde...
 		if(actConnector1 != null)
 		{
-			//wird der Connector abgew�hlt.
+			//wird der Connector abgewaehlt.
 			actConnector1.setKlicked(false);
 			actConnector1 = null;
 		}
-		//Dasselbe gilt f�r actConnector2.
+		//Dasselbe gilt fuer actConnector2.
 		if(actConnector2 != null)
 		{
 			actConnector2.setKlicked(false);
@@ -198,6 +209,39 @@ public class DrawComponent extends JSVGComponent
 	{
 		if(actObject != null)
 		{
+			if(gridMoving)
+			{								
+				gridMoveReferenceX += endMove.getX()-startMove.getX();
+				gridMoveReferenceY += endMove.getY()-startMove.getY();
+				System.out.println(gridMoveReferenceX);
+				
+				startMove.setLocation(0, 0);
+				endMove.setLocation(0, 0);
+				
+
+				if(gridMoveReferenceX >= gridInterval)
+				{
+					endMove.setLocation(gridInterval, 0);
+					gridMoveReferenceX = 0;
+				}
+				else if(gridMoveReferenceX <= gridInterval*-1)
+				{
+					endMove.setLocation(gridInterval*-1, 0);
+					gridMoveReferenceX = 0;
+				}
+				
+				if(gridMoveReferenceY >= gridInterval)
+				{
+					endMove.setLocation(endMove.getX(), gridInterval);
+					gridMoveReferenceY = 0;
+				}
+				else if(gridMoveReferenceY <= gridInterval*-1)
+				{
+					endMove.setLocation(endMove.getX(), gridInterval*-1);
+					gridMoveReferenceY = 0;
+				}
+			}
+
 			actObject.move(startMove, endMove, this.getWidth(), this.getHeight());
 		}
 		repaint();
@@ -346,15 +390,20 @@ public class DrawComponent extends JSVGComponent
 			}
 		}
 	}
-	
+
 	public void setSymbolColor(Color c)
 	{
 		this.symbolColor = c;
 	}
-	
+
 	public boolean getSchaltplan()
 	{
-		return schaltplan;
+		return schaltplantyp;
+	}
+	
+	public void setGridMoving(boolean b)
+	{
+		this.gridMoving = b;
 	}
 }
 
