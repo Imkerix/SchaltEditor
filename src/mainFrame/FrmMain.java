@@ -338,10 +338,12 @@ public class FrmMain extends javax.swing.JFrame
 
 					//+
 					drawComponent1.getInputMap(JSVGComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ADD, 0), "plusAction");
+					drawComponent1.getInputMap(JSVGComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, 0), "plusAction");
 					drawComponent1.getActionMap().put("plusAction", plus);
 
 					//-
 					drawComponent1.getInputMap(JSVGComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, 0), "minusAction");
+					drawComponent1.getInputMap(JSVGComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, 0), "minusAction");
 					drawComponent1.getActionMap().put("minusAction", minus);
 
 					//Del
@@ -350,10 +352,12 @@ public class FrmMain extends javax.swing.JFrame
 
 					//+
 					drawComponent2.getInputMap(JSVGComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ADD, 0), "plusAction");
+					drawComponent2.getInputMap(JSVGComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, 0), "plusAction");
 					drawComponent2.getActionMap().put("plusAction", plus);
 
 					//-
 					drawComponent2.getInputMap(JSVGComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, 0), "minusAction");
+					drawComponent2.getInputMap(JSVGComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, 0), "minusAction");
 					drawComponent2.getActionMap().put("minusAction", minus);
 				}
 			}
@@ -776,8 +780,8 @@ public class FrmMain extends javax.swing.JFrame
 	}
 
 	/**
-	 * Men� Datei, Men�punkt "�ffnen": Per FileChooser wird die zu �ffnede Datei gew�hlt. 
-	 * Anschlie�end werden die DrawObjects aus der Datei ausgelesen
+	 * Menu Datei, Menupunkt "Oeffnen": Per FileChooser wird die zu oeffnede Datei gewaehlt. 
+	 * Anschliessend werden die DrawObjects aus der Datei ausgelesen
 	 * @param evt
 	 */
 	@SuppressWarnings("unchecked")
@@ -896,12 +900,12 @@ public class FrmMain extends javax.swing.JFrame
 		drawComponent2.setGridInterval(interval);
 	}
 
-	public void setsynchronizeWorkBenchd(boolean b)
+	public void synchronizeWorkBench(boolean b)
 	{
 		this.synchronizeWorkBench = b;
 	}
 
-	public void setBackgroundColor(Color c1, Color c2)
+	public void setWorkBenchBackground(Color c1, Color c2)
 	{
 		jScrollPane2.getViewport().setBackground(c1);
 		jScrollPane3.getViewport().setBackground(c2);
