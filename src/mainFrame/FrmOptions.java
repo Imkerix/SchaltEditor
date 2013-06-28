@@ -415,7 +415,7 @@ public class FrmOptions extends javax.swing.JFrame
 		}
 
 		frmMain.showGrid(jCheckBox1.isSelected());
-		frmMain.setSynchronized(jCheckBox2.isSelected());
+		frmMain.synchronizeWorkBench(jCheckBox2.isSelected());
 		drawComponent1.showConnectors(!jCheckBox3.isSelected());
 		drawComponent2.showConnectors(!jCheckBox3.isSelected());
 		drawComponent1.setGridMoving(jCheckBox4.isSelected());
@@ -425,7 +425,7 @@ public class FrmOptions extends javax.swing.JFrame
 		drawComponent2.setGridColor(jEditorPane2.getBackground());
 		drawComponent1.setSymbolColor(jEditorPane3.getBackground());
 		drawComponent2.setSymbolColor(jEditorPane4.getBackground());
-		frmMain.setBackgroundColor(jEditorPane5.getBackground(), jEditorPane6.getBackground());
+		frmMain.setWorkBenchBackground(jEditorPane5.getBackground(), jEditorPane6.getBackground());
 	}
 
 	private void jEditorPane3MouseClicked(MouseEvent evt) 
