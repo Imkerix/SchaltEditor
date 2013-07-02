@@ -2,11 +2,12 @@ package editor;
 
 import javax.swing.JFrame;
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Frame;
 import java.awt.Graphics;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
+import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.RenderingHints;
 
 import shared.Connector;
 import shared.GeometricObject;
@@ -14,14 +15,18 @@ import shared.Kreis;
 import shared.Linie;
 import shared.Rechteck;
 
+import mainFrame.DrawComponent;
 import org.apache.batik.dom.GenericDOMImplementation;
 import org.apache.batik.svggen.SVGGraphics2D;
-import org.apache.batik.swing.JSVGCanvas;
+import org.apache.batik.swing.svg.JSVGComponent;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JList;
 import javax.swing.JSplitPane;
@@ -31,6 +36,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JMenuBar;
@@ -39,278 +45,566 @@ import javax.swing.JMenuItem;
 import javax.swing.JTabbedPane;
 import javax.swing.JButton;
 import javax.swing.JSeparator;
+import javax.swing.KeyStroke;
 
 /**
  * 
  * @author erik heinisch
- * @version 0.2 - 0.3
+ * @version 0.3 - 0.4
  */
 @SuppressWarnings("serial")
-public class EditorGUI extends JFrame
+public class EditorGUI extends JFrame 
 {
-	//// Begin : Values needed in several Method that can't invoke each other nicely
-		private JList<String> list = new JList<String>();
+	//// Begin : Stuff needed in several Method that can't invoke each other nicely
+		private JList<String> list;
 		private Point startMove;
-		private JSVGCanvas canvasleft;
-		private JSVGCanvas canvasright;
+		private DrawComponent canvasleft;
+		private DrawComponent canvasright;
 		private ArrayList<GeometricObject> geomListleft = new ArrayList<GeometricObject>();
 		private ArrayList<GeometricObject> geomListright = new ArrayList<GeometricObject>();
 		private GeometricObject actObjectleft;
 		private GeometricObject actObjectright;
-		private JTabbedPane mytabbedpane;
+		private JTabbedPane mytabbedpane = new JTabbedPane();
+		private JSplitPane splitPane = new JSplitPane();
+		private JScrollPane scrollPane = new JScrollPane();
+		private JScrollPane scrollPaneleft = new JScrollPane();
+		private JScrollPane scrollPaneright = new JScrollPane();
 		private int selectedGrabber;
 		private String rootDir = "Schaltzeichen";
 		private SVGGen svgGenerator = new SVGGen();
 		private boolean wasSaved = true;
 		private String objectName;
-	////end : Values needed in several Method that can't invoke each other nicely
-		
-	/**
-	 * Prepares and creates the graphical user interface for the usage to edit an existing switching symbol.<br>
-	 * @param p_objectName the name of the switching object to edit.
-	 * @param p_ArrayListWirkSchaltPlan the {@link ArrayList} that contains the {@link GeometricObject}&lsquo;s for the WirkSchaltPlan.
-	 * @param p_ArrayListStromFlussPlan the {@link ArrayList} that contains the {@link GeometricObject}&lsquo;s for the StromFlussPlan.
-	 */	
-	public EditorGUI(String p_objectName, ArrayList<GeometricObject> p_ArrayListWirkSchaltPlan, ArrayList<GeometricObject> p_ArrayListStromFlussPlan)
-	{
-		this();
-		objectName = p_objectName;
-		geomListleft = p_ArrayListWirkSchaltPlan;
-		geomListright = p_ArrayListStromFlussPlan;
-		canvasleft.repaint();
-		canvasright.repaint();
-	}
-		
-	/**
+		private JMenuBar menuBar;
+		private boolean isActive = false;
+		/**
 	 * Contains the implementation of the graphical user interface.
 	 */
 	public EditorGUI() 
 	{
 		//// Begin : Initialize
-			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-			GraphicsDevice[] screens = ge.getScreenDevices();
-			Rectangle display = screens[0].getDefaultConfiguration().getBounds();
-			setSize((int)display.getWidth()-500, (int)display.getHeight()-500);
+			setExtendedState(Frame.MAXIMIZED_BOTH);
 			
 			setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 			
 			setTitle("Schaltzeichen Editor");
 			objectName = null;
 			
-			getContentPane().setLayout(new BorderLayout(0, 0));
-			
-			JSplitPane splitPane = new JSplitPane();
-			splitPane.setDividerSize(5);
-			getContentPane().add(splitPane, BorderLayout.CENTER);
-			
-			JScrollPane scrollPane = new JScrollPane();
-			splitPane.setLeftComponent(scrollPane);
-			
-			scrollPane.setViewportView(list);
 		//// End : Initialize
 		
-		//// Begin : Canvas creation
-			 canvasleft = new JSVGCanvas()
-			 {
+		//// Begin : Canvas	
+						 
+				// subBegin : MouseMotionAdapter for Canvas
+						MouseMotionAdapter mma = new MouseMotionAdapter() 
+						{
+							@Override
+							public void mouseDragged(MouseEvent e) 
+							{
+								canvasMouseDragged(e);
+							}
+						};
+				// subEnd : MouseMotionAdapter for Canvas	
+						
 				
-				public void paint(Graphics g) 
-				{
-					// subBegin : Update canvas to actual state
-						for (GeometricObject go : geomListleft) 
+				// subBegin : MouseAdapter for Canvas	
+							MouseAdapter ma = new MouseAdapter() 
 						{
-							go.draw(g);
-						}
-						if(actObjectleft!=null)
-						{
-							actObjectleft.drawOutline(g);
-							actObjectleft.drawGrabbers(g);
-						}
-					// subEnd : Update canvas to actual state
-				}
-			 };
-			 canvasright = new JSVGCanvas()
-			 {
-				@Override
-				public void paint(Graphics g) 
-				{
-					// subBegin : Update canvas to actual state
-						for (GeometricObject go : geomListright) 
-						{
-							go.draw(g);
-						}
-						if(actObjectright!=null)
-						{
-							actObjectright.drawOutline(g);
-							actObjectright.drawGrabbers(g);
-						}
-					// subEnd : Update canvas to actual state
-				}
-			 };
-		////End : Canvas creation
-		
-		//// Begin : Create and init the JTabbedPane	 
-			mytabbedpane = new JTabbedPane();
-			mytabbedpane.setAutoscrolls(true);
-			mytabbedpane.addTab("Wirkschaltzeichen", canvasleft);
-			mytabbedpane.addTab("Stromlaufzeichen", canvasright);
-			splitPane.setRightComponent(mytabbedpane);
-		//// End : Create and init the JTabbedPane	
-		
-		//// Begin : Add MouseListener to the list with the Geometric Objects and call handler Method	
-			list.addMouseListener(new MouseAdapter()
-			{
-				@Override
-				public void mouseClicked(MouseEvent e) 
-				{
-					listMouseClicked(e);
-				}
-			});
-			addListItems();
-		//// End : Add MouseListener to the list with the Geometric Objects	and call handler Method	
+							@Override
+							public void mousePressed(MouseEvent e) 
+							{
+								canvasMousePressed(e);
+							}
+							@Override
+							public void mouseReleased(MouseEvent e) 
+							{
+								canvasMouseReleased(e);
+							}
+						};
+				// subEnd : MouseAdapter for Canvas	
+				
+				// subBegin : KeyListener 
+						
+						// subBegin : KeyListener for Canvasleft
+								AbstractAction deleteLeft = new AbstractAction() 
+								{
+									public void actionPerformed(ActionEvent e)
+									{
+										if(actObjectleft != null)
+										{
+											geomListleft.remove(actObjectleft);
+											actObjectleft = null;
+											canvasleft.repaint();
+										}
+									}
+								};
+								AbstractAction plusLeft = new AbstractAction() 
+								{
+									public void actionPerformed(ActionEvent e) 
+									{
+										for(GeometricObject tempLeft : geomListleft)
+										{
+											tempLeft.zoom(2); 
+										}
+										canvasleft.repaint();
+									}
+								};
+								AbstractAction minusLeft = new AbstractAction() 
+								{
+									public void actionPerformed(ActionEvent e) 
+									{
+										for(GeometricObject tempLeft : geomListleft)
+										{
+											tempLeft.zoom(0.5); 
+										}
+										canvasleft.repaint();
+									}
+								};
+						// subEnd : KeyListener for Canvasleft
+						// subBegin : KeyListener for Canvasright
+								AbstractAction deleteRight = new AbstractAction() 
+								{
+									public void actionPerformed(ActionEvent e)
+									{
+										if(actObjectright != null)
+										{
+											geomListright.remove(actObjectright);
+											actObjectright = null;
+											canvasright.repaint();
+										}
+									}
+								};
+								AbstractAction plusRight = new AbstractAction() 
+								{
+									public void actionPerformed(ActionEvent e) 
+									{
+										for(GeometricObject tempRight : geomListright)
+										{
+											tempRight.zoom(2); 
+										}
+										canvasright.repaint();
+									}
+								};
+								AbstractAction minusRight = new AbstractAction() 
+								{
+									public void actionPerformed(ActionEvent e) 
+									{
+										for(GeometricObject tempRight : geomListright)
+										{
+											tempRight.zoom(0.5); 
+										}
+										canvasright.repaint();
+									}
+								};
+						// subEnd : KeyListener for Canvasright	
+								
+				// subEnd : KeyListener 			
+					
+				// subBegin : Canvas creation
+						// subBegin : Left side
+						
+							 canvasleft = new DrawComponent(null, true, rootPaneCheckingEnabled, true)
+							 {
+								 @Override
+								 public void paintComponent(Graphics g)
+								 {
+									Graphics2D g2d = (Graphics2D) g;
+									g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+									g2d.setRenderingHint(RenderingHints.KEY_RENDERING,RenderingHints.VALUE_RENDER_QUALITY);
+									
+									// subBegin : Update canvas to actual state
+										if(showGrid)
+										{
+											drawGrid(g);
+										}
+										g2d.setColor(symbolColor);
+										for (GeometricObject go : geomListleft) 
+										{
+											go.draw(g);
+										}
+										if(actObjectleft!=null)
+										{
+											actObjectleft.drawOutline(g);
+											actObjectleft.drawGrabbers(g);
+										}
+									// subEnd : Update canvas to actual state 
+								 }
+							 };
+							 			
+							 // subBegin : Add Listeners
+							 	canvasleft.addMouseListener(ma);
+								canvasleft.addMouseMotionListener(mma);
+								
+								canvasleft.getInputMap(JSVGComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "deleteAction");
+								canvasleft.getActionMap().put("deleteAction", deleteLeft);
+								
+								canvasleft.getInputMap(JSVGComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, 0), "PlusAction");
+								canvasleft.getActionMap().put("PlusAction", plusLeft);
+								
+								canvasleft.getInputMap(JSVGComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, 0), "MinusAction");
+								canvasleft.getActionMap().put("MinusAction", minusLeft);
+								
+							 // subEnd : Add Listeners
+								
+						// subEnd : Left side	
+								
+						// subBegin : Right side		
+							 canvasright = new DrawComponent(null, true, rootPaneCheckingEnabled, false)
+							 {
+								 public void paintComponent(Graphics g)
+								 {
+									Graphics2D g2d = (Graphics2D) g;
+									g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+									g2d.setRenderingHint(RenderingHints.KEY_RENDERING,RenderingHints.VALUE_RENDER_QUALITY);
+										
+									// subBegin : Update canvas to actual state
+										if(showGrid)
+										{
+											drawGrid(g);
+										}
+										g2d.setColor(symbolColor);
+										for (GeometricObject go : geomListright) 
+										{
+											go.draw(g);
+										}
+										if(actObjectright!=null)
+										{
+											actObjectright.drawOutline(g);
+											actObjectright.drawGrabbers(g);
+										}
+									// subEnd : Update canvas to actual state 
+								 }
+							 };
+							 
+							 // subBegin : Add Listeners
+							 	canvasright.addMouseListener(ma);
+								canvasright.addMouseMotionListener(mma);
+								
+								canvasright.getInputMap(JSVGComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "deleteAction");
+								canvasright.getActionMap().put("deleteAction", deleteRight);
+								
+								canvasright.getInputMap(JSVGComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, 0), "PlusAction");
+								canvasright.getActionMap().put("PlusAction", plusRight);
+								
+								canvasright.getInputMap(JSVGComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, 0), "MinusAction");
+								canvasright.getActionMap().put("MinusAction", minusRight);
+							 // subEnd : Add Listeners
+						
+						// subBegin : Right side	
+								
+				// subEnd : Canvas creation
+						 
+		//// End : Canvas	
+			
+		//// Begin : List with GeometricObjects	
+			
+				// subBegin : Creation of the list
+						list = new JList<String>();
+				// subEnd : Creation of the list
+				
+					// subBegin : Add MouseListener to the list with the Geometric Objects and call handler Method	
+							list.addMouseListener(new MouseAdapter()
+							{
+								@Override
+								public void mouseClicked(MouseEvent e) 
+								{
+									listMouseClicked(e);
+								}
+							});
+					// subEnd : Add MouseListener to the list with the Geometric Objects and call handler Method
+					
+					// subBegin : Add items to the list
+							addListItems();
+					// subEnd : Add items to the list
+					
+					// subBegin : Add the List to the ScrollPane
+							scrollPane.setViewportView(list);
+					// subEnd : Add the List to the ScrollPane
+				
+		//// End : List with GeometricObjects	
 			
 		//// Begin : Create and implement the JMenuBar 
-			
-			// subBegin : Create JMenuBar and add it to the EditorGUI
-				JMenuBar menuBar = new JMenuBar();
-				setJMenuBar(menuBar);
-			// subBegin : Create JMenuBar and add it to the EditorGUI
-			
-			// subBegin : Create JMenu and add it to the JMenuBar
-				JMenu mnDatei = new JMenu("Datei");
-				menuBar.add(mnDatei);
-			// subEnd : Create JMenu and add it to the JMenuBar
-			
-			// subBegin : Create the JMenuItem "Neu"
-				JMenuItem mntmNeu = new JMenuItem("Neu");
-				mntmNeu.addActionListener(new ActionListener() 
-				{
-					// subsubBegin : React properly on MouseEvent in order to save before clearing the canvas 
-					public void actionPerformed(ActionEvent arg0) 
-					{
-						if(!wasSaved)
-						{
-							saveSwitchingObject();
-						}
-						actObjectleft = null;
-						actObjectright = null;
-						geomListleft.clear();
-						geomListright.clear();
-						canvasleft.repaint();
-						canvasright.repaint();
-					}
-					// subsubEnd : React properly on MouseEvent in order to save before clearing the canvas
-				});
-			// subEnd : Create the JMenuItem "Neu"
-			
-			// subBegin : Create the JMenuItem "Schließen"
-				JMenuItem mntmSpeichern = new JMenuItem("Speichern");
-				mntmSpeichern.addActionListener(new ActionListener() 
-				{
-					// subsubBegin : Call saving Handler method "saveSwitchingObject()" if unsaved
-					public void actionPerformed(ActionEvent arg0) 
-					{
-						if(!wasSaved)
-						{
-							saveSwitchingObject();
-						}
-					}
-					// subsubEnd : Call saving Handler method "saveSwitchingObject()" if unsaved
-				});
-			// subEnd : Create the JMenuItem "Speichern"
 				
-			// subBegin : Create the JMenuItem "Schließen"
-				JMenuItem mntmSchliessen = new JMenuItem("Schließen");
-				mntmSchliessen.addActionListener(new ActionListener() 
-				{
-					// subsubBegin : React properly on MouseEvent in order to close only a saved switching symbol 
-					public void actionPerformed(ActionEvent arg0) 
-					{
-						if(wasSaved)
-						{
-							dispose();
-						}
-						else if(!wasSaved)
-						{
-							closeUnsaved();
-						}
-					}
-					// subsubEnd : React properly on MouseEvent in order to close only a saved switching symbol
-				});
-			// subEnd : Create the JMenuItem "Schließen"
+			// subBegin : Creation		
+					menuBar = new JMenuBar();
+			// subEnd : Creation
 				
-				mnDatei.add(mntmNeu);
-				mnDatei.add(mntmSpeichern);
-				mnDatei.add(mntmSchliessen);
-			
+				// subBegin : Init JMenuBar and add it to the EditorGUI
+						menuBar.setDoubleBuffered(true);
+						setJMenuBar(menuBar);
+				// subBegin : Init JMenuBar and add it to the EditorGUI
+				
+				// subBegin : Create JMenu and add it to the JMenuBar
+						JMenu mnDatei = new JMenu("Datei");
+						menuBar.add(mnDatei);
+				// subEnd : Create JMenu and add it to the JMenuBar
+				
+				// subBegin : Create the JMenuItem "Neu"
+						JMenuItem mntmNeu = new JMenuItem("Neu");
+						mntmNeu.addActionListener(new ActionListener() 
+						{
+							// subsubBegin : React properly on MouseEvent in order to save before clearing the canvas 
+								public void actionPerformed(ActionEvent arg0) 
+								{
+									if(!wasSaved)
+									{
+										saveSwitchingObject();
+									}
+									actObjectleft = null;
+									actObjectright = null;
+									geomListleft.clear();
+									geomListright.clear();
+									canvasleft.repaint();
+									canvasright.repaint();
+								}
+							// subsubEnd : React properly on MouseEvent in order to save before clearing the canvas
+						});
+						mnDatei.add(mntmNeu);
+				// subEnd : Create the JMenuItem "Neu"
+				
+				// subBegin : Create the JMenuItem "Schließen"
+						JMenuItem mntmSpeichern = new JMenuItem("Speichern");
+						mntmSpeichern.addActionListener(new ActionListener() 
+						{
+							// subsubBegin : Call saving Handler method "saveSwitchingObject()" if unsaved
+								public void actionPerformed(ActionEvent arg0) 
+								{
+									if(!wasSaved)
+									{
+										saveSwitchingObject();
+									}
+								}
+							// subsubEnd : Call saving Handler method "saveSwitchingObject()" if unsaved
+						});
+						mnDatei.add(mntmSpeichern);
+				// subEnd : Create the JMenuItem "Speichern"
+					
+				// subBegin : Create the JMenuItem "Schließen"
+						JMenuItem mntmSchliessen = new JMenuItem("Schließen");
+						mntmSchliessen.addActionListener(new ActionListener() 
+						{
+							// subsubBegin : React properly on MouseEvent in order to close only a saved switching symbol 
+								public void actionPerformed(ActionEvent arg0) 
+								{
+									if(wasSaved)
+									{
+										dispose();
+									}
+									else if(!wasSaved)
+									{
+										closeUnsaved();
+									}
+								}
+							// subsubEnd : React properly on MouseEvent in order to close only a saved switching symbol
+						});
+						mnDatei.add(mntmSchliessen);
+				// subEnd : Create the JMenuItem "Schließen"
+						
+						menuBar.add(new JSeparator()); // For the look of the menubar
+					
+				// subBegin : Create and add JButton "Schaltzeichen aufnehmen" to add a switching symbol to the "Schalt Editor"	
+						JButton btnSchaltzeichenAufnehmen = new JButton("Schaltzeichen aufnehmen");
+						btnSchaltzeichenAufnehmen.addActionListener(new ActionListener() 
+						{
+							// subBegin : Call saving Handler method "saveSwitchingObject()" 
+								public void actionPerformed(ActionEvent arg0) 
+								{
+									saveSwitchingObject();
+								}
+							// subEnd : Call saving Handler method "saveSwitchingObject()"
+						});
+						menuBar.add(btnSchaltzeichenAufnehmen);
+				// subEnd : Create and add JButton "Schaltzeichen aufnehmen" to add a switching symbol to the "Schalt Editor"	
+					
 		//// End : Create and implement JMenuBar
 		
-		//// Begin : Create separator to get a better look in the MenuBar 	
-			JSeparator separator = new JSeparator();
-			separator.setDoubleBuffered(true);
-			menuBar.add(separator);
-		//// End : Create separator to get a better look in the MenuBar		
 		
-		//// Begin : Create and add JButton "Schaltzeichen aufnehmen" to add a switching symbol to the "Schalt Editor"	
-			JButton btnSchaltzeichenAufnehmen = new JButton("Schaltzeichen aufnehmen");
-			btnSchaltzeichenAufnehmen.addActionListener(new ActionListener() 
-			{
-				// subBegin : Call saving Handler method "saveSwitchingObject()" 
-					public void actionPerformed(ActionEvent arg0) 
-					{
-						saveSwitchingObject();
-					}
-				// subEnd : Call saving Handler method "saveSwitchingObject()"
-			});
-			menuBar.add(btnSchaltzeichenAufnehmen);
-		//// End : Create and add JButton "Schaltzeichen aufnehmen" to add a switching symbol to the "Schalt Editor"	
 		
-		//// Begin : Create mouse adapters
-			MouseMotionAdapter mma = new MouseMotionAdapter() 
-			{
-				@Override
-				public void mouseDragged(MouseEvent e) 
-				{
-					canvasMouseDragged(e);
-				}
-			};
-			MouseAdapter ma = new MouseAdapter() 
-			{
-				@Override
-				public void mousePressed(MouseEvent e) 
-				{
-					canvasMousePressed(e);
-				}
-				@Override
-				public void mouseReleased(MouseEvent e) 
-				{
-					canvasMouseReleased(e);
-				}
-			};
-			// subBegin : Add mouse adapters
-				canvasleft.addMouseMotionListener(mma);
-				canvasleft.addMouseListener(ma);
-				canvasright.addMouseMotionListener(mma);
-				canvasright.addMouseListener(ma);
-			// subEnd : Add mouse adapters
-		//// Begin : Create mouse adapters
+		
 		
 		//// Begin : Create window adapter
-			addWindowListener(new WindowAdapter() {
-				// subBegin : React on closing window for the saving system
-		            public void windowClosing(java.awt.event.WindowEvent e) {
-		            	if(wasSaved)
-						{
-							dispose();
-						}
-						else if(!wasSaved)
-						{
-							closeUnsaved();
-						}
-		            }
-	            // subEnd : React on closing window for the saving system
-	        });
+				this.addWindowListener(new WindowAdapter() {
+					// subBegin : React on closing window for the saving system
+			            public void windowClosing(WindowEvent e) 
+			            {
+			            	if(wasSaved)
+							{
+								dispose();
+							}
+							else if(!wasSaved)
+							{
+								closeUnsaved();
+							}
+			            }
+		            // subEnd : React on closing window for the saving system
+		        });
 		//// End : Create window adapter
+			
+		//// Begin : JSplitPane
+			
+				// subBegin : Left side
+						splitPane.setLeftComponent(scrollPane);
+				// subEnd : Left side
+					
+				
+				// subBegin : Right side
+						// subBegin : Left side tabbed pane
+							
+							// subBegin : Set object to scroll 
+								scrollPaneleft.setViewportView(canvasleft);
+							// subEnd : Set object to scroll 
+								
+							// subBegin : Add to mytabbedpane
+								mytabbedpane.addTab("Wirkschaltzeichen", scrollPaneleft);
+							// subEnd : Add to mytabbedpane
+								
+						// subEnd : Left side tabbed pane
+					
+						// subBegin : Right side tabbed pane
+							
+							// subBegin : Set object to scroll  
+								scrollPaneright.setViewportView(canvasright);
+							// subEnd : Set object to scroll 
+								
+							// subBegin : Add to mytabbedpane
+								mytabbedpane.addTab("Stromlaufzeichen", scrollPaneright);
+							// subEnd : Add to mytabbedpane
+								
+						// subEnd : Right side tabbed pane		
+						
+						splitPane.setRightComponent(mytabbedpane);
+						
+				// subEnd : Right side
+				
+				splitPane.setDividerSize(5);
+				this.getContentPane().add(splitPane, BorderLayout.CENTER);
+
+		//// End : JSplitPane
 	}
+	
+	////Begin : Listener methods
+	
+	/**
+			 * Invokes the +expand(int grabber, Point endMove) or the +move(Point startMove, Point endMove) method 
+			 * in {@link GeometricObject}, as required by the int selectedGrabber.<br>
+			 * @param e the Mouse Event that gives the Position of the mouse released action.   
+			 */
+			public void canvasMouseDragged(MouseEvent e)
+			{
+				//// Begin : Which is the active canvas
+					if(mytabbedpane.getSelectedIndex()==0 && actObjectleft!=null)
+					{	
+						
+						// subBegin : Where has the user clicked and how to react to		
+							switch (selectedGrabber)
+							{
+							case 0:case 1:case 2:case 3: // case 0,1,2,3 have the same handling 
+								actObjectleft.expand(selectedGrabber, e.getPoint(), canvasleft.getWidth(), canvasleft.getHeight()); wasSaved = false; break;
+							case 10: actObjectleft.move(startMove, e.getPoint(), canvasleft.getWidth(), canvasleft.getHeight()); wasSaved = false; break;
+							}
+						// subEnd : Where has the user clicked and how to react to
+					}
+					else if(actObjectright!=null)
+					{				
+						// subBegin : Where has the user clicked and how to react to	
+							switch (selectedGrabber)
+							{
+							case 0:case 1:case 2:case 3: // case 0,1,2,3 have the same handling
+								actObjectright.expand(selectedGrabber, e.getPoint(), canvasright.getWidth(), canvasright.getHeight()); wasSaved = false; break;
+							case 10: actObjectright.move(startMove, e.getPoint(), canvasright.getWidth(), canvasright.getHeight()); wasSaved = false; break;
+							}
+						// subEnd : Where has the user clicked and how to react to	
+					}
+				//// End : Which is the active canvas
+				
+				startMove = e.getPoint(); 	// set StartMove to actual event (mouse) position
+				repaint(); 					// update the canvas
+			}
+			
+			/**
+			 * Set&lsquo;s new values to the Point startMove <br>
+			 * @param e
+			 */
+			public void canvasMousePressed(MouseEvent e)
+			{
+				startMove = e.getPoint();
+			}
+			
+			/**
+			 * Tests where a {@link GeometricObject} was hit my the mouse event and set&lsquo;s <br>
+			 * selectedGrabber to a value representing the area where the Object was hit.<br>
+			 * <br>
+			 * 10 = hit inside the Object<br>
+			 * 0  = hit in grabber 0<br>
+			 * 1  = hit in grabber 1<br>
+			 * 2  = hit in grabber 2<br>
+			 * 3  = hit in grabber 3<br>
+			 * <br>
+			 * 
+			 * @param e the MouseEvent where the {@link GeometricObject} was hit by the mouse.
+			 */
+			public void canvasMouseReleased(MouseEvent e)
+			{
+				actObjectleft = null;  
+				actObjectright = null;
+				
+				if(mytabbedpane.getSelectedIndex()==0)
+				{
+					for(GeometricObject go : geomListleft)
+					{
+						if(go.isInside(e.getX(), e.getY()) != -1)
+						{
+							actObjectleft = go;
+							if(isActive == false)
+							{
+								menuBar.add(go.setOptionsBar(), 1);
+								isActive = true;
+								menuBar.validate();
+							}
+							
+							selectedGrabber = go.isInside(e.getX(), e.getY());
+						}
+						else
+						{
+							if(isActive == true)
+							{
+								menuBar.remove(1);
+								isActive = false;
+								menuBar.validate();
+							}
+						}
+					}
+				}
+				else
+				{
+					for(GeometricObject go : geomListright)
+					{
+						if(go.isInside(e.getX(), e.getY()) != -1)
+						{
+							actObjectright = go;
+								
+							if(isActive == false)
+							{
+								menuBar.add(go.setOptionsBar(), 1);
+								isActive = true;
+								menuBar.validate();
+							}
+							
+							selectedGrabber = go.isInside(e.getX(), e.getY());
+						}
+						else
+						{
+							if(isActive == true)
+							{
+								menuBar.remove(1);
+								isActive = false;
+								menuBar.validate();
+							}
+						}
+					}
+				}
+				repaint(); // update the canvas
+			}
+			
+	//// End : Listener methods
 	
 	/**
 	 * Add&lsquo;s Strings for the available standard forms to the list in the graphical user interface.
@@ -404,106 +698,48 @@ public class EditorGUI extends JFrame
 			}
 			switch (list.getSelectedValue())
 			{
-				case "Kreis" : temp.add(new Kreis(0, 0, 50, 50));
+				case "Kreis" : temp.add(new Kreis(1, 1, 51, 51));
 					break;
-				case "Rechteck" : temp.add(new Rechteck(0, 0, 50, 50));
+				case "Rechteck" : temp.add(new Rechteck(1, 1, 51, 51));
 					break;
-				case "Linie" : temp.add(new Linie(0, 0, 50, 50));
+				case "Linie" : temp.add(new Linie(1, 1, 51, 51));
 					break;
-				case "Connector" : temp.add(new Connector(0, 0, 8, 8));
+				case "Connector" : temp.add(new Connector(0,0));
 					break;
 			}
+ 			
 			wasSaved = false;
 			repaint();		
 		}
 	}
-	
+
 	/**
-	 * Invokes the +expand(int grabber, Point endMove) or the +move(Point startMove, Point endMove) method 
-	 * in {@link GeometricObject}, as required by the int selectedGrabber.<br>
-	 * @param e the Mouse Event that gives the Position of the mouse released action.   
-	 */
-	public void canvasMouseDragged(MouseEvent e)
+	 * Prepares the graphical user interface for the usage to edit an existing switching symbol.<br>
+	 * @param p_objectName the name of the switching object to edit.
+	 * @param p_ArrayListWirkSchaltPlan the {@link ArrayList} that contains the {@link GeometricObject}&lsquo;s for the WirkSchaltPlan.
+	 * @param p_ArrayListStromFlussPlan the {@link ArrayList} that contains the {@link GeometricObject}&lsquo;s for the StromFlussPlan.
+	 */	
+	public void setEditMode(String p_objectName, ArrayList<GeometricObject> p_ArrayListWirkSchaltPlan, ArrayList<GeometricObject> p_ArrayListStromFlussPlan)
 	{
-		//// Begin : Which is the active canvas
-			if(mytabbedpane.getSelectedIndex()==0 && actObjectleft!=null)
-			{	
-				
-				// subBegin : Where has the user clicked and how to react to		
-					switch (selectedGrabber)
-					{
-					case 0:case 1:case 2:case 3: // case 0,1,2,3 have the same handling 
-						actObjectleft.expand(selectedGrabber, e.getPoint(), canvasleft.getWidth(), canvasleft.getHeight()); wasSaved = false; break;
-					case 10: actObjectleft.move(startMove, e.getPoint(), canvasleft.getWidth(), canvasleft.getHeight()); wasSaved = false; break;
-					}
-				// subEnd : Where has the user clicked and how to react to
-			}
-			else if(actObjectright!=null)
-			{				
-				// subBegin : Where has the user clicked and how to react to	
-					switch (selectedGrabber)
-					{
-					case 0:case 1:case 2:case 3: // case 0,1,2,3 have the same handling
-						actObjectright.expand(selectedGrabber, e.getPoint(), canvasright.getWidth(), canvasright.getHeight()); wasSaved = false; break;
-					case 10: actObjectright.move(startMove, e.getPoint(), canvasright.getWidth(), canvasright.getHeight()); wasSaved = false; break;
-					}
-				// subEnd : Where has the user clicked and how to react to	
-			}
-		//// End : Which is the active canvas
-		
-		startMove = e.getPoint(); 	// set StartMove to actual event (mouse) position
-		repaint(); 					// update the canvas
+		objectName = p_objectName;
+		geomListleft = p_ArrayListWirkSchaltPlan;
+		geomListright = p_ArrayListStromFlussPlan;
+		canvasleft.repaint();
+		canvasright.repaint();
+	}
+
+	public void setBackgroundColor(Color p_left, Color p_right)
+	{
+		scrollPaneleft.getViewport().setBackground(p_left);
+		scrollPaneright.getViewport().setBackground(p_right);
 	}
 	
-	/**
-	 * Set&lsquo;s new values to the Point startMove <br>
-	 * @param e
-	 */
-	public void canvasMousePressed(MouseEvent e)
+	public DrawComponent getLeftDrawComponent()
 	{
-		startMove = e.getPoint();
+		return canvasleft;
 	}
-	
-	/**
-	 * Tests where a {@link GeometricObject} was hit my the mouse event and set&lsquo;s <br>
-	 * selectedGrabber to a value representing the area where the Object was hit.<br>
-	 * <br>
-	 * 10 = hit inside the Object<br>
-	 * 0  = hit in grabber 0<br>
-	 * 1  = hit in grabber 1<br>
-	 * 2  = hit in grabber 2<br>
-	 * 3  = hit in grabber 3<br>
-	 * <br>
-	 * 
-	 * @param e the MouseEvent where the {@link GeometricObject} was hit by the mouse.
-	 */
-	public void canvasMouseReleased(MouseEvent e)
+	public DrawComponent getRightDrawComponent()
 	{
-		actObjectleft = null;  
-		actObjectright = null;
-		
-		if(mytabbedpane.getSelectedIndex()==0)
-		{
-			for(GeometricObject go : geomListleft)
-			{
-				if(go.isInside(e.getX(), e.getY()) != -1)
-				{
-					actObjectleft = go;
-					selectedGrabber = go.isInside(e.getX(), e.getY());
-				}
-			}
-		}
-		else
-		{
-			for(GeometricObject go : geomListright)
-			{
-				if(go.isInside(e.getX(), e.getY()) != -1)
-				{
-					actObjectright = go;
-					selectedGrabber = go.isInside(e.getX(), e.getY());
-				}
-			}
-		}
-		repaint(); // update the canvas
+		return canvasright;
 	}
 }

@@ -6,15 +6,25 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.io.Serializable;
 
-public class Linie extends GeometricObject
+public class Linie extends GeometricObject implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4535005784268489996L;
+	// Second points
 	double punkt2X;
 	double punkt2Y;
+	// Second points
+	
+	// Surrounding points
 	double dx;
 	double dy;
 	double dwidth;
 	double dheight;
+	// Surrounding points
 	
 	public Linie(double x1, double y1, double x2, double y2)
 	{
@@ -29,10 +39,30 @@ public class Linie extends GeometricObject
 		setAroundBounds();
 	}
 	
+	@Override
+	public void zoom(double zoom)
+	{
+	    x = (x*zoom);
+	    y = (y*zoom);
+	    punkt2X = (punkt2X*zoom);
+	    punkt2Y = (punkt2Y*zoom);   
+	}
+	
 	public void draw(Graphics g)
 	{
 		Graphics2D g2d = (Graphics2D) g;
-		g2d.drawLine((int)x, (int)y, (int)(punkt2X), (int)(punkt2Y));
+		
+		if(line != null)
+		{
+			g2d.setStroke(line);
+			g2d.drawLine((int)x, (int)y, (int)(punkt2X), (int)(punkt2Y));
+			g2d.setStroke(new BasicStroke());
+		}
+		else
+		{
+			g2d.drawLine((int)x, (int)y, (int)(punkt2X), (int)(punkt2Y));
+		}
+		
 	}
 	
 	@Override

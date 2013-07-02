@@ -1,11 +1,20 @@
 package shared;
 
+import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.io.Serializable;
 
-public class Kreis extends GeometricObject
+public class Kreis extends GeometricObject implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3014423749338160039L;
+
+
+
 	public Kreis(double x, double y, double width, double height)
 	{
 		this.x = x;
@@ -17,7 +26,16 @@ public class Kreis extends GeometricObject
 	public void draw(Graphics g)
 	{
 		Graphics2D g2d = (Graphics2D) g;
-		g2d.drawOval((int) x, (int) y, (int) width, (int) height);
+		if(line != null)
+		{
+			g2d.setStroke(line);
+			g2d.drawOval((int)x, (int)y, (int)(width), (int)(height));
+			g2d.setStroke(new BasicStroke());
+		}
+		else
+		{
+			g2d.drawOval((int)x, (int)y, (int)(width), (int)(height));
+		}
 	}
 	
 	

@@ -6,22 +6,29 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JSeparator;
 import javax.swing.JToolBar;
 
-public abstract class GeometricObject 
+public abstract class GeometricObject implements Serializable
 {	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7863165709279201118L;
 	double x;
 	double y;
 	double width;
 	double height;
 	ArrayList<Rectangle> rectList = new ArrayList<Rectangle>();
-	JToolBar optionsBar;
+	BasicStroke line = null;
 	
-	public abstract void draw(Graphics g);
+	public void draw(Graphics g){};
 
 	/**
 	 * Changes the x and y coordinates to paint the {@link GeometricObject} somewhere else.
@@ -30,8 +37,8 @@ public abstract class GeometricObject
 	 */
 	public void move(Point startMove, Point endMove, int canvasWidth, int canvasHeight)
 	{
-		if(((x + endMove.getX()-startMove.getX()) > 0) 
-			&& ((y + endMove.getY()-startMove.getY()) > 0)
+		if(((x + endMove.getX()-startMove.getX()) >= 0) 
+			&& ((y + endMove.getY()-startMove.getY()) >= 0)
 			&& ((x + width + endMove.getX()-startMove.getX()) < canvasWidth) 
 			&& ((y + height + endMove.getY()-startMove.getY()) < canvasHeight)	
 			)
@@ -41,7 +48,7 @@ public abstract class GeometricObject
 		}
 	}
 	
-	public abstract void expand(int grabber, Point endMove, int canvasWidth, int canvasHeight); //could be abstract
+	public abstract void expand(int grabber, Point endMove, int canvasWidth, int canvasHeight); 
 	
 	/**
 	 * Returns the x value of the {@link GeometricObject}. <br>
@@ -140,7 +147,6 @@ public abstract class GeometricObject
 		    height = (height*zoom);   
 	}
 	
-	
 	/**
 	 *  Draw&lsquo;s the grabbers for an {@link GeometricObject}
 	 * @param g the Graphics Object used to draw the grabbers
@@ -177,11 +183,45 @@ public abstract class GeometricObject
 				g.drawRect((int)(x+width)-5, (int)(y+height)-5, 10, 10);
 					rectList.add(new Rectangle((int)(x+width)-5, (int)(y+height)-5, 10, 10));
 	}
-	public void setOptionsBar()
+	public JToolBar setOptionsBar()
 	{
-		optionsBar = new JToolBar();
-		JComboBox<String> dotted = new JComboBox<String>();
+		JToolBar optionsBar = new JToolBar();
+		final JComboBox<String> dotted = new JComboBox<String>();
+		
+		if(line == null)
+		{
+			dotted.addItem("Line");
+			dotted.addItem("Dotted");
+		}
+		else
+		{
+			dotted.addItem("Dotted");
+			dotted.addItem("Line");
+		}
+		
+		
+		dotted.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				if("Line".equals(dotted.getSelectedItem()))
+				{
+					line = null;
+				}
+				if("Dotted".equals(dotted.getSelectedItem()))
+				{
+					line = new BasicStroke(1.0f, BasicStroke.CAP_BUTT,BasicStroke.JOIN_BEVEL,1.0f,new float[]{5.0f},0.0f);
+				}
+				
+			}
+		});
+		
 		optionsBar.add(dotted);
+	
+		optionsBar.add(new JSeparator());
+		optionsBar.setFloatable(false);
+		return optionsBar;
 	}
 
 }
