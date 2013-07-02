@@ -11,7 +11,7 @@ public class Main
 	 * Diese Methode wird beim Starten des Programms aufgerufen.
 	 * @param args
 	 */
-	//Force Commit
+	
   public static void main(String[] args) 
   {
     FrmMain frmMain = new FrmMain();
