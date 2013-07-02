@@ -8,14 +8,19 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import javax.swing.JComboBox;
 import javax.swing.JSeparator;
 import javax.swing.JToolBar;
 
-public abstract class GeometricObject 
+public abstract class GeometricObject implements Serializable
 {	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7863165709279201118L;
 	double x;
 	double y;
 	double width;
@@ -23,7 +28,7 @@ public abstract class GeometricObject
 	ArrayList<Rectangle> rectList = new ArrayList<Rectangle>();
 	BasicStroke line = null;
 	
-	public abstract void draw(Graphics g);
+	public void draw(Graphics g){};
 
 	/**
 	 * Changes the x and y coordinates to paint the {@link GeometricObject} somewhere else.
@@ -32,8 +37,8 @@ public abstract class GeometricObject
 	 */
 	public void move(Point startMove, Point endMove, int canvasWidth, int canvasHeight)
 	{
-		if(((x + endMove.getX()-startMove.getX()) > 0) 
-			&& ((y + endMove.getY()-startMove.getY()) > 0)
+		if(((x + endMove.getX()-startMove.getX()) >= 0) 
+			&& ((y + endMove.getY()-startMove.getY()) >= 0)
 			&& ((x + width + endMove.getX()-startMove.getX()) < canvasWidth) 
 			&& ((y + height + endMove.getY()-startMove.getY()) < canvasHeight)	
 			)
@@ -43,7 +48,7 @@ public abstract class GeometricObject
 		}
 	}
 	
-	public abstract void expand(int grabber, Point endMove, int canvasWidth, int canvasHeight); //could be abstract
+	public abstract void expand(int grabber, Point endMove, int canvasWidth, int canvasHeight); 
 	
 	/**
 	 * Returns the x value of the {@link GeometricObject}. <br>

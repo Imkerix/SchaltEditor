@@ -5,7 +5,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Frame;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.RenderingHints;
+
 import shared.Connector;
 import shared.GeometricObject;
 import shared.Kreis;
@@ -198,12 +201,21 @@ public class EditorGUI extends JFrame
 				// subBegin : Canvas creation
 						// subBegin : Left side
 						
-							 canvasleft = new DrawComponent(null, true, rootPaneCheckingEnabled)
+							 canvasleft = new DrawComponent(null, true, rootPaneCheckingEnabled, true)
 							 {
 								 @Override
 								 public void paintComponent(Graphics g)
 								 {
+									Graphics2D g2d = (Graphics2D) g;
+									g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+									g2d.setRenderingHint(RenderingHints.KEY_RENDERING,RenderingHints.VALUE_RENDER_QUALITY);
+									
 									// subBegin : Update canvas to actual state
+										if(showGrid)
+										{
+											drawGrid(g);
+										}
+										g2d.setColor(symbolColor);
 										for (GeometricObject go : geomListleft) 
 										{
 											go.draw(g);
@@ -213,10 +225,6 @@ public class EditorGUI extends JFrame
 											actObjectleft.drawOutline(g);
 											actObjectleft.drawGrabbers(g);
 										}
-										if(showGrid)
-									    {
-									      drawGrid(g);
-									    }
 									// subEnd : Update canvas to actual state 
 								 }
 							 };
@@ -239,12 +247,20 @@ public class EditorGUI extends JFrame
 						// subEnd : Left side	
 								
 						// subBegin : Right side		
-							 canvasright = new DrawComponent(null, true, rootPaneCheckingEnabled)
+							 canvasright = new DrawComponent(null, true, rootPaneCheckingEnabled, false)
 							 {
-								 @Override
 								 public void paintComponent(Graphics g)
 								 {
+									Graphics2D g2d = (Graphics2D) g;
+									g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+									g2d.setRenderingHint(RenderingHints.KEY_RENDERING,RenderingHints.VALUE_RENDER_QUALITY);
+										
 									// subBegin : Update canvas to actual state
+										if(showGrid)
+										{
+											drawGrid(g);
+										}
+										g2d.setColor(symbolColor);
 										for (GeometricObject go : geomListright) 
 										{
 											go.draw(g);
@@ -254,10 +270,6 @@ public class EditorGUI extends JFrame
 											actObjectright.drawOutline(g);
 											actObjectright.drawGrabbers(g);
 										}
-										if(showGrid)
-									    {
-									      drawGrid(g);
-									    }
 									// subEnd : Update canvas to actual state 
 								 }
 							 };
@@ -692,7 +704,7 @@ public class EditorGUI extends JFrame
 					break;
 				case "Linie" : temp.add(new Linie(1, 1, 51, 51));
 					break;
-				case "Connector" : temp.add(new Connector(1, 1, 9, 9));
+				case "Connector" : temp.add(new Connector(0,0));
 					break;
 			}
  			

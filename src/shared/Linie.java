@@ -6,9 +6,14 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.io.Serializable;
 
-public class Linie extends GeometricObject
+public class Linie extends GeometricObject implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4535005784268489996L;
 	// Second points
 	double punkt2X;
 	double punkt2Y;

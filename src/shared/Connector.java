@@ -1,76 +1,67 @@
 package shared;
-
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import javax.swing.JToolBar;
-
-public class Connector extends GeometricObject
+import java.awt.Rectangle;
+import java.io.Serializable;
+import mainFrame.DrawObject;
+public class Connector extends GeometricObject implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8079836887320992062L;
 	private Connector connectedTo = null;
 	private boolean isKlicked = false;
-	
-	
-	public Connector(double x, double y, double width, double height)
+	private static double width = 8;
+	private static double height = 8;
+	public Connector(double x, double y)
 	{
 		this.x = x;
 		this.y = y;
-		this.width = width;
-		this.height = height;
-	}	
-
-	@Override
-	public void draw(Graphics g) 
+	}
+	public void draw(Graphics g, boolean b, DrawObject d) 
 	{
 		Graphics2D g2d = (Graphics2D) g;
-		g2d.drawOval((int) x, (int) y, (int) width, (int) height);
-		
+		if(b || (!b && (d != null)))
+		{
+			g2d.drawOval((int) x, (int) y, (int) width, (int) height);
+			if(isKlicked || connectedTo != null)
+			{
+				g2d.fillOval((int) x, (int) y, (int) width, (int) height);
+			}
+		}
 		if(connectedTo != null)
 		{
 			g.drawLine((int) (x+width/2), (int) (y+height/2), (int) connectedTo.getConnectX(), (int) connectedTo.getConnectY());
 		}
-		
-		if(isKlicked || connectedTo != null)
-		{
-			g2d.fillOval((int) x, (int) y, (int) width, (int) height);
-		}
-		
 	}
-	
 	@Override
 	public void drawOutline(Graphics g)
 	{
-		
 	}
-	
 	@Override
 	public void drawGrabbers(Graphics g)
 	{
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.fillOval((int) x, (int) y, (int) width, (int) height);
-		
 	}
-	
 	public void connectTo(Connector c)
 	{
 		this.connectedTo = c;
 	}
-	
 	public double getConnectX()
 	{
-		return (x+width/2);		
+		return (x+width/2);	
 	}
-	
 	public double getConnectY()
 	{
 		return (y+height/2);
 	}
-	
 	public void setKlicked(boolean b)
 	{
 		this.isKlicked = b;
 	}
-	
 	public boolean isConnected()
 	{
 		if(connectedTo != null)
@@ -79,23 +70,45 @@ public class Connector extends GeometricObject
 		}
 		return false;
 	}
-	
 	public Connector getConnectedTo()
 	{
 		return connectedTo;
 	}
-
 	@Override
-	public void expand(int grabber, Point endMove, int canvasWidth, int canvasHeight) 
-	{
-		// TODO Automatisch generierter Methodenstub
+	public void expand(int grabber, Point endMove, int canvasWidth, int canvasHeight) {
 	}
-	
-	@Override
-	public JToolBar setOptionsBar()
+	public static void setDiameter(double diameter)
 	{
-		return new JToolBar();
+		height = diameter;
+		width = diameter;
+	}
+	public static double getDiameter()
+	{
+		return height;
+	}
+	@Override
+	public int isInside(int p_x, int p_y)
+	{
+		for (Rectangle r : rectList) 
+		{
+			if((r.getX()<p_x && p_x<(r.getX()+width)) && (r.getY()<p_y && p_y<(r.getY()+height))) 
+			{
+				return rectList.indexOf(r);	
+			}
+		}
+		if((getX()<p_x && p_x<(getX()+width)) && (getY()<p_y && p_y<(getY()+height)))
+		{
+			return 10; //is in canvas
+		}
+		else
+		{
+			return -1; //not inside of anything
+		}
+	}
+
+	public static void staticZoom(double zoomFactor)
+	{
+		width = (width*zoomFactor);
+		height = (height*zoomFactor);
 	}
 }
-
-
