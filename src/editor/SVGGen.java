@@ -49,7 +49,7 @@ public class SVGGen {
 		    	}
 	    	// End : if Directory does not exist create one
 		    	
-		    // Begin : Create new file and stream the SVG into
+		// Begin : Create new file and stream the SVG into
 		    	try 
 		    	{
 		    		Writer out = new OutputStreamWriter(new FileOutputStream(new File(pair.getKey())), "UTF-8");
