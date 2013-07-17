@@ -76,7 +76,8 @@ public class EditorGUI extends JFrame
 		private String objectName;
 		private JMenuBar menuBar;
 		private boolean isActive = false;
-		/**
+		
+	/**
 	 * Contains the implementation of the graphical user interface.
 	 */
 	public EditorGUI() 
@@ -195,10 +196,11 @@ public class EditorGUI extends JFrame
 									}
 								};
 						// subEnd : KeyListener for Canvasright	
-								
+						
 				// subEnd : KeyListener 			
 					
 				// subBegin : Canvas creation
+				
 						// subBegin : Left side
 						
 							 canvasleft = new DrawComponent(null, true, rootPaneCheckingEnabled, true)
@@ -422,10 +424,10 @@ public class EditorGUI extends JFrame
 		
 		//// Begin : Create window adapter
 				this.addWindowListener(new WindowAdapter() {
-					// subBegin : React on closing window for the saving system
-			            public void windowClosing(WindowEvent e) 
-			            {
-			            	if(wasSaved)
+			   		// subBegin : React on closing window for the saving system
+			            		public void windowClosing(WindowEvent e) 
+				                {
+				             		if(wasSaved)
 							{
 								dispose();
 							}
@@ -433,9 +435,9 @@ public class EditorGUI extends JFrame
 							{
 								closeUnsaved();
 							}
-			            }
-		            // subEnd : React on closing window for the saving system
-		        });
+				           	 }
+		          		// subEnd : React on closing window for the saving system
+		        	});
 		//// End : Create window adapter
 			
 		//// Begin : JSplitPane
@@ -482,7 +484,7 @@ public class EditorGUI extends JFrame
 	
 	////Begin : Listener methods
 	
-	/**
+			/**
 			 * Invokes the +expand(int grabber, Point endMove) or the +move(Point startMove, Point endMove) method 
 			 * in {@link GeometricObject}, as required by the int selectedGrabber.<br>
 			 * @param e the Mouse Event that gives the Position of the mouse released action.   
