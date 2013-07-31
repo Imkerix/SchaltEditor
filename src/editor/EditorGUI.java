@@ -14,6 +14,7 @@ import shared.GeometricObject;
 import shared.Kreis;
 import shared.Linie;
 import shared.Rechteck;
+import shared.Arc;
 
 import mainFrame.DrawComponent;
 import org.apache.batik.dom.GenericDOMImplementation;
@@ -22,7 +23,6 @@ import org.apache.batik.swing.svg.JSVGComponent;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
@@ -617,11 +617,12 @@ public class EditorGUI extends JFrame
 	 */
 	public void addListItems()
 	{
-		String[] itemsToAdd = new String[4];
+		String[] itemsToAdd = new String[5];
 		itemsToAdd[0] = "Kreis";
 		itemsToAdd[1] = "Rechteck";
 		itemsToAdd[2] = "Linie";
-		itemsToAdd[3] = "Connector";
+		itemsToAdd[3] = "Arc";
+		itemsToAdd[4] = "Connector";
 		
 		list.setListData(itemsToAdd);
 	}
@@ -710,6 +711,8 @@ public class EditorGUI extends JFrame
 					break;
 				case "Linie" : temp.add(new Linie(1, 1, 51, 51));
 					break;
+				case "Arc" : temp.add(new Arc(1, 1, 51, 51, 10, 90));
+					break;
 				case "Connector" : temp.add(new Connector(0,0));
 					break;
 			}
@@ -749,9 +752,11 @@ public class EditorGUI extends JFrame
 	public void setRecommendedObjectSize(Graphics g, int recommendedObjectWidth, int recommendedObjectHeight)
 	{
 		Graphics2D g2d = (Graphics2D)g; // we want to use strokes
-		g2d.setStroke(new BasicStroke(1.0f, BasicStroke.CAP_BUTT,BasicStroke.JOIN_BEVEL,1.0f,new float[]{5.0f},0.0f)); // we need a dashed line
+		g2d.setColor(new Color(85,107,47));
+		g2d.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_SQUARE,BasicStroke.JOIN_BEVEL,1.0f,new float[]{5.0f},0.0f)); // we need a dashed line
 		g.drawRect((scrollPaneleft.getWidth()/2)-(recommendedObjectWidth/2), (scrollPaneleft.getHeight()/2)-(recommendedObjectHeight/2), recommendedObjectWidth, recommendedObjectHeight);
 		g2d.setStroke(new BasicStroke());
+		g2d.setColor(Color.black);
 	}
 	
 	public DrawComponent getLeftDrawComponent()
