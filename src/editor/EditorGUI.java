@@ -1,14 +1,14 @@
 package editor;
 
 import javax.swing.JFrame;
+
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.RenderingHints;
-
 import shared.Connector;
 import shared.GeometricObject;
 import shared.Kreis;
@@ -76,8 +76,7 @@ public class EditorGUI extends JFrame
 		private String objectName;
 		private JMenuBar menuBar;
 		private boolean isActive = false;
-		
-	/**
+		/**
 	 * Contains the implementation of the graphical user interface.
 	 */
 	public EditorGUI() 
@@ -89,7 +88,6 @@ public class EditorGUI extends JFrame
 			
 			setTitle("Schaltzeichen Editor");
 			objectName = null;
-			
 		//// End : Initialize
 		
 		//// Begin : Canvas	
@@ -196,28 +194,20 @@ public class EditorGUI extends JFrame
 									}
 								};
 						// subEnd : KeyListener for Canvasright	
-						
+								
 				// subEnd : KeyListener 			
 					
 				// subBegin : Canvas creation
-				
 						// subBegin : Left side
 						
-							 canvasleft = new DrawComponent(null, true, rootPaneCheckingEnabled, true)
+							 canvasleft = new DrawComponent(null, true, rootPaneCheckingEnabled, false)
 							 {
 								 @Override
 								 public void paintComponent(Graphics g)
 								 {
-									Graphics2D g2d = (Graphics2D) g;
-									g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-									g2d.setRenderingHint(RenderingHints.KEY_RENDERING,RenderingHints.VALUE_RENDER_QUALITY);
-									
 									// subBegin : Update canvas to actual state
-										if(showGrid)
-										{
-											drawGrid(g);
-										}
-										g2d.setColor(symbolColor);
+									 	setRecommendedObjectSize(g, 600, 600);
+									 
 										for (GeometricObject go : geomListleft) 
 										{
 											go.draw(g);
@@ -227,6 +217,10 @@ public class EditorGUI extends JFrame
 											actObjectleft.drawOutline(g);
 											actObjectleft.drawGrabbers(g);
 										}
+										if(showGrid)
+									    {
+									      drawGrid(g);
+									    }
 									// subEnd : Update canvas to actual state 
 								 }
 							 };
@@ -244,6 +238,12 @@ public class EditorGUI extends JFrame
 								canvasleft.getInputMap(JSVGComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, 0), "MinusAction");
 								canvasleft.getActionMap().put("MinusAction", minusLeft);
 								
+								canvasleft.getInputMap(JSVGComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ADD, 0), "PlusAction");
+								canvasleft.getActionMap().put("PlusAction", plusLeft);
+								
+								canvasleft.getInputMap(JSVGComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, 0), "MinusAction");
+								canvasleft.getActionMap().put("MinusAction", minusLeft);
+								
 							 // subEnd : Add Listeners
 								
 						// subEnd : Left side	
@@ -251,18 +251,12 @@ public class EditorGUI extends JFrame
 						// subBegin : Right side		
 							 canvasright = new DrawComponent(null, true, rootPaneCheckingEnabled, false)
 							 {
+								 @Override
 								 public void paintComponent(Graphics g)
 								 {
-									Graphics2D g2d = (Graphics2D) g;
-									g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-									g2d.setRenderingHint(RenderingHints.KEY_RENDERING,RenderingHints.VALUE_RENDER_QUALITY);
-										
 									// subBegin : Update canvas to actual state
-										if(showGrid)
-										{
-											drawGrid(g);
-										}
-										g2d.setColor(symbolColor);
+									 	setRecommendedObjectSize(g, 600, 600);
+									 	
 										for (GeometricObject go : geomListright) 
 										{
 											go.draw(g);
@@ -272,6 +266,10 @@ public class EditorGUI extends JFrame
 											actObjectright.drawOutline(g);
 											actObjectright.drawGrabbers(g);
 										}
+										if(showGrid)
+									    {
+									      drawGrid(g);
+									    }
 									// subEnd : Update canvas to actual state 
 								 }
 							 };
@@ -287,6 +285,12 @@ public class EditorGUI extends JFrame
 								canvasright.getActionMap().put("PlusAction", plusRight);
 								
 								canvasright.getInputMap(JSVGComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, 0), "MinusAction");
+								canvasright.getActionMap().put("MinusAction", minusRight);
+								
+								canvasright.getInputMap(JSVGComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ADD, 0), "PlusAction");
+								canvasright.getActionMap().put("PlusAction", plusRight);
+								
+								canvasright.getInputMap(JSVGComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, 0), "MinusAction");
 								canvasright.getActionMap().put("MinusAction", minusRight);
 							 // subEnd : Add Listeners
 						
@@ -424,10 +428,10 @@ public class EditorGUI extends JFrame
 		
 		//// Begin : Create window adapter
 				this.addWindowListener(new WindowAdapter() {
-			   		// subBegin : React on closing window for the saving system
-			            		public void windowClosing(WindowEvent e) 
-				                {
-				             		if(wasSaved)
+					// subBegin : React on closing window for the saving system
+			            public void windowClosing(WindowEvent e) 
+			            {
+			            	if(wasSaved)
 							{
 								dispose();
 							}
@@ -435,9 +439,9 @@ public class EditorGUI extends JFrame
 							{
 								closeUnsaved();
 							}
-				           	 }
-		          		// subEnd : React on closing window for the saving system
-		        	});
+			            }
+		            // subEnd : React on closing window for the saving system
+		        });
 		//// End : Create window adapter
 			
 		//// Begin : JSplitPane
@@ -484,7 +488,7 @@ public class EditorGUI extends JFrame
 	
 	////Begin : Listener methods
 	
-			/**
+	/**
 			 * Invokes the +expand(int grabber, Point endMove) or the +move(Point startMove, Point endMove) method 
 			 * in {@link GeometricObject}, as required by the int selectedGrabber.<br>
 			 * @param e the Mouse Event that gives the Position of the mouse released action.   
@@ -734,6 +738,20 @@ public class EditorGUI extends JFrame
 	{
 		scrollPaneleft.getViewport().setBackground(p_left);
 		scrollPaneright.getViewport().setBackground(p_right);
+	}
+	
+	/**
+	 * Draws a dotted shape that displays the recommended size of a switching symbol to the user. <br>
+	 * @param g the {@link Graphics} object used to paint the rectangle.<br>
+	 * @param recommendedObjectWidth the recommended switching symbol width.<br>
+	 * @param recommendedObjectHeight the recommended switching symbol height.<br>
+	 */
+	public void setRecommendedObjectSize(Graphics g, int recommendedObjectWidth, int recommendedObjectHeight)
+	{
+		Graphics2D g2d = (Graphics2D)g; // we want to use strokes
+		g2d.setStroke(new BasicStroke(1.0f, BasicStroke.CAP_BUTT,BasicStroke.JOIN_BEVEL,1.0f,new float[]{5.0f},0.0f)); // we need a dashed line
+		g.drawRect((scrollPaneleft.getWidth()/2)-(recommendedObjectWidth/2), (scrollPaneleft.getHeight()/2)-(recommendedObjectHeight/2), recommendedObjectWidth, recommendedObjectHeight);
+		g2d.setStroke(new BasicStroke());
 	}
 	
 	public DrawComponent getLeftDrawComponent()
