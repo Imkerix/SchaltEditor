@@ -16,6 +16,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
+
+import editor.EditorGUI;
 import shared.Connector;
 /**
  * This code was edited or generated using CloudGarden's Jigloo
@@ -35,6 +37,23 @@ public class FrmOptions extends javax.swing.JFrame
 	private JTextField jTextField1;
 	private JButton jButton1;
 	private JCheckBox jCheckBox2;
+	private JLabel jLabel22;
+	private JLabel jLabel21;
+	private JEditorPane jEditorPane12;
+	private JEditorPane jEditorPane11;
+	private JEditorPane jEditorPane10;
+	private JEditorPane jEditorPane9;
+	private JEditorPane jEditorPane8;
+	private JEditorPane jEditorPane7;
+	private JLabel jLabel20;
+	private JLabel jLabel19;
+	private JLabel jLabel18;
+	private JLabel jLabel17;
+	private JLabel jLabel16;
+	private JSeparator jSeparator3;
+	private JLabel jLabel15;
+	private JLabel jLabel14;
+	private JLabel jLabel13;
 	private JCheckBox jCheckBox4;
 	private JEditorPane jEditorPane6;
 	private JLabel jLabel12;
@@ -69,14 +88,21 @@ public class FrmOptions extends javax.swing.JFrame
 	private JPanel jPanel1;
 	private JPanel jPanel2;
 	private FrmMain frmMain;
+	private EditorGUI editorGui;
 	private DrawComponent drawComponent1;
 	private DrawComponent drawComponent2;
-	public FrmOptions(FrmMain frmMain, DrawComponent dc1, DrawComponent dc2) 
+	private DrawComponent drawComponent3;
+	private DrawComponent drawComponent4;
+	
+	public FrmOptions(FrmMain frmMain, EditorGUI editorGui, DrawComponent dc1, DrawComponent dc2, DrawComponent dc3, DrawComponent dc4) 
 	{
 		super();
 		this.frmMain = frmMain;
+		this.editorGui = editorGui;
 		this.drawComponent1 = dc1;
 		this.drawComponent2 = dc2;
+		this.drawComponent3 = dc3;
+		this.drawComponent4 = dc4;
 		initGUI();
 	}
 	private void initGUI() {
@@ -194,162 +220,299 @@ public class FrmOptions extends javax.swing.JFrame
 					jCheckBox4.setBounds(22, 159, 229, 20);
 				}
 			}
-			jPanel2 = new JPanel();
 			{
 				jTabbedPane1 = new JTabbedPane();
 				jTabbedPane1.addTab("Allgemein", jPanel1);
-				jTabbedPane1.addTab("Farben", jPanel2);
-				jPanel2.setLayout(null);
-				{
-					jLabel3 = new JLabel();
-					jPanel2.add(jLabel3);
-					jLabel3.setText("Rasterfarbe:");
-					jLabel3.setBounds(12, 34, 111, 16);
-				}
-				{
-					jEditorPane1 = new JEditorPane();
-					jPanel2.add(jEditorPane1);
-					jEditorPane1.setBounds(146, 34, 27, 20);
-					jEditorPane1.setEditable(false);
-					jEditorPane1.setBackground(new Color(210, 210, 210));
-					jEditorPane1.addMouseListener(new MouseAdapter() {
-						public void mouseClicked(MouseEvent evt) {
-							jEditorPane1MouseClicked(evt);
-						}
-					});
-				}
-				{
-					jLabel4 = new JLabel();
-					jPanel2.add(jLabel4);
-					jLabel4.setText("Zeichenflaeche Wirkschaltplan");
-					jLabel4.setBounds(12, 12, 259, 16);
-				}
-				{
-					jLabel5 = new JLabel();
-					jPanel2.add(jLabel5);
-					jLabel5.setText("Zeichenflaeche Stromlaufplan");
-					jLabel5.setBounds(328, 12, 210, 16);
-				}
-				{
-					jSeparator1 = new JSeparator(SwingConstants.VERTICAL);
-					jPanel2.add(jSeparator1);
-					jSeparator1.setBounds(306, 12, 10, 130);
-				}
-				{
-					jSeparator2 = new JSeparator();
-					jPanel2.add(jSeparator2);
-					jSeparator2.setBounds(24, 165, 610, 10);
-				}
-				{
-					jLabel6 = new JLabel();
-					jPanel2.add(jLabel6);
-					jLabel6.setText("Rasterfarbe:");
-					jLabel6.setBounds(328, 34, 81, 16);
-				}
-				{
-					jEditorPane2 = new JEditorPane();
-					jPanel2.add(jEditorPane2);
-					jEditorPane2.setBounds(453, 37, 28, 20);
-					jEditorPane2.setEditable(false);
-					jEditorPane2.setBackground(new Color(210, 210, 210));
-					jEditorPane2.addMouseListener(new MouseAdapter() {
-						public void mouseClicked(MouseEvent evt) {
-							jEditorPane2MouseClicked(evt);
-						}
-					});
-				}
-				{
-					jButton3 = new JButton();
-					jPanel2.add(jButton3);
-					jButton3.setText("Speichern");
-					jButton3.setBounds(538, 315, 103, 23);
-					jButton3.addActionListener(alSAVE);
-				}
-				{
-					jButton4 = new JButton();
-					jPanel2.add(jButton4);
-					jButton4.setText("Abbrechen");
-					jButton4.setBounds(432, 315, 88, 23);
-					jButton4.addActionListener(alABORT);
-				}
-				{
-					jButton6 = new JButton();
-					jPanel2.add(jButton6);
-					jButton6.setText("Uebernehmen");
-					jButton6.setBounds(298, 315, 123, 23);
-					jButton6.addActionListener(alAPPLY);
-				}
-				{
-					jLabel9 = new JLabel();
-					jPanel2.add(jLabel9);
-					jLabel9.setText("Symbolfarbe: ");
-					jLabel9.setBounds(12, 71, 127, 16);
-				}
-				{
-					jLabel10 = new JLabel();
-					jPanel2.add(jLabel10);
-					jLabel10.setText("Symbolfarbe: ");
-					jLabel10.setBounds(328, 71, 109, 16);
-				}
-				{
-					jEditorPane3 = new JEditorPane();
-					jPanel2.add(jEditorPane3);
-					jEditorPane3.setBounds(146, 67, 27, 20);
-					jEditorPane3.setEditable(false);
-					jEditorPane3.setBackground(Color.black);
-					jEditorPane3.addMouseListener(new MouseAdapter() {
-						public void mouseClicked(MouseEvent evt) {
-							jEditorPane3MouseClicked(evt);
-						}
-					});
-				}
-				{
-					jEditorPane4 = new JEditorPane();
-					jPanel2.add(jEditorPane4);
-					jEditorPane4.setBounds(455, 68, 26, 20);
-					jEditorPane4.setEditable(false);
-					jEditorPane4.setBackground(Color.black);
-					jEditorPane4.addMouseListener(new MouseAdapter() {
-						public void mouseClicked(MouseEvent evt) {
-							jEditorPane4MouseClicked(evt);
-						}
-					});
-				}
-				{
-					jLabel11 = new JLabel();
-					jPanel2.add(jLabel11);
-					jLabel11.setText("Hintergrundfarbe: ");
-					jLabel11.setBounds(12, 105, 111, 16);
-				}
-				{
-					jEditorPane5 = new JEditorPane();
-					jPanel2.add(jEditorPane5);
-					jEditorPane5.setBounds(146, 99, 27, 20);
-					jEditorPane5.setEditable(false);
-					jEditorPane5.addMouseListener(new MouseAdapter() {
-						public void mouseClicked(MouseEvent evt) {
-							jEditorPane5MouseClicked(evt);
-						}
-					});
-				}
-				{
-					jLabel12 = new JLabel();
-					jPanel2.add(jLabel12);
-					jLabel12.setText("Hintergrundfarbe: ");
-					jLabel12.setBounds(328, 105, 117, 16);
-				}
-				{
-					jEditorPane6 = new JEditorPane();
-					jPanel2.add(jEditorPane6);
-					jEditorPane6.setBounds(455, 100, 26, 20);
-					jEditorPane6.setEditable(false);
-					jEditorPane6.addMouseListener(new MouseAdapter() {
-						public void mouseClicked(MouseEvent evt) {
-							jEditorPane6MouseClicked(evt);
-						}
-					});
-				}
 				jPanel1.setLayout(null);
+				{
+					jPanel2 = new JPanel();
+					jTabbedPane1.addTab("Farben", null, jPanel2, null);
+					{
+						jLabel3 = new JLabel();
+						jPanel2.add(jLabel3);
+						jLabel3.setText("Rasterfarbe:");
+						jLabel3.setBounds(12, 51, 111, 16);
+					}
+					{
+						jEditorPane1 = new JEditorPane();
+						jPanel2.add(jEditorPane1);
+						jEditorPane1.setBounds(146, 51, 27, 20);
+						jEditorPane1.setEditable(false);
+						jEditorPane1.setBackground(new Color(210, 210, 210));
+						jEditorPane1.addMouseListener(new MouseAdapter() {
+							public void mouseClicked(MouseEvent evt) {
+								jEditorPane1MouseClicked(evt);
+							}
+						});
+					}
+					{
+						jLabel4 = new JLabel();
+						jPanel2.add(jLabel4);
+						jLabel4.setText("Wirkschaltplan");
+						jLabel4.setBounds(12, 29, 259, 16);
+					}
+					{
+						jLabel5 = new JLabel();
+						jPanel2.add(jLabel5);
+						jLabel5.setText("Stromlaufplan");
+						jLabel5.setBounds(328, 29, 210, 16);
+					}
+					{
+						jSeparator1 = new JSeparator(SwingConstants.VERTICAL);
+						jPanel2.add(jSeparator1);
+						jSeparator1.setBounds(306, 29, 10, 130);
+					}
+					{
+						jSeparator2 = new JSeparator();
+						jPanel2.add(jSeparator2);
+						jSeparator2.setBounds(24, 165, 610, 10);
+					}
+					{
+						jLabel6 = new JLabel();
+						jPanel2.add(jLabel6);
+						jLabel6.setText("Rasterfarbe:");
+						jLabel6.setBounds(328, 51, 81, 16);
+					}
+					{
+						jEditorPane2 = new JEditorPane();
+						jPanel2.add(jEditorPane2);
+						jEditorPane2.setBounds(453, 54, 28, 20);
+						jEditorPane2.setEditable(false);
+						jEditorPane2.setBackground(new Color(210, 210, 210));
+						jEditorPane2.addMouseListener(new MouseAdapter() {
+							public void mouseClicked(MouseEvent evt) {
+								jEditorPane2MouseClicked(evt);
+							}
+						});
+					}
+					{
+						jButton3 = new JButton();
+						jPanel2.add(jButton3);
+						jButton3.setText("Speichern");
+						jButton3.setBounds(538, 315, 103, 23);
+						jButton3.addActionListener(alSAVE);
+					}
+					{
+						jButton4 = new JButton();
+						jPanel2.add(jButton4);
+						jButton4.setText("Abbrechen");
+						jButton4.setBounds(409, 315, 111, 23);
+						jButton4.addActionListener(alABORT);
+					}
+					{
+						jButton6 = new JButton();
+						jPanel2.add(jButton6);
+						jButton6.setText("Uebernehmen");
+						jButton6.setBounds(260, 315, 123, 23);
+						jButton6.addActionListener(alAPPLY);
+					}
+					{
+						jLabel9 = new JLabel();
+						jPanel2.add(jLabel9);
+						jLabel9.setText("Symbolfarbe: ");
+						jLabel9.setBounds(12, 88, 127, 16);
+					}
+					{
+						jLabel10 = new JLabel();
+						jPanel2.add(jLabel10);
+						jLabel10.setText("Symbolfarbe: ");
+						jLabel10.setBounds(328, 88, 109, 16);
+					}
+					{
+						jEditorPane3 = new JEditorPane();
+						jPanel2.add(jEditorPane3);
+						jEditorPane3.setBounds(146, 84, 27, 20);
+						jEditorPane3.setEditable(false);
+						jEditorPane3.setBackground(Color.black);
+						jEditorPane3.addMouseListener(new MouseAdapter() {
+							public void mouseClicked(MouseEvent evt) {
+								jEditorPane3MouseClicked(evt);
+							}
+						});
+					}
+					{
+						jEditorPane4 = new JEditorPane();
+						jPanel2.add(jEditorPane4);
+						jEditorPane4.setBounds(455, 85, 26, 20);
+						jEditorPane4.setEditable(false);
+						jEditorPane4.setBackground(Color.black);
+						jEditorPane4.addMouseListener(new MouseAdapter() {
+							public void mouseClicked(MouseEvent evt) {
+								jEditorPane4MouseClicked(evt);
+							}
+						});
+					}
+					{
+						jLabel11 = new JLabel();
+						jPanel2.add(jLabel11);
+						jLabel11.setText("Hintergrundfarbe: ");
+						jLabel11.setBounds(12, 122, 111, 16);
+					}
+					{
+						jEditorPane5 = new JEditorPane();
+						jPanel2.add(jEditorPane5);
+						jEditorPane5.setBounds(146, 116, 27, 20);
+						jEditorPane5.setEditable(false);
+						jEditorPane5.addMouseListener(new MouseAdapter() {
+							public void mouseClicked(MouseEvent evt) {
+								jEditorPane5MouseClicked(evt);
+							}
+						});
+					}
+					{
+						jLabel12 = new JLabel();
+						jPanel2.add(jLabel12);
+						jLabel12.setText("Hintergrundfarbe: ");
+						jLabel12.setBounds(328, 122, 117, 16);
+					}
+					{
+						jEditorPane6 = new JEditorPane();
+						jPanel2.add(jEditorPane6);
+						jEditorPane6.setBounds(455, 117, 26, 20);
+						jEditorPane6.setEditable(false);
+						jEditorPane6.addMouseListener(new MouseAdapter() {
+							public void mouseClicked(MouseEvent evt) {
+								jEditorPane6MouseClicked(evt);
+							}
+						});
+					}
+					{
+						jLabel13 = new JLabel();
+						jPanel2.add(jLabel13);
+						jLabel13.setText("Wirkschaltplan");
+						jLabel13.setBounds(108, 193, 78, 16);
+					}
+					{
+						jLabel14 = new JLabel();
+						jPanel2.add(jLabel14);
+						jLabel14.setText("Schaltplaneditor");
+						jLabel14.setBounds(285, 2, 124, 16);
+					}
+					{
+						jLabel15 = new JLabel();
+						jPanel2.add(jLabel15);
+						jLabel15.setText("Bauteileeditor");
+						jLabel15.setBounds(285, 171, 112, 16);
+					}
+					{
+						jSeparator3 = new JSeparator(SwingConstants.VERTICAL);
+						jPanel2.add(jSeparator3);
+						jSeparator3.setBounds(310, 193, 18, 110);
+					}
+					{
+						jLabel16 = new JLabel();
+						jPanel2.add(jLabel16);
+						jLabel16.setText("Stromlaufplan");
+						jLabel16.setBounds(438, 193, 75, 16);
+					}
+					{
+						jLabel17 = new JLabel();
+						jPanel2.add(jLabel17);
+						jLabel17.setText("Rasterfarbe:");
+						jLabel17.setBounds(12, 215, 111, 16);
+					}
+					{
+						jLabel18 = new JLabel();
+						jPanel2.add(jLabel18);
+						jLabel18.setText("Symbolfarbe:");
+						jLabel18.setBounds(12, 243, 122, 16);
+					}
+					{
+						jLabel19 = new JLabel();
+						jPanel2.add(jLabel19);
+						jLabel19.setText("Hintergrundfarbe:");
+						jLabel19.setBounds(12, 271, 122, 16);
+					}
+					{
+						jLabel20 = new JLabel();
+						jPanel2.add(jLabel20);
+						jLabel20.setText("Rasterfarbe:");
+						jLabel20.setBounds(328, 215, 109, 16);
+					}
+					{
+						jLabel21 = new JLabel();
+						jPanel2.add(jLabel21);
+						jLabel21.setText("Symbolfarbe:");
+						jLabel21.setBounds(328, 243, 115, 16);
+					}
+					{
+						jLabel22 = new JLabel();
+						jPanel2.add(jLabel22);
+						jLabel22.setText("Hintergrundfarbe:");
+						jLabel22.setBounds(327, 271, 113, 16);
+					}
+					{
+						jEditorPane7 = new JEditorPane();
+						jEditorPane7.setEditable(false);
+						jEditorPane7.setBackground(new Color(210, 210, 210));
+						jPanel2.add(jEditorPane7);
+						jEditorPane7.setBounds(146, 218, 27, 20);
+						jEditorPane7.addMouseListener(new MouseAdapter() {
+							public void mouseClicked(MouseEvent evt) {
+								jEditorPane7MouseClicked(evt);
+							}
+						});
+					}
+					{
+						jEditorPane8 = new JEditorPane();
+						jEditorPane8.setEditable(false);
+						jEditorPane8.setBackground(Color.black);
+						jPanel2.add(jEditorPane8);
+						jEditorPane8.setBounds(146, 246, 27, 20);
+						jEditorPane8.addMouseListener(new MouseAdapter() {
+							public void mouseClicked(MouseEvent evt) {
+								jEditorPane8MouseClicked(evt);
+							}
+						});
+					}
+					{
+						jEditorPane9 = new JEditorPane();
+						jEditorPane9.setEditable(false);
+						jPanel2.add(jEditorPane9);
+						jEditorPane9.setBounds(146, 274, 27, 20);
+						jEditorPane9.addMouseListener(new MouseAdapter() {
+							public void mouseClicked(MouseEvent evt) {
+								jEditorPane9MouseClicked(evt);
+							}
+						});
+					}
+					{
+						jEditorPane10 = new JEditorPane();
+						jEditorPane10.setEditable(false);
+						jEditorPane10.setBackground(new Color(210, 210, 210));
+						jPanel2.add(jEditorPane10);
+						jEditorPane10.setBounds(455, 218, 26, 20);
+						jEditorPane10.addMouseListener(new MouseAdapter() {
+							public void mouseClicked(MouseEvent evt) {
+								jEditorPane10MouseClicked(evt);
+							}
+						});
+					}
+					{
+						jEditorPane11 = new JEditorPane();
+						jEditorPane11.setEditable(false);
+						jEditorPane11.setBackground(Color.black);
+						jPanel2.add(jEditorPane11);
+						jEditorPane11.setBounds(455, 244, 26, 20);
+						jEditorPane11.addMouseListener(new MouseAdapter() {
+							public void mouseClicked(MouseEvent evt) {
+								jEditorPane11MouseClicked(evt);
+							}
+						});
+					}
+					{
+						jEditorPane12 = new JEditorPane();
+						jEditorPane12.setEditable(false);
+						jPanel2.add(jEditorPane12);
+						jEditorPane12.setBounds(455, 274, 26, 20);
+						jEditorPane12.addMouseListener(new MouseAdapter() {
+							public void mouseClicked(MouseEvent evt) {
+								jEditorPane12MouseClicked(evt);
+							}
+						});
+					}
+					jPanel2.setLayout(null);
+				}
 				getContentPane().add(jTabbedPane1, BorderLayout.CENTER);
 			}
 			setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -371,12 +534,12 @@ public class FrmOptions extends javax.swing.JFrame
 	}
 	private void jEditorPane1MouseClicked(MouseEvent evt) 
 	{
-		Color c = JColorChooser.showDialog(this, "Rasterfarbe Zeichenflaeche Wirkschaltplan:", new Color(210, 210, 210));
+		Color c = JColorChooser.showDialog(this, "Rasterfarbe Schaltplaneditor Wirkschaltplan:", new Color(210, 210, 210));
 		jEditorPane1.setBackground(c);
 	}
 	private void jEditorPane2MouseClicked(MouseEvent evt) 
 	{
-		Color c = JColorChooser.showDialog(this, "Rasterfarbe Zeichenflaeche Stromlaufplan:", new Color(210, 210, 210));
+		Color c = JColorChooser.showDialog(this, "Rasterfarbe Schaltplaneditor Stromlaufplan:", new Color(210, 210, 210));
 		jEditorPane2.setBackground(c);
 	}
 	private void jButton5ActionPerformed(ActionEvent evt) 
@@ -403,29 +566,64 @@ public class FrmOptions extends javax.swing.JFrame
 		drawComponent1.setGridColor(jEditorPane1.getBackground());
 		drawComponent2.setGridColor(jEditorPane2.getBackground());
 		drawComponent1.setSymbolColor(jEditorPane3.getBackground());
-		drawComponent2.setSymbolColor(jEditorPane4.getBackground());
+		drawComponent2.setSymbolColor(jEditorPane4.getBackground());		
+		drawComponent3.setGridColor(jEditorPane7.getBackground());
+		drawComponent4.setGridColor(jEditorPane10.getBackground());
+		drawComponent3.setSymbolColor(jEditorPane8.getBackground());
+		drawComponent4.setSymbolColor(jEditorPane11.getBackground());
 		frmMain.setWorkBenchBackground(jEditorPane5.getBackground(), jEditorPane6.getBackground());
+		editorGui.setBackgroundColor(jEditorPane9.getBackground(), jEditorPane12.getBackground());
 	}
 	private void jEditorPane3MouseClicked(MouseEvent evt) 
 	{
-		Color c = JColorChooser.showDialog(this, "Symbolfarbe Zeichenflaeche Wirkschaltplan:", Color.black);
+		Color c = JColorChooser.showDialog(this, "Symbolfarbe Schaltplaneditor Wirkschaltplan:", Color.black);
 		jEditorPane3.setBackground(c);
 	}
 	private void jEditorPane4MouseClicked(MouseEvent evt) 
 	{
-		Color c = JColorChooser.showDialog(this, "Symbolfarbe Zeichenflaeche Stromlaufplan:", Color.black);
+		Color c = JColorChooser.showDialog(this, "Symbolfarbe Schaltplaneditor Stromlaufplan:", Color.black);
 		jEditorPane4.setBackground(c);
 	}
 
 	private void jEditorPane5MouseClicked(MouseEvent evt) 
 	{
-		Color c = JColorChooser.showDialog(this, "Hintergrundfarbe Zeichenflaeche Wirkschaltplan:", Color.white);
+		Color c = JColorChooser.showDialog(this, "Hintergrundfarbe Schaltplaneditor Wirkschaltplan:", Color.white);
 		jEditorPane5.setBackground(c);
 	}
 
 	private void jEditorPane6MouseClicked(MouseEvent evt) 
 	{
-		Color c = JColorChooser.showDialog(this, "Hintergrundfarbe Zeichenflaeche Stromlaufplan:", Color.white);
+		Color c = JColorChooser.showDialog(this, "Hintergrundfarbe Schaltplaneditor Stromlaufplan:", Color.white);
 		jEditorPane6.setBackground(c);
+	}
+	
+	private void jEditorPane7MouseClicked(MouseEvent evt) {
+		Color c = JColorChooser.showDialog(this, "Rasterfarbe Bauteileeditor Wirkschaltplan:", Color.white);
+		jEditorPane7.setBackground(c);
+	}
+	
+	private void jEditorPane8MouseClicked(MouseEvent evt) {
+		Color c = JColorChooser.showDialog(this, "Symbolfarbe Bauteileeditor Wirkschaltplan:", Color.white);
+		jEditorPane8.setBackground(c);
+	}
+	
+	private void jEditorPane9MouseClicked(MouseEvent evt) {
+		Color c = JColorChooser.showDialog(this, "Hintergrundfarbe Bauteileeditor Wirkschaltplan:", Color.white);
+		jEditorPane9.setBackground(c);
+	}
+	
+	private void jEditorPane10MouseClicked(MouseEvent evt) {
+		Color c = JColorChooser.showDialog(this, "Rasterfarbe Bauteileeditor Stromlaufplan:", Color.white);
+		jEditorPane10.setBackground(c);
+	}
+	
+	private void jEditorPane11MouseClicked(MouseEvent evt) {
+			Color c = JColorChooser.showDialog(this, "Symbolfarbe Bauteileeditor Stromlaufplan:", Color.white);
+			jEditorPane11.setBackground(c);
+	}
+	
+	private void jEditorPane12MouseClicked(MouseEvent evt) {
+		Color c = JColorChooser.showDialog(this, "Hintergrundfarbe Bauteileeditor Stromlaufplan:", Color.white);
+		jEditorPane12.setBackground(c);
 	}
 }

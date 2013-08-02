@@ -50,6 +50,7 @@ import editor.EditorGUI;
 public class FrmMain extends javax.swing.JFrame 
 {
 	private static final long serialVersionUID = 1L;
+	EditorGUI editorGui = new EditorGUI();
 
 	//GUI
 	//Hauptpanel
@@ -95,7 +96,7 @@ public class FrmMain extends javax.swing.JFrame
 	private ArrayList<ElectricObject> electricObjects= new ArrayList<ElectricObject>(); 
 	private Point startMove;
 	private int zoomCount = 0;
-	private FrmOptions frmOptions = new FrmOptions(this, drawComponent1, drawComponent2);
+	private FrmOptions frmOptions = new FrmOptions(this, editorGui, drawComponent1, drawComponent2, editorGui.getLeftDrawComponent(), editorGui.getRightDrawComponent());
 	private JFileChooser jfc = new JFileChooser();
 	private String path = null;
 	public FrmMain() {
@@ -637,7 +638,6 @@ public class FrmMain extends javax.swing.JFrame
 	 */
 	private void menuItemNewSymbolActionPerformed(ActionEvent evt) 
 	{
-		EditorGUI editorGui = new EditorGUI();
 		editorGui.setVisible(true);
 	}
 	/**
@@ -787,6 +787,8 @@ public class FrmMain extends javax.swing.JFrame
 	{
 		drawComponent1.showGrid(b);
 		drawComponent2.showGrid(b);
+		editorGui.getRightDrawComponent().showGrid(b);
+		editorGui.getLeftDrawComponent().showGrid(b);
 		repaintAll();
 	}
 	public int getGridInterval()
