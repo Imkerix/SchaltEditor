@@ -50,12 +50,12 @@ import javax.swing.KeyStroke;
 /**
  * 
  * @author erik heinisch
- * @version 0.3 - 0.4
+ * @version preAlpha
  */
 @SuppressWarnings("serial")
 public class EditorGUI extends JFrame 
 {
-	//// Begin : Stuff needed in several Method that can't invoke each other nicely
+	//// Begin : Stuff needed in several Method that can't be invoked more nicely
 		private JList<String> list;
 		private Point startMove;
 		private DrawComponent canvasleft;
@@ -66,7 +66,6 @@ public class EditorGUI extends JFrame
 		private GeometricObject actObjectright;
 		private JTabbedPane mytabbedpane = new JTabbedPane();
 		private JSplitPane splitPane = new JSplitPane();
-		private JScrollPane scrollPane = new JScrollPane();
 		private JScrollPane scrollPaneleft = new JScrollPane();
 		private JScrollPane scrollPaneright = new JScrollPane();
 		private int selectedGrabber;
@@ -76,7 +75,9 @@ public class EditorGUI extends JFrame
 		private String objectName;
 		private JMenuBar menuBar;
 		private boolean isActive = false;
-		/**
+	//// End : Stuff needed in several Method that can't be invoked more nicely
+		
+	/**
 	 * Contains the implementation of the graphical user interface.
 	 */
 	public EditorGUI() 
@@ -320,10 +321,6 @@ public class EditorGUI extends JFrame
 					// subBegin : Add items to the list
 							addListItems();
 					// subEnd : Add items to the list
-					
-					// subBegin : Add the List to the ScrollPane
-							scrollPane.setViewportView(list);
-					// subEnd : Add the List to the ScrollPane
 				
 		//// End : List with GeometricObjects	
 			
@@ -447,7 +444,7 @@ public class EditorGUI extends JFrame
 		//// Begin : JSplitPane
 			
 				// subBegin : Left side
-						splitPane.setLeftComponent(scrollPane);
+						splitPane.setLeftComponent(list);
 				// subEnd : Left side
 					
 				
@@ -488,7 +485,7 @@ public class EditorGUI extends JFrame
 	
 	////Begin : Listener methods
 	
-	/**
+			/**
 			 * Invokes the +expand(int grabber, Point endMove) or the +move(Point startMove, Point endMove) method 
 			 * in {@link GeometricObject}, as required by the int selectedGrabber.<br>
 			 * @param e the Mouse Event that gives the Position of the mouse released action.   
@@ -711,7 +708,7 @@ public class EditorGUI extends JFrame
 					break;
 				case "Linie" : temp.add(new Linie(1, 1, 51, 51));
 					break;
-				case "Arc" : temp.add(new Arc(1, 1, 51, 51, 10, 90));
+				case "Arc" : temp.add(new Arc(1, 1, 51, 51, 45, 90));
 					break;
 				case "Connector" : temp.add(new Connector(0,0));
 					break;
