@@ -13,6 +13,8 @@ import java.util.ArrayList;
 
 import javax.swing.JComboBox;
 import javax.swing.JSeparator;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.JToolBar;
 
 public abstract class GeometricObject implements Serializable
@@ -218,11 +220,17 @@ public abstract class GeometricObject implements Serializable
 		});
 		
 		optionsBar.add(dotted);
-	
 		optionsBar.add(new JSeparator());
 		optionsBar.setFloatable(false);
 		return optionsBar;
 	}
+
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName();
+	}
+	
+	
 
 }
 

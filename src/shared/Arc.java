@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.geom.Ellipse2D;
 import java.io.Serializable;
 
 public class Arc extends GeometricObject implements Serializable{
@@ -79,20 +80,6 @@ public class Arc extends GeometricObject implements Serializable{
 		g.setColor(Color.black);
 		g.drawRect((int)(x+width)-5, (int)(y+height)-5, 10, 10);
 			rectList.add(new Rectangle((int)(x+width)-5, (int)(y+height)-5, 10, 10));
-		
-		//Grabber StartAngle
-		g.setColor(Color.white);
-		g.fillOval((int)((x+(width/2)+arcAngle*(width/2))-5),(int) ((y+(height/2)+arcAngle*(height/2))-5), 10, 10);
-		g.setColor(Color.red);
-		g.drawOval((int)((x+(width/2)+arcAngle*(width/2))-5),(int) ((y+(height/2)+arcAngle*(height/2))-5), 10, 10);
-			super.rectList.add(new Rectangle((int)x-5, (int)y-5, 10, 10));
-
-		//Grabber ArcAngle
-		g.setColor(Color.white);
-		g.fillOval((int)(x+width)-5,(int)(y+height)-5 ,10,10);
-		g.setColor(Color.red);
-		g.drawOval((int)(x+width)-5, (int)(y+height)-5 ,10,10);
-			super.rectList.add(new Rectangle((int)(x+width)-5, (int)(y+height)-5 ,10,10));
 	}
 	
 	@Override
@@ -146,5 +133,5 @@ public class Arc extends GeometricObject implements Serializable{
 			}
 		}
 	}
-
+	
 }

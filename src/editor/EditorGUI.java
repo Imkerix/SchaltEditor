@@ -9,14 +9,15 @@ import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+
 import shared.Connector;
 import shared.GeometricObject;
 import shared.Kreis;
 import shared.Linie;
 import shared.Rechteck;
 import shared.Arc;
-
 import mainFrame.DrawComponent;
+
 import org.apache.batik.dom.GenericDOMImplementation;
 import org.apache.batik.svggen.SVGGraphics2D;
 import org.apache.batik.swing.svg.JSVGComponent;
@@ -30,10 +31,12 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.JList;
 import javax.swing.JSplitPane;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 
 import javax.swing.AbstractAction;
@@ -45,7 +48,12 @@ import javax.swing.JMenuItem;
 import javax.swing.JTabbedPane;
 import javax.swing.JButton;
 import javax.swing.JSeparator;
+import javax.swing.JTree;
 import javax.swing.KeyStroke;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 
 /**
  * 
@@ -65,7 +73,10 @@ public class EditorGUI extends JFrame
 		private GeometricObject actObjectleft;
 		private GeometricObject actObjectright;
 		private JTabbedPane mytabbedpane = new JTabbedPane();
-		private JSplitPane splitPane = new JSplitPane();
+		private JSplitPane mainsplitPane = new JSplitPane();
+		private DefaultMutableTreeNode topLevelName = new DefaultMutableTreeNode("Schaltzeichen");
+		private JTree livingObjects = new JTree(topLevelName);
+		private JSplitPane innersplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		private JScrollPane scrollPaneleft = new JScrollPane();
 		private JScrollPane scrollPaneright = new JScrollPane();
 		private int selectedGrabber;
@@ -440,49 +451,80 @@ public class EditorGUI extends JFrame
 		            // subEnd : React on closing window for the saving system
 		        });
 		//// End : Create window adapter
-			
+		
+		//// Begin : JTree add Listener
+			livingObjects.addTreeSelectionListener(new TreeSelectionListener() {
+			    public void valueChanged(TreeSelectionEvent e) {
+			        DefaultMutableTreeNode node = (DefaultMutableTreeNode)livingObjects.getLastSelectedPathComponent();
+
+			    /* if nothing is selected */ 
+			        if(node == null){return;}
+
+			    /* retrieve the node that was selected */ 
+			        GeometricObject nodeInfo = (GeometricObject) node.getUserObject();
+			        
+			    /* React to the node selection. */
+			        actObjectleft = nodeInfo;
+			        
+			        if(isActive == true)
+					{
+						menuBar.remove(1);
+						isActive = false;
+						menuBar.validate();
+					}
+			        
+			        menuBar.add(nodeInfo.setOptionsBar(),1);
+			        menuBar.validate();
+			        isActive = true;
+			        repaint();
+			    }
+			});
+		//// End : JTree add Listener
+				
 		//// Begin : JSplitPane
-			
-				// subBegin : Left side
-						splitPane.setLeftComponent(list);
-				// subEnd : Left side
-					
+				// subBegin : innerSplitpane
+				 		innersplitPane.setRightComponent(livingObjects);
+				 		innersplitPane.setLeftComponent(list);
+				// subEnd : innerSplitpane
 				
-				// subBegin : Right side
-						// subBegin : Left side tabbed pane
-							
-							// subBegin : Set object to scroll 
-								scrollPaneleft.setViewportView(canvasleft);
-							// subEnd : Set object to scroll 
-								
-							// subBegin : Add to mytabbedpane
-								mytabbedpane.addTab("Wirkschaltzeichen", scrollPaneleft);
-							// subEnd : Add to mytabbedpane
-								
-						// subEnd : Left side tabbed pane
-					
-						// subBegin : Right side tabbed pane
-							
-							// subBegin : Set object to scroll  
-								scrollPaneright.setViewportView(canvasright);
-							// subEnd : Set object to scroll 
-								
-							// subBegin : Add to mytabbedpane
-								mytabbedpane.addTab("Stromlaufzeichen", scrollPaneright);
-							// subEnd : Add to mytabbedpane
-								
-						// subEnd : Right side tabbed pane		
-						
-						splitPane.setRightComponent(mytabbedpane);
-						
-				// subEnd : Right side
+				// subBegin : mainSplitpane
+				 		// subBegin : Left side
+				 			mainsplitPane.setLeftComponent(innersplitPane);
+				 		// subEnd : Left side
+				 		
+				 		// subBegin : Right side
+					 		// subBegin : Left side tabbed pane
+						 		// subBegin : Set object to scroll 
+						 			scrollPaneleft.setViewportView(canvasleft);
+						 		// subEnd : Set object to scroll 
+						 		
+						 		// subBegin : Add to mytabbedpane
+						 			mytabbedpane.addTab("Wirkschaltzeichen", scrollPaneleft);
+						 		// subEnd : Add to mytabbedpane
+					 		// subEnd : Left side tabbed pane
+					 		
+					 		// subBegin : Right side tabbed pane
+						 		// subBegin : Set object to scroll  
+						 			scrollPaneright.setViewportView(canvasright);
+						 		// subEnd : Set object to scroll 
+						 		
+						 		// subBegin : Add to mytabbedpane
+						 			mytabbedpane.addTab("Stromlaufzeichen", scrollPaneright);
+						 		// subEnd : Add to mytabbedpane
+						 	// subEnd : Right side tabbed pane		
+				 		
+				 			mainsplitPane.setRightComponent(mytabbedpane);
+				 		
+				 		// subEnd : Right side
+				// subEnd : mainSplitpane
 				
-				splitPane.setDividerSize(5);
-				this.getContentPane().add(splitPane, BorderLayout.CENTER);
+				mainsplitPane.setDividerSize(5);
+				this.getContentPane().add(mainsplitPane, BorderLayout.CENTER);
 
 		//// End : JSplitPane
 	}
 	
+
 	////Begin : Listener methods
 	
 			/**
@@ -716,6 +758,7 @@ public class EditorGUI extends JFrame
  			
 			wasSaved = false;
 			repaint();		
+			createNodes(topLevelName, temp.get(temp.size()-1));
 		}
 	}
 
@@ -755,6 +798,51 @@ public class EditorGUI extends JFrame
 		g2d.setStroke(new BasicStroke());
 		g2d.setColor(Color.black);
 	}
+	
+	/**
+	 * Adds a {@link GeometricObject} to the {@link JTree} in the {@link JSplitPane} at the downer left of the {@link EditorGUI}. <br>
+	 * @param topLevelName a {@link DefaultMutableTreeNode} that represents the tree on which to work.
+	 * @param geomObj the {@link GeometricObject} to add to the tree.
+	 */
+	private void createNodes(DefaultMutableTreeNode topLevelName, GeometricObject geomObj) 
+	{
+		DefaultMutableTreeNode category = null;
+	    DefaultMutableTreeNode geometricObjectNode = null;
+	    
+	    DefaultTreeModel model = (DefaultTreeModel) livingObjects.getModel();
+	    DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
+	    DefaultMutableTreeNode temp = null;
+	    
+	    
+    	boolean exists = false;
+    	Enumeration<DefaultMutableTreeNode> e = topLevelName.depthFirstEnumeration();
+    	
+        while (e.hasMoreElements()) 
+        {
+            DefaultMutableTreeNode testingnode = e.nextElement();
+            if (testingnode.toString().equalsIgnoreCase(geomObj.getClass().getSimpleName())) 
+            {
+            	temp = testingnode;
+                exists = true;
+            }
+        }
+        
+        if(exists)
+        {
+        	category = temp;
+        	geometricObjectNode = new DefaultMutableTreeNode(geomObj);
+        	category.add(geometricObjectNode);
+        }
+        else if(!exists)
+        {
+        	category = new DefaultMutableTreeNode(geomObj.getClass().getSimpleName());
+            topLevelName.add(category);
+        	geometricObjectNode = new DefaultMutableTreeNode(geomObj);
+        	category.add(geometricObjectNode);
+        }
+	    model.reload(root);
+	}
+
 	
 	public DrawComponent getLeftDrawComponent()
 	{
