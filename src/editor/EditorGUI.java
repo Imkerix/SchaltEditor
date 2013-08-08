@@ -5,6 +5,8 @@ import javax.swing.JFrame;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -24,6 +26,9 @@ import org.apache.batik.swing.svg.JSVGComponent;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
@@ -34,13 +39,16 @@ import javax.swing.JSplitPane;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 
 import javax.swing.AbstractAction;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -48,6 +56,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JTabbedPane;
 import javax.swing.JButton;
 import javax.swing.JSeparator;
+import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.KeyStroke;
 import javax.swing.event.TreeSelectionEvent;
@@ -86,6 +95,8 @@ public class EditorGUI extends JFrame
 		private String objectName;
 		private JMenuBar menuBar;
 		private boolean isActive = false;
+		private boolean propertySet = false;
+		private PropertySpace prop = new PropertySpace();
 	//// End : Stuff needed in several Method that can't be invoked more nicely
 		
 	/**
@@ -95,11 +106,14 @@ public class EditorGUI extends JFrame
 	{
 		//// Begin : Initialize
 			setExtendedState(Frame.MAXIMIZED_BOTH);
+			setSize(1200,700);
 			
 			setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 			
 			setTitle("Schaltzeichen Editor");
 			objectName = null;
+			
+			
 		//// End : Initialize
 		
 		//// Begin : Canvas	
@@ -458,7 +472,7 @@ public class EditorGUI extends JFrame
 			        DefaultMutableTreeNode node = (DefaultMutableTreeNode)livingObjects.getLastSelectedPathComponent();
 
 			    /* if nothing is selected */ 
-			        if(node == null){return;}
+			        if(node == null || node.isLeaf() == false){return;} // causes class cast exception if node would be not a leaf.
 
 			    /* retrieve the node that was selected */ 
 			        GeometricObject nodeInfo = (GeometricObject) node.getUserObject();
@@ -466,18 +480,24 @@ public class EditorGUI extends JFrame
 			    /* React to the node selection. */
 			        actObjectleft = nodeInfo;
 			        
+			        
+			        
 			        if(isActive == true)
 					{
 						menuBar.remove(1);
+						rmPropertySpace();
 						isActive = false;
 						menuBar.validate();
 					}
 			        
+			        addPropertySpace(nodeInfo);
 			        menuBar.add(nodeInfo.setOptionsBar(),1);
 			        menuBar.validate();
 			        isActive = true;
 			        repaint();
 			    }
+
+				
 			});
 		//// End : JTree add Listener
 				
@@ -519,6 +539,7 @@ public class EditorGUI extends JFrame
 				// subEnd : mainSplitpane
 				
 				mainsplitPane.setDividerSize(5);
+				mainsplitPane.setDividerLocation(this.getWidth()/6);
 				this.getContentPane().add(mainsplitPane, BorderLayout.CENTER);
 
 		//// End : JSplitPane
@@ -615,6 +636,10 @@ public class EditorGUI extends JFrame
 								isActive = false;
 								menuBar.validate();
 							}
+							if(propertySet == true)
+							{
+								rmPropertySpace();
+							}
 						}
 					}
 				}
@@ -642,6 +667,10 @@ public class EditorGUI extends JFrame
 								menuBar.remove(1);
 								isActive = false;
 								menuBar.validate();
+							}
+							if(propertySet == true)
+							{
+								rmPropertySpace();
 							}
 						}
 					}
@@ -815,7 +844,9 @@ public class EditorGUI extends JFrame
 	    
 	    
     	boolean exists = false;
-    	Enumeration<DefaultMutableTreeNode> e = topLevelName.depthFirstEnumeration();
+    	
+    	@SuppressWarnings("unchecked")
+		Enumeration<DefaultMutableTreeNode> e = topLevelName.depthFirstEnumeration();
     	
         while (e.hasMoreElements()) 
         {
@@ -842,7 +873,33 @@ public class EditorGUI extends JFrame
         }
 	    model.reload(root);
 	}
+	
+	//// Begin : Property Space //// 
+	
+	private void addPropertySpace(GeometricObject nodeInfo)
+	{
+		// subBegin : reclaim space for the new JPanel. 
+		mainsplitPane.setSize(this.getWidth()-(this.getWidth()/6),this.getHeight());
+		mainsplitPane.validate();
+		// subEnd : reclaim space for the new JPanel. 
+		
+		// subBegin : line up the Property Panel. 
+		prop.setBounds(this.getWidth()-(this.getWidth()/6), mainsplitPane.getY(), this.getWidth()/6, mainsplitPane.getHeight());
+		prop.setup(nodeInfo);
+		propertySet = true;
+		this.add(prop);
+		// subEnd : line up the Property Panel.
+		
+	}
+	private void rmPropertySpace()
+	{
+		this.remove(prop);
+		propertySet = false;
+		mainsplitPane.setSize(this.getWidth(), this.getHeight());
+		mainsplitPane.validate();
+	}
 
+	//// End : Property Space //// 
 	
 	public DrawComponent getLeftDrawComponent()
 	{

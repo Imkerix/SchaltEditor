@@ -16,7 +16,7 @@ public class Arc extends GeometricObject implements Serializable{
 	//// Variables only Arc has a use for ////
 	double startAngle, arcAngle;
 	
-	// Surrounding points
+		// Surrounding points
 		double dx;
 		double dy;
 		double dwidth;
@@ -133,5 +133,4 @@ public class Arc extends GeometricObject implements Serializable{
 			}
 		}
 	}
-	
 }
