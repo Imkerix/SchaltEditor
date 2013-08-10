@@ -5,8 +5,6 @@ import javax.swing.JFrame;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -26,9 +24,6 @@ import org.apache.batik.swing.svg.JSVGComponent;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
@@ -39,16 +34,13 @@ import javax.swing.JSplitPane;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 
 import javax.swing.AbstractAction;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -56,7 +48,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JTabbedPane;
 import javax.swing.JButton;
 import javax.swing.JSeparator;
-import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.KeyStroke;
 import javax.swing.event.TreeSelectionEvent;
@@ -96,7 +87,7 @@ public class EditorGUI extends JFrame
 		private JMenuBar menuBar;
 		private boolean isActive = false;
 		private boolean propertySet = false;
-		private PropertySpace prop = new PropertySpace();
+		private PropertySpace prop; 
 	//// End : Stuff needed in several Method that can't be invoked more nicely
 		
 	/**
@@ -105,15 +96,11 @@ public class EditorGUI extends JFrame
 	public EditorGUI() 
 	{
 		//// Begin : Initialize
-			setExtendedState(Frame.MAXIMIZED_BOTH);
-			setSize(1200,700);
-			
 			setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-			
+			setExtendedState(Frame.MAXIMIZED_BOTH);
+			setSize(1200,770);
 			setTitle("Schaltzeichen Editor");
 			objectName = null;
-			
-			
 		//// End : Initialize
 		
 		//// Begin : Canvas	
@@ -131,7 +118,7 @@ public class EditorGUI extends JFrame
 						
 				
 				// subBegin : MouseAdapter for Canvas	
-							MouseAdapter ma = new MouseAdapter() 
+						MouseAdapter ma = new MouseAdapter() 
 						{
 							@Override
 							public void mousePressed(MouseEvent e) 
@@ -231,9 +218,19 @@ public class EditorGUI extends JFrame
 								 @Override
 								 public void paintComponent(Graphics g)
 								 {
-									// subBegin : Update canvas to actual state
-									 	setRecommendedObjectSize(g, 600, 600);
+									 Graphics2D g2d = (Graphics2D) g;
+//									 setRecommendedObjectSize(g, 600, 600);
 									 
+									 g2d.setColor(new Color(85,107,47));
+									 g2d.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_SQUARE,BasicStroke.JOIN_BEVEL,1.0f,new float[]{5.0f},0.0f)); // we need a dashed line
+									 g.drawRect((canvasleft.getWidth()/2)-(600/2), (canvasleft.getHeight()/2)-(600/2), 600, 600);
+									 g2d.setStroke(new BasicStroke());
+									 g2d.setColor(Color.black);
+									// subBegin : Update canvas to actual state
+									 	
+									 	
+									 	
+									 	
 										for (GeometricObject go : geomListleft) 
 										{
 											go.draw(g);
@@ -320,7 +317,7 @@ public class EditorGUI extends JFrame
 								canvasright.getActionMap().put("MinusAction", minusRight);
 							 // subEnd : Add Listeners
 						
-						// subBegin : Right side	
+						// subEnd : Right side	
 								
 				// subEnd : Canvas creation
 						 
@@ -482,13 +479,16 @@ public class EditorGUI extends JFrame
 			        
 			        
 			        
-			        if(isActive == true)
+			        if(isActive)
 					{
 						menuBar.remove(1);
-						rmPropertySpace();
 						isActive = false;
 						menuBar.validate();
 					}
+			        if(propertySet)
+			        {
+			        	rmPropertySpace();
+			        }
 			        
 			        addPropertySpace(nodeInfo);
 			        menuBar.add(nodeInfo.setOptionsBar(),1);
@@ -499,6 +499,7 @@ public class EditorGUI extends JFrame
 
 				
 			});
+				 		
 		//// End : JTree add Listener
 				
 		//// Begin : JSplitPane
@@ -540,7 +541,10 @@ public class EditorGUI extends JFrame
 				
 				mainsplitPane.setDividerSize(5);
 				mainsplitPane.setDividerLocation(this.getWidth()/6);
-				this.getContentPane().add(mainsplitPane, BorderLayout.CENTER);
+				
+				getContentPane().add(mainsplitPane, BorderLayout.CENTER);
+				
+			
 
 		//// End : JSplitPane
 	}
@@ -802,8 +806,18 @@ public class EditorGUI extends JFrame
 		objectName = p_objectName;
 		geomListleft = p_ArrayListWirkSchaltPlan;
 		geomListright = p_ArrayListStromFlussPlan;
+		
+		for(GeometricObject geomObj : geomListleft)
+		{
+			createNodes(topLevelName, geomObj);
+		}
+		for(GeometricObject geomObj : geomListright)
+		{
+			createNodes(topLevelName, geomObj);
+		}
 		canvasleft.repaint();
 		canvasright.repaint();
+		
 	}
 
 	public void setBackgroundColor(Color p_left, Color p_right)
@@ -823,11 +837,12 @@ public class EditorGUI extends JFrame
 		Graphics2D g2d = (Graphics2D)g; // we want to use strokes
 		g2d.setColor(new Color(85,107,47));
 		g2d.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_SQUARE,BasicStroke.JOIN_BEVEL,1.0f,new float[]{5.0f},0.0f)); // we need a dashed line
-		g.drawRect((scrollPaneleft.getWidth()/2)-(recommendedObjectWidth/2), (scrollPaneleft.getHeight()/2)-(recommendedObjectHeight/2), recommendedObjectWidth, recommendedObjectHeight);
+		g.drawRect((canvasleft.getWidth()/2)-(recommendedObjectWidth/2), (canvasleft.getHeight()/2)-(recommendedObjectHeight/2), recommendedObjectWidth, recommendedObjectHeight);
 		g2d.setStroke(new BasicStroke());
 		g2d.setColor(Color.black);
 	}
 	
+	//// Begin : 
 	/**
 	 * Adds a {@link GeometricObject} to the {@link JTree} in the {@link JSplitPane} at the downer left of the {@link EditorGUI}. <br>
 	 * @param topLevelName a {@link DefaultMutableTreeNode} that represents the tree on which to work.
@@ -874,32 +889,21 @@ public class EditorGUI extends JFrame
 	    model.reload(root);
 	}
 	
-	//// Begin : Property Space //// 
-	
-	private void addPropertySpace(GeometricObject nodeInfo)
-	{
-		// subBegin : reclaim space for the new JPanel. 
-		mainsplitPane.setSize(this.getWidth()-(this.getWidth()/6),this.getHeight());
-		mainsplitPane.validate();
-		// subEnd : reclaim space for the new JPanel. 
-		
-		// subBegin : line up the Property Panel. 
-		prop.setBounds(this.getWidth()-(this.getWidth()/6), mainsplitPane.getY(), this.getWidth()/6, mainsplitPane.getHeight());
-		prop.setup(nodeInfo);
-		propertySet = true;
-		this.add(prop);
-		// subEnd : line up the Property Panel.
-		
-	}
-	private void rmPropertySpace()
-	{
-		this.remove(prop);
-		propertySet = false;
-		mainsplitPane.setSize(this.getWidth(), this.getHeight());
-		mainsplitPane.validate();
-	}
-
-	//// End : Property Space //// 
+	//// Begin : Property Space 
+		private void addPropertySpace(GeometricObject nodeInfo)
+		{
+				propertySet = true;
+				prop = new PropertySpace(nodeInfo);
+				getContentPane().add(prop, BorderLayout.EAST);
+				pack();
+		}
+		private void rmPropertySpace()
+		{
+			this.remove(prop);
+			propertySet = false;
+			pack();
+		}
+	//// End : Property Space 
 	
 	public DrawComponent getLeftDrawComponent()
 	{
