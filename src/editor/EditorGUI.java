@@ -887,25 +887,19 @@ public class EditorGUI extends JFrame
 		{
 				propertySet = true;
 				
-				int canvasWidth = 0;
-				int canvasHeight = 0;
 				DrawComponent canvas = null;
 				
 				if(geomListleft.contains(nodeInfo))
 				{
-					canvasWidth = canvasleft.getWidth();
-					canvasHeight = canvasleft.getHeight();
 					canvas = canvasleft;
 				}
 				if(geomListright.contains(nodeInfo))
 				{
-					canvasWidth = canvasleft.getWidth();
-					canvasHeight = canvasleft.getHeight();
 					canvas = canvasright;
 				}
 				
 				
-				prop = new PropertySpace(nodeInfo, canvasWidth, canvasHeight, canvas);
+				prop = new PropertySpace(nodeInfo, canvas);
 				getContentPane().add(prop, BorderLayout.EAST);
 				pack();
 		}

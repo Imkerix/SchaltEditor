@@ -35,12 +35,12 @@ public class PropertySpace extends JPanel
 	private DrawComponent canvas;
 	
 	
-	public PropertySpace(GeometricObject p_geomObj, int p_canvasWidth, int p_canvasHeight, DrawComponent p_canvas) 
+	public PropertySpace(GeometricObject p_geomObj, DrawComponent p_canvas) 
 	{
 		this.geomObject = p_geomObj;
 		this.canvas = p_canvas;
-		this.canvasWidth = p_canvasWidth;
-		this.canvasHeight = p_canvasHeight;
+		this.canvasWidth = canvas.getWidth();
+		this.canvasHeight = canvas.getHeight();
 		this.setBackground(Color.gray);
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
