@@ -29,6 +29,7 @@ public abstract class GeometricObject implements Serializable
 	double height;
 	ArrayList<Rectangle> rectList = new ArrayList<Rectangle>();
 	BasicStroke line = null;
+	String objectName = this.getClass().getSimpleName();
 	
 	public void draw(Graphics g){};
 
@@ -49,6 +50,7 @@ public abstract class GeometricObject implements Serializable
 			y += endMove.getY()-startMove.getY();			
 		}
 	}
+	
 	
 	public abstract void expand(int grabber, Point endMove, int canvasWidth, int canvasHeight); 
 	
@@ -225,9 +227,14 @@ public abstract class GeometricObject implements Serializable
 		return optionsBar;
 	}
 
+	
+	public void setObjectName(String objectName) {
+		this.objectName = objectName;
+	}
+	
 	@Override
 	public String toString() {
-		return this.getClass().getSimpleName();
+		return this.objectName;
 	}
 	
 	

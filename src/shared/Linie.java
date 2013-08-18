@@ -70,8 +70,8 @@ public class Linie extends GeometricObject implements Serializable
 	{
 		if(((x + endMove.getX()-startMove.getX()) > 0) 
 				&& ((y + endMove.getY()-startMove.getY()) > 0)
-				&& ((x + width + endMove.getX()-startMove.getX()) < canvasWidth) 
-				&& ((y + height + endMove.getY()-startMove.getY()) < canvasHeight)	
+				&& ((punkt2X + endMove.getX()-startMove.getX()) < canvasWidth) 
+				&& ((punkt2Y + endMove.getY()-startMove.getY()) < canvasHeight)	
 				)
 		{
 			x += endMove.getX()-startMove.getX();

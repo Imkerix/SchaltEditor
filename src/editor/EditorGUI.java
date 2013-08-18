@@ -218,18 +218,8 @@ public class EditorGUI extends JFrame
 								 @Override
 								 public void paintComponent(Graphics g)
 								 {
-									 Graphics2D g2d = (Graphics2D) g;
-//									 setRecommendedObjectSize(g, 600, 600);
-									 
-									 g2d.setColor(new Color(85,107,47));
-									 g2d.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_SQUARE,BasicStroke.JOIN_BEVEL,1.0f,new float[]{5.0f},0.0f)); // we need a dashed line
-									 g.drawRect((canvasleft.getWidth()/2)-(600/2), (canvasleft.getHeight()/2)-(600/2), 600, 600);
-									 g2d.setStroke(new BasicStroke());
-									 g2d.setColor(Color.black);
-									// subBegin : Update canvas to actual state
-									 	
-									 	
-									 	
+									 // subBegin : Update canvas to actual state
+									 	setRecommendedObjectSize(g, 600, 600);
 									 	
 										for (GeometricObject go : geomListleft) 
 										{
@@ -842,7 +832,6 @@ public class EditorGUI extends JFrame
 		g2d.setColor(Color.black);
 	}
 	
-	//// Begin : 
 	/**
 	 * Adds a {@link GeometricObject} to the {@link JTree} in the {@link JSplitPane} at the downer left of the {@link EditorGUI}. <br>
 	 * @param topLevelName a {@link DefaultMutableTreeNode} that represents the tree on which to work.
@@ -890,13 +879,39 @@ public class EditorGUI extends JFrame
 	}
 	
 	//// Begin : Property Space 
+		/**
+		 * Creates a panel that provides some information about the {@link GeometricObject} selected in the JTree {@link livingObjects}.
+		 * @param nodeInfo the {@link GeometricObject} which is supposed to be shown.
+		 */
 		private void addPropertySpace(GeometricObject nodeInfo)
 		{
 				propertySet = true;
-				prop = new PropertySpace(nodeInfo);
+				
+				int canvasWidth = 0;
+				int canvasHeight = 0;
+				DrawComponent canvas = null;
+				
+				if(geomListleft.contains(nodeInfo))
+				{
+					canvasWidth = canvasleft.getWidth();
+					canvasHeight = canvasleft.getHeight();
+					canvas = canvasleft;
+				}
+				if(geomListright.contains(nodeInfo))
+				{
+					canvasWidth = canvasleft.getWidth();
+					canvasHeight = canvasleft.getHeight();
+					canvas = canvasright;
+				}
+				
+				
+				prop = new PropertySpace(nodeInfo, canvasWidth, canvasHeight, canvas);
 				getContentPane().add(prop, BorderLayout.EAST);
 				pack();
 		}
+		/**
+		 * Removes the information panel created in {@link addPropertySpace}.
+		 */
 		private void rmPropertySpace()
 		{
 			this.remove(prop);
