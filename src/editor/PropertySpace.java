@@ -21,6 +21,8 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.TextEvent;
 import java.awt.event.TextListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 @SuppressWarnings("serial")
 public class PropertySpace extends JPanel 
@@ -70,6 +72,14 @@ public class PropertySpace extends JPanel
 			public void focusGained(FocusEvent e) 
 			{
 				beforeFocus = textField_Name.getText(); 
+			}
+		});
+		textField_Name.addPropertyChangeListener(new PropertyChangeListener() 
+		{
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) 
+			{
+				geomObject.setObjectName(textField_Name.getText());
 			}
 		});
 		textField_Name.setColumns(10);
@@ -192,7 +202,7 @@ public class PropertySpace extends JPanel
 				JLabel lbl_x = new JLabel("X Wert :");
 					innerPanel.add(lbl_x);
 				final JTextField txtF_x = new JTextField(String.valueOf((int)(geomObject.getX())));
-					txtF_x.addFocusListener(new FocusListener() 
+				    txtF_x.addFocusListener(new FocusListener() 
 					{
 						String beforeFocus;
 						
@@ -212,6 +222,17 @@ public class PropertySpace extends JPanel
 						public void focusGained(FocusEvent e) 
 						{
 							beforeFocus = txtF_x.getText(); 
+						}
+					});
+				 	txtF_x.addActionListener(new ActionListener() 
+				 	{
+						@Override
+						public void actionPerformed(ActionEvent e) 
+						{
+							Point startMove = new Point((int)geomObject.getX(), (int)geomObject.getY());
+							Point endMove = new Point(Integer.parseInt(txtF_x.getText()), (int)geomObject.getY());
+							geomObject.move(startMove, endMove, canvasWidth, canvasHeight);
+							canvas.repaint();
 						}
 					});
 					innerPanel.add(txtF_x);
@@ -239,6 +260,17 @@ public class PropertySpace extends JPanel
 						public void focusGained(FocusEvent e) 
 						{
 							beforeFocus = txtF_y.getText(); 
+						}
+					});
+					txtF_y.addActionListener(new ActionListener() 
+				 	{
+						@Override
+						public void actionPerformed(ActionEvent e) 
+						{
+							Point startMove = new Point((int)geomObject.getX(), (int)geomObject.getY());
+							Point endMove = new Point((int)geomObject.getX(), Integer.parseInt(txtF_y.getText()));
+							geomObject.move(startMove, endMove, canvasWidth, canvasHeight);
+							canvas.repaint();
 						}
 					});
 					innerPanel.add(txtF_y);
@@ -271,6 +303,16 @@ public class PropertySpace extends JPanel
 							beforeFocus = txtF2_x.getText(); 
 						}
 					});
+					txtF2_x.addActionListener(new ActionListener() 
+					{
+						@Override
+						public void actionPerformed(ActionEvent e) 
+						{
+							Point endMove = new Point(Integer.parseInt(txtF2_x.getText()), (int)(geomObject.getY()+geomObject.getHeight()));
+							geomObject.expand(1, endMove, canvasWidth, canvasHeight);
+							canvas.repaint();
+						}
+					});
 					innerPanel.add(txtF2_x);
 			
 				JLabel lbl_y = new JLabel("Y2 Wert: ");
@@ -295,6 +337,16 @@ public class PropertySpace extends JPanel
 						public void focusGained(FocusEvent e) 
 						{
 							beforeFocus = txtF2_y.getText(); 
+						}
+					});
+					txtF2_y.addActionListener(new ActionListener() 
+					{
+						@Override
+						public void actionPerformed(ActionEvent e) 
+						{
+							Point endMove = new Point((int)(geomObject.getX()+geomObject.getWidth()), Integer.parseInt(txtF2_y.getText()));
+							geomObject.expand(1, endMove, canvasWidth, canvasHeight);
+							canvas.repaint();
 						}
 					});
 					innerPanel.add(txtF2_y);
@@ -327,6 +379,16 @@ public class PropertySpace extends JPanel
 							beforeFocus = txtF_width.getText(); 
 						}
 					});
+					txtF_width.addActionListener(new ActionListener() 
+					{
+						@Override
+						public void actionPerformed(ActionEvent e) 
+						{
+							Point endMove = new Point((int)(Integer.parseInt(txtF_width.getText())+geomObject.getX()) ,(int)geomObject.getY());
+							geomObject.expand(1, endMove, canvasWidth, canvasHeight);
+							canvas.repaint();
+						}
+					});
 					innerPanel.add(txtF_width);
 			
 				JLabel lbl_height = new JLabel("Höhe : ");
@@ -353,6 +415,16 @@ public class PropertySpace extends JPanel
 							beforeFocus = txtF_height.getText(); 
 						}
 					});
+					txtF_height.addActionListener(new ActionListener() 
+					{
+						@Override
+						public void actionPerformed(ActionEvent e) 
+						{
+							Point endMove = new Point((int)geomObject.getX(), (int)(Integer.parseInt(txtF_height.getText())+geomObject.getY()));
+							geomObject.expand(2, endMove, canvasWidth, canvasHeight);
+							canvas.repaint();
+						}
+					});
 					innerPanel.add(txtF_height);
 			// End : Value Labels
 		}
@@ -371,8 +443,7 @@ public class PropertySpace extends JPanel
 					{
 						if(!(beforeFocus.equals(txtF_diameter.getText()))) // if text was changed
 						{
-//							Point endMove = new Point((int)(Integer.parseInt(txtF_diameter.getText())+geomObject.getX()) ,(int)(Integer.parseInt(txtF_diameter.getText())+geomObject.getY()));
-							Point endMove = new Point(500,300);
+							Point endMove = new Point((int)(Integer.parseInt(txtF_diameter.getText())+geomObject.getX()) ,(int)(Integer.parseInt(txtF_diameter.getText())+geomObject.getY()));
 							geomObject.expand(0, endMove, canvasWidth, canvasHeight);
 							canvas.repaint();
 						}
@@ -384,7 +455,17 @@ public class PropertySpace extends JPanel
 						beforeFocus = txtF_diameter.getText(); 
 					}
 				});
-					innerPanel.add(txtF_diameter);
+				txtF_diameter.addActionListener(new ActionListener()
+				{
+					@Override
+					public void actionPerformed(ActionEvent e)
+					{
+						Point endMove = new Point((int)(Integer.parseInt(txtF_diameter.getText())+geomObject.getX()) ,(int)(Integer.parseInt(txtF_diameter.getText())+geomObject.getY()));
+						geomObject.expand(0, endMove, canvasWidth, canvasHeight);
+						canvas.repaint();
+					}
+				});
+				innerPanel.add(txtF_diameter);
 			// End : Value Labels
 		}
 	////Begin : Value Lables

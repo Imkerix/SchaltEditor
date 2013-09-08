@@ -22,6 +22,8 @@ import org.apache.batik.dom.GenericDOMImplementation;
 import org.apache.batik.svggen.SVGGraphics2D;
 import org.apache.batik.swing.svg.JSVGComponent;
 
+import com.sun.corba.se.impl.orbutil.graph.Node;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -54,6 +56,7 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
 
 /**
  * 
@@ -143,6 +146,7 @@ public class EditorGUI extends JFrame
 										if(actObjectleft != null)
 										{
 											geomListleft.remove(actObjectleft);
+											rmNodes(actObjectleft);
 											actObjectleft = null;
 											canvasleft.repaint();
 										}
@@ -179,6 +183,7 @@ public class EditorGUI extends JFrame
 										if(actObjectright != null)
 										{
 											geomListright.remove(actObjectright);
+											rmNodes(actObjectright);
 											actObjectright = null;
 											canvasright.repaint();
 										}
@@ -489,7 +494,6 @@ public class EditorGUI extends JFrame
 
 				
 			});
-				 		
 		//// End : JTree add Listener
 				
 		//// Begin : JSplitPane
@@ -781,7 +785,7 @@ public class EditorGUI extends JFrame
  			
 			wasSaved = false;
 			repaint();		
-			createNodes(topLevelName, temp.get(temp.size()-1));
+			mkNodes(topLevelName, temp.get(temp.size()-1));
 		}
 	}
 
@@ -799,11 +803,11 @@ public class EditorGUI extends JFrame
 		
 		for(GeometricObject geomObj : geomListleft)
 		{
-			createNodes(topLevelName, geomObj);
+			mkNodes(topLevelName, geomObj);
 		}
 		for(GeometricObject geomObj : geomListright)
 		{
-			createNodes(topLevelName, geomObj);
+			mkNodes(topLevelName, geomObj);
 		}
 		canvasleft.repaint();
 		canvasright.repaint();
@@ -837,7 +841,7 @@ public class EditorGUI extends JFrame
 	 * @param topLevelName a {@link DefaultMutableTreeNode} that represents the tree on which to work.
 	 * @param geomObj the {@link GeometricObject} to add to the tree.
 	 */
-	private void createNodes(DefaultMutableTreeNode topLevelName, GeometricObject geomObj) 
+	private void mkNodes(DefaultMutableTreeNode topLevelName, GeometricObject geomObj) 
 	{
 		DefaultMutableTreeNode category = null;
 	    DefaultMutableTreeNode geometricObjectNode = null;
@@ -867,6 +871,7 @@ public class EditorGUI extends JFrame
         	category = temp;
         	geometricObjectNode = new DefaultMutableTreeNode(geomObj);
         	category.add(geometricObjectNode);
+        	model.reload(category);
         }
         else if(!exists)
         {
@@ -874,8 +879,43 @@ public class EditorGUI extends JFrame
             topLevelName.add(category);
         	geometricObjectNode = new DefaultMutableTreeNode(geomObj);
         	category.add(geometricObjectNode);
+        	model.reload(root);
         }
-	    model.reload(root);
+	}
+	
+	/**
+	 * Removes {@link Node}&lsquo; from the {@link JTree} livingObjects. <br>
+	 * @param  {@link GeometricObject} a object that is used to find the {@link Node} to remove. 
+	 */
+	@SuppressWarnings("rawtypes")
+	private void rmNodes(GeometricObject geomObj)
+	{
+	    DefaultTreeModel model = (DefaultTreeModel) livingObjects.getModel();
+	    DefaultMutableTreeNode root = (DefaultMutableTreeNode)model.getRoot();
+	    DefaultMutableTreeNode node = null;
+
+	    if (root != null)
+	    {
+	        for (Enumeration e = root.breadthFirstEnumeration(); e.hasMoreElements();)
+	        {
+	        	DefaultMutableTreeNode current = (DefaultMutableTreeNode)e.nextElement();
+
+	            if (geomObj.equals(current.getUserObject()))
+	            {
+	                node = current;
+	                break;
+	            }
+	        }
+	    }
+	    if (node != null && node.getParent().getChildCount() == 1)
+	    {
+	    	topLevelName.remove((MutableTreeNode) node.getParent());
+	    	model.reload(node.getParent());
+	    }
+	    if (node != null && node.getParent().getChildCount() > 1)
+	    {
+	    	model.removeNodeFromParent(node);
+	    }
 	}
 	
 	//// Begin : Property Space 
